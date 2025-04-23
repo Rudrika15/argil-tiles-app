@@ -38,6 +38,7 @@ class GroupCompanyScreen extends StatelessWidget {
       ),
       endDrawer: Container(
         color: Colors.white,
+        
         child: const SizedBox(
           width: 250,
           child: AppDrawer(),

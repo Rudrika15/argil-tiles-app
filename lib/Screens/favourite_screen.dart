@@ -2,9 +2,12 @@ import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/Screens/company_profile_screen.dart';
 import 'package:argil_tiles/Screens/contact_us_screen.dart';
+import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
+import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -14,7 +17,6 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class FavoriteScreenState extends State<FavoriteScreen> {
-  // List to store the favorite items locally (using names and image paths as placeholder)
   List<Map<String, String>> favorites = [
     {'name': 'NERO MARQUINA', 'image': 'assets/images/category1.png'},
     {'name': 'GLACIAR WHITE', 'image': 'assets/images/category2.png'},
@@ -22,17 +24,9 @@ class FavoriteScreenState extends State<FavoriteScreen> {
     {'name': 'HIMALAYAN WHITE', 'image': 'assets/images/category4.png'},
   ];
 
-  // Method to remove a favorite item
   void removeFavorite(int index) {
     setState(() {
       favorites.removeAt(index);
-    });
-  }
-
-  // Method to add a new item to the favorites list
-  void addFavorite(Map<String, String> item) {
-    setState(() {
-      favorites.add(item);
     });
   }
 
@@ -126,6 +120,8 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final drawerProvider = Provider.of<DrawerProvider>(context);
+
     return Drawer(
       child: Container(
         color: Colors.black,
@@ -144,11 +140,21 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             ExpansionTile(
-              leading: const Icon(Icons.category),
-              title: const Text("Products"),
+              leading: const Icon(Icons.category, color: Colors.white),
+              title: const Text("Products", style: TextStyle(color: Colors.white)),
               children: [
-                ListTile(title: const Text("Dura Quartz Surface"), onTap: () {}),
-                ListTile(title: const Text("SPC Products"), onTap: () {}),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'Dura Quartz Surface',
+                  onTap: () {},
+                ),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'SPC Products',
+                  onTap: () {},
+                ),
               ],
             ),
             _drawerItem(
@@ -156,6 +162,7 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.favorite,
               text: 'Favorite',
               onTap: () {
+                drawerProvider.selectItem('Favorite');
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const FavoriteScreen()),
@@ -163,36 +170,56 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ExpansionTile(
-              leading: const Icon(Icons.business),
-              title: const Text("Corporate"),
+              leading: const Icon(Icons.business, color: Colors.white),
+              title: const Text("Corporate", style: TextStyle(color: Colors.white)),
               children: [
-                ListTile(
-                  title: const Text("Group Company"),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AboutScreen()),
-                  ),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'Group Company',
+                  onTap: () {
+                    drawerProvider.selectItem('Group Company');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GroupCompanyScreen()),
+                    );
+                  },
                 ),
-                ListTile(
-                  title: const Text("Achievements"),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AchievementsScreen()),
-                  ),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'Achievements',
+                  onTap: () {
+                    drawerProvider.selectItem('Achievements');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => AchievementsScreen()),
+                    );
+                  },
                 ),
-                ListTile(
-                  title: const Text("Quality"),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const QualityScreen()),
-                  ),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'Quality',
+                  onTap: () {
+                    drawerProvider.selectItem('Quality');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => QualityScreen()),
+                    );
+                  },
                 ),
-                ListTile(
-                  title: const Text("Company Profile"),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CompanyProfileScreen()),
-                  ),
+                _drawerItem(
+                  context,
+                  icon: Icons.circle,
+                  text: 'Company Profile',
+                  onTap: () {
+                    drawerProvider.selectItem('Company Profile');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => CompanyProfileScreen()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -201,9 +228,10 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.info,
               text: 'About Us',
               onTap: () {
+                drawerProvider.selectItem('About Us');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                  MaterialPageRoute(builder: (_) => AboutScreen()),
                 );
               },
             ),
@@ -212,9 +240,10 @@ class AppDrawer extends StatelessWidget {
               icon: Icons.contact_mail,
               text: 'Contact Us',
               onTap: () {
+                drawerProvider.selectItem('Contact Us');
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+                  MaterialPageRoute(builder: (_) => ContactUsScreen()),
                 );
               },
             ),
@@ -238,7 +267,7 @@ class AppDrawer extends StatelessWidget {
                           Navigator.pop(context);
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const SplashScreen()),
+                            MaterialPageRoute(builder: (_) => const SplashScreen()),
                           );
                         },
                         child: const Text("Logout"),
@@ -260,10 +289,23 @@ class AppDrawer extends StatelessWidget {
     required String text,
     required VoidCallback onTap,
   }) {
+    final drawerProvider = Provider.of<DrawerProvider>(context);
+    final isSelected = drawerProvider.selectedItem == text;
+
     return ListTile(
-      leading: Icon(icon),
-      title: Text(text),
-      onTap: onTap,
+      leading: Icon(icon, color: isSelected ? Colors.amber : Colors.white),
+      title: Text(
+        text,
+        style: TextStyle(
+          color: isSelected ? Colors.amber : Colors.white,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      tileColor: isSelected ? Colors.white12 : Colors.transparent,
+      onTap: () {
+        drawerProvider.selectItem(text);
+        onTap();
+      },
     );
   }
 }

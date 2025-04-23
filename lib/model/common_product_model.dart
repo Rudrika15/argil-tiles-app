@@ -44,7 +44,7 @@ class ProductModel {
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    names = json['names'];
+    names = json['names'] == null ? json['name'] : json['names'];
     thicknesses = json['thicknesses'];
     primarycolors = json['primarycolors'];
     edges = json['edges'];

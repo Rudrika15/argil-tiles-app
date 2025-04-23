@@ -2,9 +2,13 @@ import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/Screens/contact_us_screen.dart';
 import 'package:argil_tiles/Screens/favourite_screen.dart';
+import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
+import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CompanyProfileScreen extends StatelessWidget {
   const CompanyProfileScreen({super.key});
@@ -29,7 +33,6 @@ class CompanyProfileScreen extends StatelessWidget {
       endDrawer: const SizedBox(
         width: 250,
         child: AppDrawer(),
-        
       ),
       body: Stack(
         children: [
@@ -66,34 +69,25 @@ class CompanyProfileScreen extends StatelessWidget {
   }
 }
 
-class AppDrawer extends StatefulWidget {
+class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
-  @override
-  State<AppDrawer> createState() => _AppDrawerState();
-}
-
-class _AppDrawerState extends State<AppDrawer> {
-  String _selectedItem = '';
-
-  void _selectItem(String itemName, VoidCallback navigate) {
-    setState(() {
-      _selectedItem = itemName;
-    });
+  void _selectItem(BuildContext context, String itemName, VoidCallback navigate) {
+    context.read<DrawerProvider>().selectItem(itemName);
     Navigator.pop(context);
     navigate();
   }
 
-  bool _isSelected(String itemName) => _selectedItem == itemName;
+  bool _isSelected(BuildContext context, String itemName) {
+    return context.watch<DrawerProvider>().selectedItem == itemName;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      
       child: Container(
         color: Colors.black,
         child: ListView(
-          
           padding: EdgeInsets.zero,
           children: [
             const SizedBox(height: 30),
@@ -108,101 +102,90 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
             ExpansionTile(
-              leading: const Icon(Icons.category),
-              title: const Text("Products"),
+              leading: const Icon(Icons.category, color: Colors.white),
+              title: const Text("Products", style: TextStyle(color: Colors.white)),
               children: [
                 _drawerItem(
+                  context: context,
                   text: 'Dura Quartz Surface',
-                  isSelected: _isSelected('Dura Quartz'),
-                  onTap: () => _selectItem('Dura Quartz', () {}),
+                  isSelected: _isSelected(context, 'Dura Quartz'),
+                  onTap: () => _selectItem(context, 'Dura Quartz', () {}),
                 ),
                 _drawerItem(
+                  context: context,
                   text: 'SPC Products',
-                  isSelected: _isSelected('SPC Products'),
-                  onTap: () => _selectItem('SPC Products', () {}),
+                  isSelected: _isSelected(context, 'SPC Products'),
+                  onTap: () => _selectItem(context, 'SPC Products', () {}),
                 ),
               ],
             ),
             _drawerItem(
+              context: context,
               icon: Icons.favorite,
               text: 'Favorite',
-              isSelected: _isSelected('Favorite'),
-              onTap: () => _selectItem('Favorite', () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const FavoriteScreen()),
-                );
+              isSelected: _isSelected(context, 'Favorite'),
+              onTap: () => _selectItem(context, 'Favorite', () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => FavoriteScreen()));
               }),
             ),
             ExpansionTile(
-              leading: const Icon(Icons.business),
-              title: const Text("Corporate"),
+              leading: const Icon(Icons.business, color: Colors.white),
+              title: const Text("Corporate", style: TextStyle(color: Colors.white)),
               children: [
                 _drawerItem(
+                  context: context,
                   text: 'Group Company',
-                  isSelected: _isSelected('Group Company'),
-                  onTap: () => _selectItem('Group Company', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const AboutScreen()),
-                    );
+                  isSelected: _isSelected(context, 'Group Company'),
+                  onTap: () => _selectItem(context, 'Group Company', () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => GroupCompanyScreen()));
                   }),
                 ),
                 _drawerItem(
+                  context: context,
                   text: 'Achievements',
-                  isSelected: _isSelected('Achievements'),
-                  onTap: () => _selectItem('Achievements', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const AchievementsScreen()),
-                    );
+                  isSelected: _isSelected(context, 'Achievements'),
+                  onTap: () => _selectItem(context, 'Achievements', () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => AchievementsScreen()));
                   }),
                 ),
                 _drawerItem(
+                  context: context,
                   text: 'Quality',
-                  isSelected: _isSelected('Quality'),
-                  onTap: () => _selectItem('Quality', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const QualityScreen()),
-                    );
+                  isSelected: _isSelected(context, 'Quality'),
+                  onTap: () => _selectItem(context, 'Quality', () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => QualityScreen()));
                   }),
                 ),
                 _drawerItem(
+                  context: context,
                   text: 'Company Profile',
-                  isSelected: _isSelected('Company Profile'),
-                  onTap: () => _selectItem('Company Profile', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CompanyProfileScreen()),
-                    );
+                  isSelected: _isSelected(context, 'Company Profile'),
+                  onTap: () => _selectItem(context, 'Company Profile', () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanyProfileScreen()));
                   }),
                 ),
               ],
             ),
             _drawerItem(
+              context: context,
               icon: Icons.info,
               text: 'About Us',
-              isSelected: _isSelected('About Us'),
-              onTap: () => _selectItem('About Us', () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AboutScreen()),
-                );
+              isSelected: _isSelected(context, 'About Us'),
+              onTap: () => _selectItem(context, 'About Us', () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen()));
               }),
             ),
             _drawerItem(
+              context: context,
               icon: Icons.contact_mail,
               text: 'Contact Us',
-              isSelected: _isSelected('Contact Us'),
-              onTap: () => _selectItem('Contact Us', () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ContactUsScreen()),
-                );
+              isSelected: _isSelected(context, 'Contact Us'),
+              onTap: () => _selectItem(context, 'Contact Us', () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ContactUsScreen()));
               }),
             ),
             _drawerItem(
+              context: context,
               icon: Icons.logout,
               text: 'Logout',
               onTap: () {
@@ -238,16 +221,25 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   Widget _drawerItem({
+    required BuildContext context,
     IconData? icon,
     required String text,
     required VoidCallback onTap,
     bool isSelected = false,
   }) {
     return ListTile(
-      leading: icon != null ? Icon(icon) : null,
-      title: Text(text),
+      leading: icon != null
+          ? Icon(icon, color: isSelected ? Colors.black : Colors.white)
+          : null,
+      title: Text(
+        text,
+        style: TextStyle(
+          color: isSelected ? Colors.black : Colors.white,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
       selected: isSelected,
-      selectedTileColor: Colors.grey[300],
+      selectedTileColor: Colors.white,
       onTap: onTap,
     );
   }

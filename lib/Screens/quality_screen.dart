@@ -1,12 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/product_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/Screens/company_profile_screen.dart';
 import 'package:argil_tiles/Screens/contact_us_screen.dart';
 import 'package:argil_tiles/Screens/favourite_screen.dart';
-
+import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 
 class QualityScreen extends StatelessWidget {
   const QualityScreen({super.key});
@@ -22,24 +24,14 @@ class QualityScreen extends StatelessWidget {
             builder:
                 (context) => IconButton(
                   icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
                 ),
           ),
         ],
       ),
-      endDrawer: Container(
-        color: Colors.white,
-        child: const SizedBox(
-          width: 250, // You can adjust this width
-          child: AppDrawer(),
-        ),
-      ),
-
+      endDrawer: const SizedBox(width: 250, child: AppDrawer()),
       body: Stack(
         children: [
-          // Background watermark image
           Center(
             child: Opacity(
               opacity: 0.05,
@@ -50,8 +42,6 @@ class QualityScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Main content
           SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -75,139 +65,132 @@ class QualityScreen extends StatelessWidget {
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
+  void _setSelected(BuildContext context, String item, Widget screen) {
+    Provider.of<DrawerProvider>(context, listen: false).selectItem(item);
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selected = Provider.of<DrawerProvider>(context).selectedItem;
+
     return Drawer(
       child: Container(
         color: Colors.black,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: Image.asset(
-                  'assets/images/logo.png', // Update if your path is different
-                  height: 80,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset('assets/images/logo.png', height: 80),
               ),
             ),
             ExpansionTile(
-              leading: const Icon(Icons.category),
-              title: const Text("Products"),
+              leading: const Icon(Icons.category, color: Colors.white),
+              title: const Text(
+                "Products",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
-                ListTile(
-                  title: const Text("Dura Quartz Surface"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductScreen()),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "dura",
+                  "Dura Quartz Surface",
+                  ProductScreen(),
+                  selected,
                 ),
-                ListTile(
-                  title: const Text("SPC Products"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductScreen()),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "spc",
+                  "SPC Products",
+                  ProductScreen(),
+                  selected,
                 ),
               ],
             ),
-            _createDrawerItem(
-              context: context,
+            _buildTile(
+              context,
+              "favorite",
+              "Favorite",
+              const FavoriteScreen(),
+              selected,
               icon: Icons.favorite,
-              text: 'Favorite',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FavoriteScreen()),
-                );
-              },
             ),
             ExpansionTile(
-              leading: const Icon(Icons.business),
-              title: const Text("Corporate"),
+              leading: const Icon(Icons.business, color: Colors.white),
+              title: const Text(
+                "Corporate",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
-                ListTile(
-                  title: const Text("Group Company"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AboutScreen()),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "group",
+                  "Group Company",
+                  GroupCompanyScreen(),
+                  selected,
                 ),
-                ListTile(
-                  title: const Text("Achievements"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AchievementsScreen(),
-                      ),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "achievements",
+                  "Achievements",
+                  const AchievementsScreen(),
+                  selected,
                 ),
-                ListTile(
-                  title: const Text("Quality"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => QualityScreen()),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "quality",
+                  "Quality",
+                  const QualityScreen(),
+                  selected,
                 ),
-                ListTile(
-                  title: const Text("Company Profile"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CompanyProfileScreen(),
-                      ),
-                    );
-                  },
+                _buildTile(
+                  context,
+                  "profile",
+                  "Company Profile",
+                  const CompanyProfileScreen(),
+                  selected,
                 ),
               ],
             ),
-            _createDrawerItem(
-              context: context,
+            _buildTile(
+              context,
+              "about",
+              "About Us",
+              const AboutScreen(),
+              selected,
               icon: Icons.info,
-              text: 'About Us',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AboutScreen()),
-                );
-              },
             ),
-            _createDrawerItem(
-              context: context,
+            _buildTile(
+              context,
+              "contact",
+              "Contact Us",
+              const ContactUsScreen(),
+              selected,
               icon: Icons.contact_mail,
-              text: 'Contact Us',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ContactUsScreen()),
-                );
-              },
             ),
-            _createDrawerItem(
-              context: context,
-              icon: Icons.logout,
-              text: 'Logout',
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.white),
+              title: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
+                Provider.of<DrawerProvider>(
+                  context,
+                  listen: false,
+                ).selectItem("logout");
                 showDialog(
                   context: context,
                   builder:
-                      (context) => AlertDialog(
+                      (_) => AlertDialog(
                         title: const Text("Confirm Logout"),
-                        content: const Text("Are you sure you want to log out?"),
+                        content: const Text(
+                          "Are you sure you want to log out?",
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
@@ -219,9 +202,7 @@ class AppDrawer extends StatelessWidget {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          SplashScreen(), 
+                                  builder: (_) => const SplashScreen(),
                                 ),
                               );
                             },
@@ -231,6 +212,8 @@ class AppDrawer extends StatelessWidget {
                       ),
                 );
               },
+              selected: selected == "logout",
+              selectedTileColor: Colors.blue[100],
             ),
           ],
         ),
@@ -238,12 +221,20 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createDrawerItem({
-    required BuildContext context,
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
+  ListTile _buildTile(
+    BuildContext context,
+    String id,
+    String title,
+    Widget screen,
+    String selected, {
+    IconData? icon,
   }) {
-    return ListTile(leading: Icon(icon), title: Text(text), onTap: onTap);
+    return ListTile(
+      leading: icon != null ? Icon(icon, color: Colors.white) : null,
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      selected: selected == id,
+      selectedTileColor: Colors.blue[100],
+      onTap: () => _setSelected(context, id, screen),
+    );
   }
 }

@@ -1,3 +1,7 @@
+// import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
+// import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
 import 'package:argil_tiles/provider/product_inquiry_provider.dart';
 import 'package:argil_tiles/provider/quartzproducts_provider.dart';
@@ -30,7 +34,15 @@ void main() {
        ChangeNotifierProvider
         (
           create: (context) => ProductInquiryProvider()
-        )
+        ),
+      ChangeNotifierProvider
+      (
+        create: (context) => DrawerProvider(),
+      ),
+      ChangeNotifierProvider
+      (
+        create: (context) => NewDrawerProvider()
+      )
       ],
       child: const MyApp(),
     ),

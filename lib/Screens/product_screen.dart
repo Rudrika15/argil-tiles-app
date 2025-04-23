@@ -1,5 +1,8 @@
-import 'package:argil_tiles/Screens/splash_screen.dart';
+import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:argil_tiles/Screens/group_company_screen.dart';
+import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/Screens/company_profile_screen.dart';
@@ -8,7 +11,8 @@ import 'package:argil_tiles/Screens/favourite_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 
 class ProductScreen extends StatelessWidget {
-  ProductScreen({super.key});
+  final int initialTab;
+  ProductScreen({super.key, this.initialTab = 0});
 
   final List<Map<String, String>> surfaces = [
     {'name': 'NERO MARQUINA', 'image': 'assets/images/category1.png'},
@@ -104,10 +108,7 @@ class ProductScreen extends StatelessWidget {
                         left: 8,
                         child: Container(
                           color: Colors.black.withOpacity(0.5),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           child: Text(
                             item['name']!,
                             style: const TextStyle(color: Colors.white),
@@ -136,155 +137,70 @@ class ProductScreen extends StatelessWidget {
   }
 }
 
-class AppDrawer extends StatefulWidget {
+class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
-  @override
-  _AppDrawerState createState() => _AppDrawerState();
-}
-
-class _AppDrawerState extends State<AppDrawer> {
-  int _selectedIndex = 0; // Track the selected menu item
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.pop(context); // Close the drawer after item tap
+  void _navigate(BuildContext context, String key, Widget screen) {
+    Provider.of<DrawerProvider>(context, listen: false).selectItem(key);
+    Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
   }
 
   @override
   Widget build(BuildContext context) {
+    final drawerProvider = Provider.of<DrawerProvider>(context);
+    final selected = drawerProvider.selectedItem;
+
     return Drawer(
       child: Container(
         color: Colors.black,
         child: ListView(
-          padding: EdgeInsets.zero,
           children: [
             const SizedBox(height: 30),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  height: 80,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset('assets/images/logo.png', height: 80, fit: BoxFit.contain),
               ),
             ),
             ExpansionTile(
-              leading: const Icon(Icons.category),
-              title: const Text("Products"),
+              leading: const Icon(Icons.category, color: Colors.white),
+              title: const Text("Products", style: TextStyle(color: Colors.white)),
               children: [
                 ListTile(
-                  title: const Text("Dura Quartz Surface"),
-                  onTap: () {
-                    _onItemTapped(0);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProductDetailScreen(
-                          imagePath: 'assets/images/category1.png',
-                        ),
-                      ),
-                    );
-                  },
+                  title: const Text("Dura Quartz Surface", style: TextStyle(color: Colors.white)),
+                  selected: selected == "Dura Quartz Surface",
+                  selectedTileColor: Colors.blue[100],
+                  onTap: () => _navigate(
+                    context,
+                    "Dura Quartz Surface",
+                    const ProductDetailScreen(imagePath: 'assets/images/category1.png'),
+                  ),
                 ),
-                ListTile(title: const Text("SPC Products"), onTap: () {}),
+                ListTile(
+                  title: const Text("SPC Products", style: TextStyle(color: Colors.white)),
+                  onTap: () {},
+                ),
               ],
             ),
-            _createDrawerItem(
-              index: 1, // Index for Favorite
-              icon: Icons.favorite,
-              text: 'Favorite',
-              onTap: () {
-                _onItemTapped(1);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FavoriteScreen()),
-                );
-              },
-            ),
+            _drawerItem(context, "Favorite", Icons.favorite, 'Favorite', const FavoriteScreen()),
             ExpansionTile(
-              leading: const Icon(Icons.business),
-              title: const Text("Corporate"),
+              leading: const Icon(Icons.business, color: Colors.white),
+              title: const Text("Corporate", style: TextStyle(color: Colors.white)),
               children: [
-                ListTile(
-                  title: const Text("Group Company"),
-                  onTap: () {
-                    _onItemTapped(2);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AboutScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Achievements"),
-                  onTap: () {
-                    _onItemTapped(3);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AchievementsScreen(),
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Quality"),
-                  onTap: () {
-                    _onItemTapped(4);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const QualityScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Company Profile"),
-                  onTap: () {
-                    _onItemTapped(5);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CompanyProfileScreen(),
-                      ),
-                    );
-                  },
-                ),
+                _drawerItem(context, "Group Company", null, 'Group Company', GroupCompanyScreen()),
+                _drawerItem(context, "Achievements", null, 'Achievements', const AchievementsScreen()),
+                _drawerItem(context, "Quality", null, 'Quality', const QualityScreen()),
+                _drawerItem(context, "Company Profile", null, 'Company Profile', const CompanyProfileScreen()),
               ],
             ),
-            _createDrawerItem(
-              index: 6, // Index for About Us
-              icon: Icons.info,
-              text: 'About Us',
+            _drawerItem(context, "About", Icons.info, 'About Us', const AboutScreen()),
+            _drawerItem(context, "Contact", Icons.contact_mail, 'Contact Us', const ContactUsScreen()),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.white),
+              title: const Text('Logout', style: TextStyle(color: Colors.white)),
               onTap: () {
-                _onItemTapped(6);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
-                );
-              },
-            ),
-            _createDrawerItem(
-              index: 7, // Index for Contact Us
-              icon: Icons.contact_mail,
-              text: 'Contact Us',
-              onTap: () {
-                _onItemTapped(7);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ContactUsScreen()),
-                );
-              },
-            ),
-            _createDrawerItem(
-              index: 8, // Index for Logout
-              icon: Icons.logout,
-              text: 'Logout',
-              onTap: () {
-                _onItemTapped(8);
+                drawerProvider.selectItem("Logout");
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -300,9 +216,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           Navigator.pop(context);
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const SplashScreen(),
-                            ),
+                            MaterialPageRoute(builder: (context) => const SplashScreen()),
                           );
                         },
                         child: const Text("Logout"),
@@ -318,25 +232,20 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  Widget _createDrawerItem({
-    required int index,
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-  }) {
+  Widget _drawerItem(BuildContext context, String key, IconData? icon, String text, Widget screen) {
+    final isSelected = Provider.of<DrawerProvider>(context).selectedItem == key;
     return ListTile(
-      leading: Icon(icon),
-      title: Text(text),
-      selected: _selectedIndex == index,
-      selectedTileColor: Colors.blue[100], // Highlight color for selected item
-      onTap: onTap,
+      leading: icon != null ? Icon(icon, color: Colors.white) : null,
+      title: Text(text, style: const TextStyle(color: Colors.white)),
+      selected: isSelected,
+      selectedTileColor: Colors.blue[100],
+      onTap: () => _navigate(context, key, screen),
     );
   }
 }
 
 class ProductDetailScreen extends StatelessWidget {
   final String imagePath;
-
   const ProductDetailScreen({super.key, required this.imagePath});
 
   @override

@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import '../model/common_product_model.dart';
 import 'product_inquiry_screen.dart';
 
-
-class ProductInfoScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatelessWidget {
   final String url;
   final ProductModel? productModel;
 
-  const ProductInfoScreen({
-    super.key,
-     this.productModel,
-    required this.url,
-  });
+  const ProductDetailsScreen({super.key, this.productModel, required this.url});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(productModel?.names ?? ''),
+        titleTextStyle: TextStyle(color: Colors.black),
+      ),
       backgroundColor: Colors.white,
+
       body: Column(
         children: [
           // Top Content - Scrollable
@@ -32,9 +31,12 @@ class ProductInfoScreen extends StatelessWidget {
                 _buildInfoCard(
                   title: "Spaces",
                   rows: [
-                    _infoRow("Primary Color", "White / Grey"),
-                    _infoRow("Stock", "New"),
-                    _infoRow("Book Match", "N/A"),
+                    _infoRow(
+                      "Primary Color",
+                      productModel?.primarycolors ?? '',
+                    ),
+                    _infoRow("Stock", productModel?.status ?? ''),
+                    _infoRow("Book Match", productModel?.bookmatch ?? ''),
                     _infoRow("Available Finish", "Polished"),
                   ],
                 ),
@@ -43,7 +45,7 @@ class ProductInfoScreen extends StatelessWidget {
                 _buildInfoCard(
                   title: "Sizes",
                   rows: [
-                    _infoRow("Thickness", "20 X 30 MM"),
+                    _infoRow("Thickness", productModel?.thicknesses ?? ''),
                     _infoRow("Slab Size", "1600 X 3200 MM"),
                   ],
                 ),
@@ -62,10 +64,13 @@ class ProductInfoScreen extends StatelessWidget {
                 _actionButton(
                   context: context,
                   label: "Inquiry Now",
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ProductInquiryScreen()),
-                  ),
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductInquiryScreen(),
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -103,10 +108,7 @@ class ProductInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard({
-    required String title,
-    required List<Widget> rows,
-  }) {
+  Widget _buildInfoCard({required String title, required List<Widget> rows}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -151,7 +153,10 @@ class ProductInfoScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Applications", style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text(
+              "Applications",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             _applicationRow("Flooring", true, true),
             _applicationRow("Counters", true, true),
@@ -208,7 +213,9 @@ class ProductInfoScreen extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.brown.shade800,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         child: Text(label, style: const TextStyle(color: Colors.white)),
       ),
