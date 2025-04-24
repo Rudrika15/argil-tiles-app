@@ -121,7 +121,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ExpansionTile(
               leading: const Icon(Icons.category),
-              title: const Text("Products"),
+              title: const Text("Products",style: TextStyle(color: Colors.white),),
               children: [
                 ListTile(
                   title: const Text("Dura Quartz Surface"),
@@ -132,7 +132,12 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(title: const Text("SPC Products"), onTap: () {}),
+                ListTile(title: const Text("SPC Products"), onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductScreen()),
+                    );
+                }),
               ],
             ),
             _createDrawerItem(
@@ -251,7 +256,7 @@ class AppDrawer extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon),
-      title: Text(text),
+      title: Text(text,style: TextStyle(color: Colors.white),),
       onTap: onTap,
     );
   }

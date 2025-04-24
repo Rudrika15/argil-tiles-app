@@ -34,6 +34,7 @@ class FavoriteScreenState extends State<FavoriteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFD3C8BA),
         title: const Text("Favorites"),
         actions: [
           Builder(
@@ -46,7 +47,10 @@ class FavoriteScreenState extends State<FavoriteScreen> {
           ),
         ],
       ),
-      endDrawer: const SizedBox(width: 200, child: AppDrawer()),
+       endDrawer: const SizedBox(
+        width: 250,
+        child: AppDrawer(),
+      ),
       body: favorites.isEmpty
           ? const Center(
               child: Text(

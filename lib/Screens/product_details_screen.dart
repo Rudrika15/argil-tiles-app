@@ -1,3 +1,4 @@
+import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:flutter/material.dart';
 import '../model/common_product_model.dart';
 import 'product_inquiry_screen.dart';
@@ -12,10 +13,14 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFD3C8BA),
         title: Text(productModel?.names ?? ''),
-        titleTextStyle: TextStyle(color: Colors.black),
+        titleTextStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.white,
+       endDrawer: const SizedBox(
+        width: 250,
+        child: AppDrawer(),
+      ),
 
       body: Column(
         children: [

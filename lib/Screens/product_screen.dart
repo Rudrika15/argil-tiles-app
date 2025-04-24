@@ -33,7 +33,7 @@ class ProductScreen extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFAF6F1),
+        backgroundColor: const Color(0xFFD3C8BA),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),

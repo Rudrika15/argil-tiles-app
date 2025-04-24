@@ -55,7 +55,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 30.0),
-          child: Image.asset('assets/images/logo.png', height: 150, width: 150),
+          child: Image.asset(
+            'assets/images/logo.png',
+            height: 200,
+            width: 2000,
+          ),
         ),
         actions: [
           IconButton(
@@ -143,9 +147,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 onPressed: () {
                                   setState(() => showAllQuartz = true);
                                   // Navigate to the Product Screen for Quartz
-                                  push(
-                                    context: context,
-                                    widget: ProductScreen(),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              ProductScreen(), // Assuming ProductScreen is the target
+                                    ),
                                   );
                                 },
                                 child: const Text("View All"),
@@ -171,11 +179,15 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       quartzProvider.products![index];
                                   return GestureDetector(
                                     onTap:
-                                        () => push(
-                                          context: context,
-                                          widget: ProductDetailsScreen(
-                                            url: "quartz",
-                                            productModel: product,
+                                        () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    ProductDetailsScreen(
+                                                      url: "quartz",
+                                                      productModel: product,
+                                                    ),
                                           ),
                                         ),
                                     child: Container(
@@ -216,9 +228,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 onPressed: () {
                                   setState(() => showAllSpc = true);
                                   // Navigate to the Product Screen for SPC
-                                  push(
-                                    context: context,
-                                    widget: ProductScreen(),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              ProductScreen(), // Navigate to ProductScreen
+                                    ),
                                   );
                                 },
                                 child: const Text("View All"),
@@ -244,11 +260,15 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       spcProvider.products![index];
                                   return GestureDetector(
                                     onTap:
-                                        () => push(
-                                          context: context,
-                                          widget: ProductDetailsScreen(
-                                            url: "spc",
-                                            productModel: product,
+                                        () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    ProductDetailsScreen(
+                                                      url: "spc",
+                                                      productModel: product,
+                                                    ),
                                           ),
                                         ),
                                     child: Container(

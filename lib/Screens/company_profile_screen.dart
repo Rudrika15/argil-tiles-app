@@ -17,6 +17,7 @@ class CompanyProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFD3C8BA),
         title: const Text('Company Profile'),
         leading: const BackButton(),
         actions: [

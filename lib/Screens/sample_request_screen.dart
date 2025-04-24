@@ -58,7 +58,8 @@ class SampleRequestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sample Request")),
+      appBar: AppBar(title: Text("Sample Request"),
+      backgroundColor: const Color(0xFFD3C8BA),),
       body: Center(
         child: ElevatedButton(
           onPressed: () => showSampleRequestDialog(context),
