@@ -5,9 +5,12 @@ import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
+import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:sizer/sizer.dart';
+import '../app_const/app_color.dart';
 import '../provider/homescreen_provider.dart';
 import '../provider/quartzproducts_provider.dart';
 import '../provider/spcproducts_provider.dart';
@@ -52,18 +55,22 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFD3C8BA),
+        surfaceTintColor: const Color(0xFFD3C8BA),
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 30.0),
+        automaticallyImplyLeading: false,
+        title: CustomContainer(
           child: Image.asset(
             'assets/images/logo.png',
-            height: 200,
-            width: 2000,
+            height: 5.h,
+            width: 20.w,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
+            icon: const Icon(
+              Icons.favorite_border,
+              color: AppColors.blackColor,
+            ),
             onPressed:
                 () => Navigator.push(
                   context,
@@ -73,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
           Builder(
             builder:
                 (context) => IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.black),
+                  icon: const Icon(Icons.menu, color: AppColors.blackColor),
                   onPressed: () => Scaffold.of(context).openEndDrawer(),
                 ),
           ),
@@ -94,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
             homeScreenProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

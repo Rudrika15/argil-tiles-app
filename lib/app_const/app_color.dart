@@ -8,4 +8,5 @@ class AppColors {
   static const Color errorColor = Colors.red;
   static const Color blackColor = Colors.black;
   static const Color orange = Colors.orange;
+  static const Color brown = Colors.brown;
 }

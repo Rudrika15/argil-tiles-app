@@ -8,6 +8,7 @@ class SplashScreen extends StatefulWidget {
   @override
   SplashScreenState createState() => SplashScreenState();
 }
+
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
@@ -20,18 +21,19 @@ class SplashScreenState extends State<SplashScreen> {
       );
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[400], 
+        color: Colors.grey[400],
         child: Stack(
           children: [
             // Centered Logo
             Center(
               child: Image.asset(
-                'assets/images/logo.png', 
-                width: 150, 
+                'assets/images/logo.png',
+                width: 150,
                 height: 150,
               ),
             ),
