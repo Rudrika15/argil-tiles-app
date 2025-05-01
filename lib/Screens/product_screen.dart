@@ -1,4 +1,6 @@
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/provider/homescreen_provider.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:argil_tiles/Screens/group_company_screen.dart';
@@ -23,15 +25,10 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
     return Scaffold(
       backgroundColor: const Color(0xFFFAF6F1),
-      endDrawer: Container(
-        color: Colors.white,
-        child: const SizedBox(
-          width: 250,
-          child: AppDrawer(),
-        ),
-      ),
+      endDrawer: DrawerWidget(),
       appBar: AppBar(
         backgroundColor: const Color(0xFFD3C8BA),
         elevation: 0,
@@ -48,10 +45,11 @@ class ProductScreen extends StatelessWidget {
           const Icon(Icons.favorite_border, color: Colors.black),
           const SizedBox(width: 16),
           Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-            ),
+            builder:
+                (context) => IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.black),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                ),
           ),
           const SizedBox(width: 12),
         ],
@@ -108,7 +106,10 @@ class ProductScreen extends StatelessWidget {
                         left: 8,
                         child: Container(
                           color: Colors.black.withOpacity(0.5),
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           child: Text(
                             item['name']!,
                             style: const TextStyle(color: Colors.white),
@@ -160,69 +161,138 @@ class AppDrawer extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: Image.asset('assets/images/logo.png', height: 80, fit: BoxFit.contain),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 80,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             ExpansionTile(
               leading: const Icon(Icons.category, color: Colors.white),
-              title: const Text("Products", style: TextStyle(color: Colors.white)),
+              title: const Text(
+                "Products",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
                 ListTile(
-                  title: const Text("Dura Quartz Surface", style: TextStyle(color: Colors.white)),
+                  title: const Text(
+                    "Dura Quartz Surface",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   selected: selected == "Dura Quartz Surface",
                   selectedTileColor: Colors.blue[100],
-                  onTap: () => _navigate(
-                    context,
-                    "Dura Quartz Surface",
-                    const ProductDetailScreen(imagePath: 'assets/images/category1.png'),
-                  ),
+                  onTap:
+                      () => _navigate(
+                        context,
+                        "Dura Quartz Surface",
+                        const ProductDetailScreen(
+                          imagePath: 'assets/images/category1.png',
+                        ),
+                      ),
                 ),
                 ListTile(
-                  title: const Text("SPC Products", style: TextStyle(color: Colors.white)),
+                  title: const Text(
+                    "SPC Products",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onTap: () {},
                 ),
               ],
             ),
-            _drawerItem(context, "Favorite", Icons.favorite, 'Favorite', const FavoriteScreen()),
+            _drawerItem(
+              context,
+              "Favorite",
+              Icons.favorite,
+              'Favorite',
+              const FavoriteScreen(),
+            ),
             ExpansionTile(
               leading: const Icon(Icons.business, color: Colors.white),
-              title: const Text("Corporate", style: TextStyle(color: Colors.white)),
+              title: const Text(
+                "Corporate",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
-                _drawerItem(context, "Group Company", null, 'Group Company', GroupCompanyScreen()),
-                _drawerItem(context, "Achievements", null, 'Achievements', const AchievementsScreen()),
-                _drawerItem(context, "Quality", null, 'Quality', const QualityScreen()),
-                _drawerItem(context, "Company Profile", null, 'Company Profile', const CompanyProfileScreen()),
+                _drawerItem(
+                  context,
+                  "Group Company",
+                  null,
+                  'Group Company',
+                  GroupCompanyScreen(),
+                ),
+                _drawerItem(
+                  context,
+                  "Achievements",
+                  null,
+                  'Achievements',
+                  const AchievementsScreen(),
+                ),
+                _drawerItem(
+                  context,
+                  "Quality",
+                  null,
+                  'Quality',
+                  const QualityScreen(),
+                ),
+                _drawerItem(
+                  context,
+                  "Company Profile",
+                  null,
+                  'Company Profile',
+                  const CompanyProfileScreen(),
+                ),
               ],
             ),
-            _drawerItem(context, "About", Icons.info, 'About Us', const AboutScreen()),
-            _drawerItem(context, "Contact", Icons.contact_mail, 'Contact Us', const ContactUsScreen()),
+            _drawerItem(
+              context,
+              "About",
+              Icons.info,
+              'About Us',
+              const AboutScreen(),
+            ),
+            _drawerItem(
+              context,
+              "Contact",
+              Icons.contact_mail,
+              'Contact Us',
+              const ContactUsScreen(),
+            ),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.white),
-              title: const Text('Logout', style: TextStyle(color: Colors.white)),
+              title: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 drawerProvider.selectItem("Logout");
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("Confirm Logout"),
-                    content: const Text("Are you sure you want to log out?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text("Confirm Logout"),
+                        content: const Text(
+                          "Are you sure you want to log out?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SplashScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text("Logout"),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const SplashScreen()),
-                          );
-                        },
-                        child: const Text("Logout"),
-                      ),
-                    ],
-                  ),
                 );
               },
             ),
@@ -232,7 +302,13 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(BuildContext context, String key, IconData? icon, String text, Widget screen) {
+  Widget _drawerItem(
+    BuildContext context,
+    String key,
+    IconData? icon,
+    String text,
+    Widget screen,
+  ) {
     final isSelected = Provider.of<DrawerProvider>(context).selectedItem == key;
     return ListTile(
       leading: icon != null ? Icon(icon, color: Colors.white) : null,

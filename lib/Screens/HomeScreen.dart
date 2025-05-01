@@ -1,11 +1,9 @@
-import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/product_details_screen.dart';
-import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:argil_tiles/model/common_product_model.dart';
-import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,11 +13,6 @@ import '../provider/homescreen_provider.dart';
 import '../provider/quartzproducts_provider.dart';
 import '../provider/spcproducts_provider.dart';
 import '../Screens/favourite_screen.dart';
-import '../Screens/about_screen.dart';
-import '../Screens/achievements_screen.dart';
-import '../Screens/company_profile_screen.dart';
-import '../Screens/contact_us_screen.dart';
-import '../Screens/quality_screen.dart';
 import '../Screens/product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -87,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
           const SizedBox(width: 10),
         ],
       ),
-      endDrawer: _buildDrawer(context),
+      endDrawer: DrawerWidget(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -135,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           )
                         else
                           const Text("No featured products found"),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 2.h),
 
                         // Quartz Section
                         Row(
@@ -163,7 +156,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     ),
                                   );
                                 },
-                                child: const Text("View All"),
+                                child: const Text(
+                                  "View All",
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
                               ),
                           ],
                         ),
@@ -244,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     ),
                                   );
                                 },
-                                child: const Text("View All"),
+                                child: Text(
+                                  "View All",
+                                  style: TextStyle(color: AppColors.whiteColor),
+                                ),
                               ),
                           ],
                         ),
@@ -370,124 +369,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     return Text(
       title,
       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget _buildDrawer(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      child: Drawer(
-        backgroundColor: const Color(0xFFF5F5F5),
-        child: Container(
-          color: Colors.black,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const SizedBox(height: 30),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    height: 80,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              ExpansionTile(
-                leading: const Icon(Icons.category, color: Colors.white),
-                title: const Text(
-                  "Products",
-                  style: TextStyle(color: Colors.white),
-                ),
-                children: [
-                  _drawerItem("Dura Quartz Surface", ProductScreen()),
-                  _drawerItem("SPC Products", ProductScreen()),
-                ],
-              ),
-              _drawerItem(
-                "Favourite",
-                FavoriteScreen(),
-                icon: Icons.favorite_border,
-              ),
-              ExpansionTile(
-                leading: const Icon(Icons.business, color: Colors.white),
-                title: const Text(
-                  "Corporate",
-                  style: TextStyle(color: Colors.white),
-                ),
-                children: [
-                  _drawerItem("Group Company", GroupCompanyScreen()),
-                  _drawerItem("Achievements", AchievementsScreen()),
-                  _drawerItem("Quality", QualityScreen()),
-                  _drawerItem("Company Profile", CompanyProfileScreen()),
-                ],
-              ),
-              _drawerItem("About Us", AboutScreen(), icon: Icons.info),
-              _drawerItem(
-                "Contact Us",
-                ContactUsScreen(),
-                icon: Icons.contact_mail,
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout, color: Colors.white),
-                title: const Text(
-                  "Logout",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder:
-                        (context) => AlertDialog(
-                          title: const Text("Confirm Logout"),
-                          content: const Text(
-                            "Are you sure you want to log out?",
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => SplashScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text("Logout"),
-                            ),
-                          ],
-                        ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _drawerItem(String title, Widget screen, {IconData? icon}) {
-    return Consumer<DrawerProvider>(
-      builder: (context, drawerProvider, _) {
-        return ListTile(
-          selected: drawerProvider.selectedItem == title,
-          selectedTileColor: Colors.grey.shade300,
-          leading: icon != null ? Icon(icon, color: Colors.white) : null,
-          title: Text(title, style: const TextStyle(color: Colors.white)),
-          onTap: () {
-            drawerProvider.selectItem(title);
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
-          },
-        );
-      },
     );
   }
 }

@@ -1,5 +1,6 @@
 // import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
 // import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           (context, orientation, screenType) => MaterialApp(
             title: 'Argil',
             debugShowCheckedModeBanner: false,
+            theme: ThemeData(scaffoldBackgroundColor: AppColors.whiteColor),
             home: const SplashScreen(),
           ),
     );
