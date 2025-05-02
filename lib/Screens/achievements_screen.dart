@@ -1,6 +1,6 @@
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
-import 'package:argil_tiles/sevices/gradient_helper.dart';
+import 'package:argil_tiles/utils/method_helper/gradient_helper.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +64,7 @@ class AchievementsScreen extends StatelessWidget {
                           return CustomContainer(
                             backGroundColor: AppColors.whiteColor,
                             margin: EdgeInsets.symmetric(vertical: 2.h),
-                            boxShadow: [GradientHelper.shadow],
+                            boxShadow: [BoxShadowHelper.shadow],
                             borderRadius: BorderRadius.circular(AppSize.size10),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(

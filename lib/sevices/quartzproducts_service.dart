@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/common_product_model.dart';
 
 class QuartzproductsService {
-  final String baseUrl = 'https://dev.argiltiles.com/api';
+  
 
   Future<List<ProductModel>?> fetchSpcProducts() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/quartzproduct'));
+      final response = await http.get(Uri.parse(ApiHelper.quartzProduct));
 
       if (response.statusCode == 200) {
         print(response.body);

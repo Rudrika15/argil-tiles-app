@@ -1,16 +1,17 @@
 import 'dart:developer';
 import 'package:argil_tiles/model/inquiry_request_done_model.dart';
 import 'package:argil_tiles/model/product_inquiry_model.dart';
+import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProductInquiryService {
-  final String _baseUrl = 'https://dev.argiltiles.com/api';
+
 
   Future<InquiryRequestDoneModel?> submitInquiry(
     ProductInquiryModel inquiry,
   ) async {
-    final url = Uri.parse('$_baseUrl/inquiry');
+    final url = Uri.parse(ApiHelper.inquiry);
 
     try {
       final response = await http.post(

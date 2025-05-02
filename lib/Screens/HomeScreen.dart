@@ -15,7 +15,7 @@ import '../provider/quartzproducts_provider.dart';
 import '../provider/spcproducts_provider.dart';
 import '../Screens/favourite_screen.dart';
 import '../Screens/product_screen.dart';
-import '../sevices/gradient_helper.dart';
+import '../utils/method_helper/gradient_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     ),
                                     fit: BoxFit.cover,
                                   ),
-                                  boxShadow: [GradientHelper.shadow],
+                                  boxShadow: [BoxShadowHelper.shadow],
                                   borderRadius: BorderRadius.circular(
                                     AppSize.size10,
                                   ),
@@ -343,7 +343,7 @@ class HomeScreenProductContainer extends StatelessWidget {
       width: 30.w,
       margin: EdgeInsets.symmetric(horizontal: 2.w),
       borderRadius: BorderRadius.circular(AppSize.size10),
-      boxShadow: [GradientHelper.shadow],
+      boxShadow: [BoxShadowHelper.shadow],
       image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
     );
   }

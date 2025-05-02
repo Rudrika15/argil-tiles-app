@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:argil_tiles/model/contact_model.dart';
 import 'package:argil_tiles/model/contact_us_query_done_model.dart';
+import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/src/response.dart';
 
 class ContactService {
-  final String _baseUrl = 'https://dev.argiltiles.com/api';
 
   Future<ContactUsQueryDone?> submitContact({
     required ContactModel contact,
   }) async {
-    Uri url = Uri.parse('$_baseUrl/contactus');
+    Uri url = Uri.parse(ApiHelper.contactUs);
     try {
       Response response = await http.post(
         url,
