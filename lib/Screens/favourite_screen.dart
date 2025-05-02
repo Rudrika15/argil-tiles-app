@@ -6,7 +6,9 @@ import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
+import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,86 +35,95 @@ class FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD3C8BA),
-        title: const Text("Favorites"),
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
+    return PopAndRedirectToHome(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFD3C8BA),
+          title: const Text("Favorites"),
+          actions: [
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  ),
             ),
-          ),
-        ],
-      ),
-       endDrawer: DrawerWidget(),
-      body: favorites.isEmpty
-          ? const Center(
-              child: Text(
-                "No favorite items yet!",
-                style: TextStyle(fontSize: 16),
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                itemCount: favorites.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 3 / 4,
-                ),
-                itemBuilder: (context, index) {
-                  final item = favorites[index];
-                  return Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          item['image']!,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
+          ],
+        ),
+        endDrawer: DrawerWidget(),
+        body:
+            favorites.isEmpty
+                ? const Center(
+                  child: Text(
+                    "No favorite items yet!",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )
+                : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GridView.builder(
+                    itemCount: favorites.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 3 / 4,
                         ),
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: GestureDetector(
-                          onTap: () => removeFavorite(index),
-                          child: const CircleAvatar(
-                            radius: 14,
-                            backgroundColor: Colors.black54,
-                            child: Icon(Icons.close, size: 16, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          color: Colors.black.withOpacity(0.6),
-                          child: Text(
-                            item['name']!,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                    itemBuilder: (context, index) {
+                      final item = favorites[index];
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              item['image']!,
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: GestureDetector(
+                              onTap: () => removeFavorite(index),
+                              child: const CircleAvatar(
+                                radius: 14,
+                                backgroundColor: Colors.black54,
+                                child: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              color: Colors.black.withOpacity(0.6),
+                              child: Text(
+                                item['name']!,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+      ),
     );
   }
 }
@@ -143,7 +154,10 @@ class AppDrawer extends StatelessWidget {
             ),
             ExpansionTile(
               leading: const Icon(Icons.category, color: Colors.white),
-              title: const Text("Products", style: TextStyle(color: Colors.white)),
+              title: const Text(
+                "Products",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
                 _drawerItem(
                   context,
@@ -173,7 +187,10 @@ class AppDrawer extends StatelessWidget {
             ),
             ExpansionTile(
               leading: const Icon(Icons.business, color: Colors.white),
-              title: const Text("Corporate", style: TextStyle(color: Colors.white)),
+              title: const Text(
+                "Corporate",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
                 _drawerItem(
                   context,
@@ -256,26 +273,31 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("Confirm Logout"),
-                    content: const Text("Are you sure you want to log out?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text("Confirm Logout"),
+                        content: const Text(
+                          "Are you sure you want to log out?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SplashScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text("Logout"),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const SplashScreen()),
-                          );
-                        },
-                        child: const Text("Logout"),
-                      ),
-                    ],
-                  ),
                 );
               },
             ),

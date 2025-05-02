@@ -1,9 +1,12 @@
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/model/contact_model.dart';
+import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:argil_tiles/sevices/contact_service.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
+import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsScreen extends StatefulWidget {
@@ -61,120 +64,123 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD3C8BA),
-        title: const Text('Contact Us', style: TextStyle(fontSize: 18)),
-        leading: const BackButton(),
-        centerTitle: true,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      endDrawer: DrawerWidget(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Container(
-          decoration: BoxDecoration(
-            // image: DecorationImage(
-            //   image: AssetImage('assets/images/product1.png'), // path to your background image
-            //   fit: BoxFit.cover,
-            //   opacity: 0.5, // You can adjust the opacity if needed
-            // ),
-          ),
-          child: Column(
-            children: [
-              const Text(
-                "for more information you can\nreach out to us",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              const SizedBox(height: 16),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildInputField(
-                      controller: _nameController,
-                      hint: "Name",
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Enter your name'
-                                  : null,
-                    ),
-                    _buildInputField(
-                      controller: _emailController,
-                      hint: "Email",
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter your email';
-                        } else if (!_emailRegex.hasMatch(value)) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
-                      },
-                    ),
-                    _buildInputField(
-                      controller: _contactNoController,
-                      hint: "Contact No",
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter your contact number';
-                        } else if (value.length < 10) {
-                          return 'Enter a valid 10-digit number';
-                        }
-                        return null;
-                      },
-                    ),
-                    _buildInputField(
-                      controller: _messageController,
-                      hint: "Message",
-                      maxLines: 4,
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Enter a message'
-                                  : null,
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF663333),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        onPressed: _isLoading ? null : _submitForm,
-                        child:
-                            _isLoading
-                                ? const SizedBox(
-                                  height: 16,
-                                  width: 16,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : const Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                      ),
-                    ),
-                  ],
+   
+    return PopAndRedirectToHome(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFD3C8BA),
+          title: const Text('Contact Us', style: TextStyle(fontSize: 18)),
+          leading: const BackButton(),
+          centerTitle: true,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
+        endDrawer: DrawerWidget(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            decoration: BoxDecoration(
+              // image: DecorationImage(
+              //   image: AssetImage('assets/images/product1.png'), // path to your background image
+              //   fit: BoxFit.cover,
+              //   opacity: 0.5, // You can adjust the opacity if needed
+              // ),
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  "for more information you can\nreach out to us",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-              ),
-              const SizedBox(height: 30),
-              _buildContactDetailsCard(),
-            ],
+                const SizedBox(height: 16),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _buildInputField(
+                        controller: _nameController,
+                        hint: "Name",
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Enter your name'
+                                    : null,
+                      ),
+                      _buildInputField(
+                        controller: _emailController,
+                        hint: "Email",
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Enter your email';
+                          } else if (!_emailRegex.hasMatch(value)) {
+                            return 'Enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      _buildInputField(
+                        controller: _contactNoController,
+                        hint: "Contact No",
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Enter your contact number';
+                          } else if (value.length < 10) {
+                            return 'Enter a valid 10-digit number';
+                          }
+                          return null;
+                        },
+                      ),
+                      _buildInputField(
+                        controller: _messageController,
+                        hint: "Message",
+                        maxLines: 4,
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Enter a message'
+                                    : null,
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF663333),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: _isLoading ? null : _submitForm,
+                          child:
+                              _isLoading
+                                  ? const SizedBox(
+                                    height: 16,
+                                    width: 16,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                _buildContactDetailsCard(),
+              ],
+            ),
           ),
         ),
       ),
@@ -319,3 +325,5 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     }
   }
 }
+
+

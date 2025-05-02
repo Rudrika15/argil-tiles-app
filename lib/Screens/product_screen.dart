@@ -1,6 +1,7 @@
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
+import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:argil_tiles/Screens/group_company_screen.dart';
@@ -25,114 +26,118 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
-    return Scaffold(
-      backgroundColor: const Color(0xFFFAF6F1),
-      endDrawer: DrawerWidget(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD3C8BA),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'DURA QUARTZ SURFACE',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          const Icon(Icons.favorite_border, color: Colors.black),
-          const SizedBox(width: 16),
-          Builder(
-            builder:
-                (context) => IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.black),
-                  onPressed: () => Scaffold.of(context).openEndDrawer(),
-                ),
+    return PopAndRedirectToHome(
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFAF6F1),
+        endDrawer: DrawerWidget(),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFD3C8BA),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
           ),
-          const SizedBox(width: 12),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  borderSide: BorderSide.none,
+          title: const Text(
+            'DURA QUARTZ SURFACE',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          actions: [
+            const Icon(Icons.favorite_border, color: Colors.black),
+            const SizedBox(width: 16),
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.black),
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  ),
+            ),
+            const SizedBox(width: 12),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(32),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                itemCount: surfaces.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GridView.builder(
+                  itemCount: surfaces.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = surfaces[index];
+                    return Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: AssetImage(item['image']!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 8,
+                          left: 8,
+                          child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              item['name']!,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final item = surfaces[index];
-                  return Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: AssetImage(item['image']!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Icon(Icons.favorite_border, color: Colors.white),
-                      ),
-                      Positioned(
-                        bottom: 8,
-                        left: 8,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          child: Text(
-                            item['name']!,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            height: 5,
-            width: 60,
-            decoration: BoxDecoration(
-              color: Colors.brown,
-              borderRadius: BorderRadius.circular(5),
+            const SizedBox(height: 8),
+            Container(
+              height: 5,
+              width: 60,
+              decoration: BoxDecoration(
+                color: Colors.brown,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              margin: const EdgeInsets.only(bottom: 12),
             ),
-            margin: const EdgeInsets.only(bottom: 12),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

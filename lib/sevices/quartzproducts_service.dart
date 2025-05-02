@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
-
 import '../model/common_product_model.dart';
 
 class QuartzproductsService {

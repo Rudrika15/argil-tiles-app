@@ -1,5 +1,6 @@
 import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
+import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
@@ -9,83 +10,89 @@ import 'package:argil_tiles/Screens/favourite_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/product_screen.dart';
 
+
 class GroupCompanyScreen extends StatelessWidget {
   const GroupCompanyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFAF6F1),
-      appBar: AppBar(
+   
+    return PopAndRedirectToHome(
+      
+      child: Scaffold(
         backgroundColor: const Color(0xFFFAF6F1),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Group Company',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-            ),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFFAF6F1),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
           ),
-        ],
-      ),
-      endDrawer:DrawerWidget(),
-      body: Stack(
-        children: [
-          Center(
-            child: Opacity(
-              opacity: 0.05,
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: 200,
-                fit: BoxFit.contain,
+          title: const Text(
+            'Group Company',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          actions: [
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.black),
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  ),
+            ),
+          ],
+        ),
+        endDrawer: DrawerWidget(),
+        body: Stack(
+          children: [
+            Center(
+              child: Opacity(
+                opacity: 0.05,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 200,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 16),
-                    child: Image(
-                      image: AssetImage('assets/images/logo.png'),
-                      height: 50,
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: Image(
+                        image: AssetImage('assets/images/logo.png'),
+                        height: 50,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  "The company has three manufacturing units. The Roof Tile, Wall tiles and the Quartz Stone Unit. All the units have a very strong and industrious infrastructure that is instrumental in making the company and the brand, leading players in their respective product lines across India and overseas...",
-                  style: TextStyle(fontSize: 14),
-                ),
-                SizedBox(height: 24),
-                Text(
-                  "MEN",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "“Hands that work are never dirty”",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "The operatives of the company, many of them working since more than 20 years, are all part of the success story of ARGIL...",
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
+                  Text(
+                    "The company has three manufacturing units. The Roof Tile, Wall tiles and the Quartz Stone Unit. All the units have a very strong and industrious infrastructure that is instrumental in making the company and the brand, leading players in their respective product lines across India and overseas...",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    "MEN",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "“Hands that work are never dirty”",
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "The operatives of the company, many of them working since more than 20 years, are all part of the success story of ARGIL...",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -115,7 +122,10 @@ class AppDrawer extends StatelessWidget {
             ),
             ExpansionTile(
               leading: const Icon(Icons.category),
-              title: const Text("Products",style: TextStyle(color: Colors.white),),
+              title: const Text(
+                "Products",
+                style: TextStyle(color: Colors.white),
+              ),
               children: [
                 ListTile(
                   title: const Text("Dura Quartz Surface"),
@@ -126,12 +136,15 @@ class AppDrawer extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(title: const Text("SPC Products"), onTap: () {
-                  Navigator.push(
+                ListTile(
+                  title: const Text("SPC Products"),
+                  onTap: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ProductScreen()),
                     );
-                }),
+                  },
+                ),
               ],
             ),
             _createDrawerItem(
@@ -141,7 +154,9 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const FavoriteScreen(),
+                  ),
                 );
               },
             ),
@@ -160,7 +175,9 @@ class AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AchievementsScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const AchievementsScreen(),
+                      ),
                     );
                   },
                 ),
@@ -169,7 +186,9 @@ class AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const QualityScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const QualityScreen(),
+                      ),
                     );
                   },
                 ),
@@ -178,7 +197,9 @@ class AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const CompanyProfileScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const CompanyProfileScreen(),
+                      ),
                     );
                   },
                 ),
@@ -202,7 +223,9 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const ContactUsScreen(),
+                  ),
                 );
               },
             ),
@@ -213,26 +236,31 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("Confirm Logout"),
-                    content: const Text("Are you sure you want to log out?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text("Confirm Logout"),
+                        content: const Text(
+                          "Are you sure you want to log out?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SplashScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text("Logout"),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => SplashScreen()),
-                          );
-                        },
-                        child: const Text("Logout"),
-                      ),
-                    ],
-                  ),
                 );
               },
             ),
@@ -250,7 +278,7 @@ class AppDrawer extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon),
-      title: Text(text,style: TextStyle(color: Colors.white),),
+      title: Text(text, style: TextStyle(color: Colors.white)),
       onTap: onTap,
     );
   }

@@ -1,6 +1,4 @@
-import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../Screens/about_screen.dart';
 import '../Screens/achievements_screen.dart';
@@ -12,14 +10,12 @@ import '../Screens/product_screen.dart';
 import '../Screens/quality_screen.dart';
 import '../app_const/app_color.dart';
 import '../widgets/drawer_item.dart';
-import 'custom_container.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
     return Drawer(
       width: 60.w,
       backgroundColor: AppColors.blackColor,
@@ -108,12 +104,12 @@ class DrawerWidget extends StatelessWidget {
             title: "About Us",
 
             icon: Icons.info,
-            index: 4,
+            index: 8,
             screen: AboutScreen(),
           ),
           DrawerItem(
             icon: Icons.contact_mail,
-            index: 5,
+            index: 9,
             title: "Contact Us",
             screen: ContactUsScreen(),
           ),

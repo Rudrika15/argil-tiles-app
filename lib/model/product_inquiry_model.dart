@@ -1,5 +1,6 @@
 class ProductInquiryModel {
   String? subject;
+  String? productName;
   String? name;
   String? email;
   String? phone;
@@ -7,20 +8,24 @@ class ProductInquiryModel {
   String? details;
   int? id;
 
-  ProductInquiryModel(
-      {this.subject,
-      this.name,
-      this.email,
-      this.phone,
-      this.message,
-      this.details,
-      this.id, required bool requestSample});
+  ProductInquiryModel({
+    this.subject,
+    this.name,
+    this.productName,
+    this.email,
+    this.phone,
+    this.message,
+    this.details,
+    this.id,
+    required bool requestSample,
+  });
 
   ProductInquiryModel.fromJson(Map<String, dynamic> json) {
     subject = json['subject'];
+    productName = json['productname'];
     name = json['name'];
     email = json['email'];
-    phone = json['phone'];
+    phone = json['contactno'];
     message = json['message'];
     details = json['details'];
     id = json['id'];
@@ -28,13 +33,14 @@ class ProductInquiryModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['subject'] =  subject;
-    data['name'] =  name;
-    data['email'] =  email;
-    data['phone'] =  phone;
-    data['message'] =  message;
-    data['details'] =  details;
-    data['id'] =  id;
+    data['subject'] = subject;
+    data['productname'] = productName;
+    data['name'] = name;
+    data['email'] = email;
+    data['contactno'] = phone;
+    data['message'] = message;
+    data['details'] = details;
+    data['id'] = id;
     return data;
   }
 }

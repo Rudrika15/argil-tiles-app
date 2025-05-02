@@ -1,4 +1,3 @@
-import 'package:argil_tiles/Screens/product_inquiry_screen.dart';
 import 'package:flutter/material.dart';
 
 class SampleRequestScreen extends StatelessWidget {
@@ -26,25 +25,21 @@ class SampleRequestScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>  ProductInquiryScreen(),
-                        ),
-                        (route) => false, 
-                      );
-                    },
-                    child: const Text("Yes",
-                    style: TextStyle(color: Colors.black)),
+                    onPressed: () {},
+                    child: const Text(
+                      "Yes",
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
 
                   OutlinedButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Cancel",
-                    style: TextStyle(color: Colors.black)),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),
@@ -58,13 +53,14 @@ class SampleRequestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sample Request"),
-      backgroundColor: const Color(0xFFD3C8BA),),
+      appBar: AppBar(
+        title: Text("Sample Request"),
+        backgroundColor: const Color(0xFFD3C8BA),
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => showSampleRequestDialog(context),
-          child: Text("Request Sample",
-          style: TextStyle(color: Colors.black),),
+          child: Text("Request Sample", style: TextStyle(color: Colors.black)),
         ),
       ),
     );

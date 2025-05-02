@@ -1,7 +1,7 @@
-import 'package:argil_tiles/Screens/achievements_screen.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
+import 'package:argil_tiles/widgets/inquiry_form.dart';
 import 'package:flutter/material.dart';
 import '../model/common_product_model.dart';
-import 'product_inquiry_screen.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String url;
@@ -15,12 +15,12 @@ class ProductDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFD3C8BA),
         title: Text(productModel?.names ?? ''),
-        titleTextStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+        titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-       endDrawer: const SizedBox(
-        width: 250,
-        child: AppDrawer(),
-      ),
+      endDrawer: DrawerWidget(),
 
       body: Column(
         children: [
@@ -70,11 +70,14 @@ class ProductDetailsScreen extends StatelessWidget {
                   context: context,
                   label: "Inquiry Now",
                   onPressed:
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ProductInquiryScreen(),
-                        ),
+                      () => showDialog(
+                        context: context,
+                        builder:
+                            (context) => Dialog(
+                              child: InquiryForm(
+                                productName: productModel?.names ?? "Not Found",
+                              ),
+                            ),
                       ),
                 ),
               ],
