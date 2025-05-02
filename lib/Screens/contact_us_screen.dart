@@ -1,13 +1,16 @@
-import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/model/contact_model.dart';
-import 'package:argil_tiles/provider/homescreen_provider.dart';
+import 'package:argil_tiles/provider/contact_us_provider.dart';
 import 'package:argil_tiles/sevices/contact_service.dart';
+import 'package:argil_tiles/widgets/custom_text_form_field.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../app_const/app_color.dart';
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
@@ -17,54 +20,11 @@ class ContactUsScreen extends StatefulWidget {
 }
 
 class _ContactUsScreenState extends State<ContactUsScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _contactNoController = TextEditingController();
-  final _messageController = TextEditingController();
-  bool _isLoading = false;
-
   final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _isLoading = true);
-
-      final contact = ContactModel(
-        name: _nameController.text,
-        email: _emailController.text,
-        contactno: _contactNoController.text,
-        message: _messageController.text,
-      );
-
-      final success = await ContactService().submitContact(contact);
-
-      setState(() => _isLoading = false);
-
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success
-                ? 'Message sent successfully!'
-                : 'Failed to send message. Try again.',
-          ),
-        ),
-      );
-
-      if (success) {
-        _formKey.currentState?.reset();
-        _nameController.clear();
-        _emailController.clear();
-        _contactNoController.clear();
-        _messageController.clear();
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-   
+    ContactUsProvider contactUsProvider = context.watch<ContactUsProvider>();
     return PopAndRedirectToHome(
       child: Scaffold(
         appBar: AppBar(
@@ -79,13 +39,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Container(
-            decoration: BoxDecoration(
-              // image: DecorationImage(
-              //   image: AssetImage('assets/images/product1.png'), // path to your background image
-              //   fit: BoxFit.cover,
-              //   opacity: 0.5, // You can adjust the opacity if needed
-              // ),
-            ),
+            decoration: BoxDecoration(),
             child: Column(
               children: [
                 const Text(
@@ -95,21 +49,22 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Form(
-                  key: _formKey,
+                  key: contactUsProvider.formKey,
                   child: Column(
                     children: [
-                      _buildInputField(
-                        controller: _nameController,
-                        hint: "Name",
+                      CustomTextFormField(
+                        controller: contactUsProvider.nameController,
+                        hintText: "Name",
                         validator:
                             (value) =>
                                 value == null || value.isEmpty
                                     ? 'Enter your name'
                                     : null,
                       ),
-                      _buildInputField(
-                        controller: _emailController,
-                        hint: "Email",
+                      SizedBox(height: 2.h),
+                      CustomTextFormField(
+                        controller: contactUsProvider.emailController,
+                        hintText: "Email",
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -120,9 +75,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                           return null;
                         },
                       ),
-                      _buildInputField(
-                        controller: _contactNoController,
-                        hint: "Contact No",
+                      SizedBox(height: 2.h),
+                      CustomTextFormField(
+                        controller: contactUsProvider.contactController,
+                        hintText: "Contact No",
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -133,9 +89,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                           return null;
                         },
                       ),
-                      _buildInputField(
-                        controller: _messageController,
-                        hint: "Message",
+                      SizedBox(height: 2.h),
+                      CustomTextFormField(
+                        controller: contactUsProvider.messageController,
+                        hintText: "Message",
                         maxLines: 4,
                         validator:
                             (value) =>
@@ -143,20 +100,61 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                     ? 'Enter a message'
                                     : null,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 3.h),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF663333),
+                            backgroundColor: Colors.brown.shade800,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
-                          onPressed: _isLoading ? null : _submitForm,
+                          onPressed:
+                              contactUsProvider.isLoading
+                                  ? () {}
+                                  : () async {
+                                    if (contactUsProvider.formKey.currentState
+                                            ?.validate() ??
+                                        false) {
+                                      bool success =
+                                          await contactUsProvider.contactUs();
+                                      if (success) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            backgroundColor:
+                                                AppColors.primaryColor,
+                                            content: Text(
+                                              contactUsProvider
+                                                      .contactUsQueryDone
+                                                      ?.message ??
+                                                  "",
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            backgroundColor:
+                                                AppColors.errorColor,
+                                            content: Text(
+                                              contactUsProvider
+                                                      .contactUsQueryDone
+                                                      ?.message ??
+                                                  "Something Went wrong",
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
                           child:
-                              _isLoading
+                              contactUsProvider.isLoading
                                   ? const SizedBox(
                                     height: 16,
                                     width: 16,
@@ -181,38 +179,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 _buildContactDetailsCard(),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInputField({
-    required TextEditingController controller,
-    required String hint,
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    required String? Function(String?) validator,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        validator: validator,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(fontSize: 12),
-          filled: true,
-          fillColor: const Color(0xFFF5F5F5),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 10,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none,
           ),
         ),
       ),
@@ -325,5 +291,3 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     }
   }
 }
-
-

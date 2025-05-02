@@ -18,29 +18,30 @@ class ProductModel {
   String? subImg5;
   String? status;
   String? image;
+  String? navigateUrl;
 
-
-  ProductModel(
-      {this.id,
-      this.names,
-      this.thicknesses,
-      this.primarycolors,
-      this.edges,
-      this.clicktype,
-      this.shadeVariation,
-      this.backingType,
-      this.style,
-      this.wearLayer,
-      this.bookmatch,
-      this.mainImg,
-      this.subImg1,
-      this.subImg2,
-      this.subImg3,
-      this.subImg4,
-      this.subImg5,
-      this.status,
-      this.image,
-     });
+  ProductModel({
+    this.id,
+    this.names,
+    this.thicknesses,
+    this.primarycolors,
+    this.edges,
+    this.clicktype,
+    this.shadeVariation,
+    this.backingType,
+    this.style,
+    this.wearLayer,
+    this.bookmatch,
+    this.mainImg,
+    this.subImg1,
+    this.subImg2,
+    this.subImg3,
+    this.subImg4,
+    this.subImg5,
+    this.status,
+    this.image,
+    this.navigateUrl,
+  });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -62,8 +63,7 @@ class ProductModel {
     subImg5 = json['subImg5'];
     status = json['status'];
     image = json['image'];
-
-    
+    image = json['navigate_url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +87,7 @@ class ProductModel {
     data['subImg5'] = this.subImg5;
     data['status'] = this.status;
     data['image'] = this.image;
+    data['navigate_url'] = this.navigateUrl;
     return data;
   }
 }

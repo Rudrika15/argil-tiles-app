@@ -289,12 +289,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 horizontal: 5.w,
                               ),
                               scrollDirection: Axis.horizontal,
-                              itemCount:
-                                  newArrivalProvider
-                                      .newArrivals
-                                      ?.data
-                                      ?.length ??
-                                  0,
+                              itemCount: newArrivalProvider.getList().length,
                               itemBuilder: (context, index) {
                                 final ProductModel item =
                                     newArrivalProvider
@@ -303,17 +298,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 debugPrint(item.names);
                                 return GestureDetector(
                                   onTap:
-                                      () => push(
-                                        context: context,
-                                        widget: ProductDetailsScreen(
-                                          productModel: item,
-                                          url:
-                                              newArrivalProvider
-                                                  .newArrivals
-                                                  ?.url ??
-                                              "",
-                                        ),
-                                      ),
+                                      () => newArrivalProvider
+                                          .getNewArrivalAndRedirectToProductPage(
+                                            context: context,
+                                          ),
                                   child: HomeScreenProductContainer(
                                     imageUrl:
                                         "https://admin.argiltiles.com/${newArrivalProvider.newArrivals?.url}/${item.mainImg}",

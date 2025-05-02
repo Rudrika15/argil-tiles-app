@@ -21,7 +21,7 @@ class DrawerItem extends StatelessWidget {
     bool selected = index == homeScreenProvider.selectedIndex;
     return ListTile(
       selected: selected,
-      selectedTileColor: AppColors.orange,
+      selectedTileColor: Color.fromARGB(238, 81, 58, 29),
       leading: icon != null ? Icon(icon, color: AppColors.whiteColor) : null,
       title: Text(title, style: const TextStyle(color: AppColors.whiteColor)),
       onTap: () {

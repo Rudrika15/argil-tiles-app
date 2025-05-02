@@ -1,6 +1,8 @@
+import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/model/newarrival_model.dart';
 import 'package:argil_tiles/sevices/newarraival_service.dart';
 import 'package:flutter/material.dart';
+import '../model/common_product_model.dart';
 
 class NewarrivalProvider with ChangeNotifier {
   final NewArrivalService _service = NewArrivalService();
@@ -16,16 +18,42 @@ class NewarrivalProvider with ChangeNotifier {
     notifyListeners();
 
     _newArrivals = await _service.getNewArrivals();
-    if (_newArrivals?.status == true) {
-      removeEmptyBunch();
-    }
     _isLoading = false;
     notifyListeners();
   }
 
-  void removeEmptyBunch() {
-    _newArrivals?.data =
-        _newArrivals?.data?.where((e) => e.mainImg != null).toList();
+  List<ProductModel> getList() {
+    return _newArrivals?.data?.where((e) => e.mainImg != null).toList() ?? [];
+  }
+
+  void getNewArrivalAndRedirectToProductPage({
+    required BuildContext context,
+  }) async {
+    /// set _isLoading true
+    _isLoading = true;
     notifyListeners();
+    String url =
+        _newArrivals?.data
+            ?.firstWhere((e) => e.navigateUrl != null)
+            .navigateUrl ??
+        "";
+    ProductModel? product = await _service.getNewArrivalProduct(url: url);
+
+    if (product != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => ProductDetailsScreen(
+                productModel: product,
+                url: _newArrivals?.url ?? "",
+              ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Something went wrong")));
+    }
   }
 }
