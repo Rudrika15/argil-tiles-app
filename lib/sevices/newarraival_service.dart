@@ -2,24 +2,24 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:argil_tiles/model/newarrival_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/src/response.dart';
 
 class NewArrivalService {
-  final String baseUrl = 'https://dev.argiltiles.com/api'; // Replace with actual URL
+  final String baseUrl =
+      'https://dev.argiltiles.com/api'; // Replace with actual URL
 
   Future<NewarrivalModel?> getNewArrivals() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/newarrivals'));
+      Response response = await http.get(Uri.parse('$baseUrl/newarrivals'));
 
       if (response.statusCode == 200) {
-        final jsonBody = json.decode(response.body);
-        log("===================== > $jsonBody");
-        return NewarrivalModel.fromJson(jsonBody);
+        return NewarrivalModel.fromJson(jsonDecode(response.body));
       } else {
-        print('Error: Status code ${response.statusCode}');
+        log('Error: Status code ${response.body}');
         return null;
       }
     } catch (e) {
-      print('Exception occurred: $e');
+      log('Exception occurred: $e');
       return null;
     }
   }

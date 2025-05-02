@@ -173,8 +173,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               scrollDirection: Axis.horizontal,
                               itemCount:
                                   showAllQuartz
-                                      ? quartzProvider.products!.length
-                                      : (quartzProvider.products!.length > 5
+                                      ? quartzProvider.products?.length
+                                      : ((quartzProvider.products?.length ??
+                                                  0) >
+                                              5
                                           ? 5
                                           : quartzProvider.products!.length),
                               itemBuilder: (context, index) {
@@ -288,7 +290,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               ),
                               scrollDirection: Axis.horizontal,
                               itemCount:
-                                  newArrivalProvider.newArrivals!.data!.length,
+                                  newArrivalProvider
+                                      .newArrivals
+                                      ?.data
+                                      ?.length ??
+                                  0,
                               itemBuilder: (context, index) {
                                 final ProductModel item =
                                     newArrivalProvider

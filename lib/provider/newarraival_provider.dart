@@ -15,9 +15,17 @@ class NewarrivalProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _newArrivals  = await _service.getNewArrivals();
-
+    _newArrivals = await _service.getNewArrivals();
+    if (_newArrivals?.status == true) {
+      removeEmptyBunch();
+    }
     _isLoading = false;
+    notifyListeners();
+  }
+
+  void removeEmptyBunch() {
+    _newArrivals?.data =
+        _newArrivals?.data?.where((e) => e.mainImg != null).toList();
     notifyListeners();
   }
 }
