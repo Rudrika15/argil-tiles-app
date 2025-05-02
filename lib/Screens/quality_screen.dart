@@ -1,3 +1,4 @@
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -31,7 +32,7 @@ class QualityScreen extends StatelessWidget {
           ),
         ],
       ),
-      endDrawer: const SizedBox(width: 250, child: AppDrawer()),
+      endDrawer: DrawerWidget(),
       body: Stack(
         children: [
           Center(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:argil_tiles/model/homescreen_model.dart';
 import 'package:argil_tiles/sevices/homescreen_service.dart';
 
-
 class HomeScreenProvider with ChangeNotifier {
   List<HomescreenModel>? _homeItems = [];
   bool _isLoading = false;
@@ -23,10 +22,9 @@ class HomeScreenProvider with ChangeNotifier {
 
   ////////////////////////////////////////////////////////////
   ///
-  int selectedIndex = 1;
+  int selectedIndex = 0;
   set setSelectedIndex(int index) {
     selectedIndex = index;
     notifyListeners();
   }
-
 }

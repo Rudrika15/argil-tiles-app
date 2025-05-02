@@ -6,6 +6,7 @@ import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -31,13 +32,7 @@ class AchievementsScreen extends StatelessWidget {
           ),
         ],
       ),
-      endDrawer: Container(
-        color: Colors.white,
-        child: const SizedBox(
-          width: 250,
-          child: AppDrawer(),
-        ),
-      ),
+      endDrawer:DrawerWidget(),
       body: Stack(
         children: [
           Center(

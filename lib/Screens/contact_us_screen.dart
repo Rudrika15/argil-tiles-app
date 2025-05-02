@@ -1,6 +1,7 @@
 import 'package:argil_tiles/Screens/achievements_screen.dart';
 import 'package:argil_tiles/model/contact_model.dart';
 import 'package:argil_tiles/sevices/contact_service.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,7 +70,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      endDrawer: const SizedBox(width: 250, child: AppDrawer()),
+      endDrawer: DrawerWidget(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Container(

@@ -18,14 +18,22 @@ class DrawerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
+    bool selected = index == homeScreenProvider.selectedIndex;
     return ListTile(
-      tileColor: AppColors.errorColor,
+      selected: selected,
+      selectedTileColor: AppColors.orange,
       leading: icon != null ? Icon(icon, color: AppColors.whiteColor) : null,
       title: Text(title, style: const TextStyle(color: AppColors.whiteColor)),
       onTap: () {
-        homeScreenProvider.setSelectedIndex = index;
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+        selected
+            ? Navigator.pop(context)
+            : {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => screen),
+              ),
+              homeScreenProvider.setSelectedIndex = index,
+            };
       },
     );
   }

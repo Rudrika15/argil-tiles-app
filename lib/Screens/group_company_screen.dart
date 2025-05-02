@@ -1,4 +1,5 @@
 import 'package:argil_tiles/Screens/splash_screen.dart';
+import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:argil_tiles/Screens/about_screen.dart';
 import 'package:argil_tiles/Screens/achievements_screen.dart';
@@ -36,14 +37,7 @@ class GroupCompanyScreen extends StatelessWidget {
           ),
         ],
       ),
-      endDrawer: Container(
-        color: Colors.white,
-        
-        child: const SizedBox(
-          width: 250,
-          child: AppDrawer(),
-        ),
-      ),
+      endDrawer:DrawerWidget(),
       body: Stack(
         children: [
           Center(
