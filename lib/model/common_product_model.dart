@@ -63,7 +63,7 @@ class ProductModel {
     subImg5 = json['subImg5'];
     status = json['status'];
     image = json['image'];
-    image = json['navigate_url'];
+    navigateUrl = json['navigate_url'];
   }
 
   Map<String, dynamic> toJson() {

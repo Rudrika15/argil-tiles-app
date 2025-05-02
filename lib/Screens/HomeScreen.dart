@@ -289,7 +289,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 horizontal: 5.w,
                               ),
                               scrollDirection: Axis.horizontal,
-                              itemCount: newArrivalProvider.getList().length,
+                              itemCount:
+                                  newArrivalProvider.getProductList().length,
                               itemBuilder: (context, index) {
                                 final ProductModel item =
                                     newArrivalProvider
@@ -297,11 +298,46 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         .data![index];
                                 debugPrint(item.names);
                                 return GestureDetector(
-                                  onTap:
-                                      () => newArrivalProvider
-                                          .getNewArrivalAndRedirectToProductPage(
-                                            context: context,
+                                  onTap: () async {
+                                    if (newArrivalProvider.navigateUrl ==
+                                            null ||
+                                        newArrivalProvider
+                                                .navigateUrl
+                                                ?.isEmpty ==
+                                            true) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Product link not available",
                                           ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    await newArrivalProvider
+                                        .getNewArrivalAndRedirectToProductPage()
+                                        .then((product) {
+                                          if (product != null) {
+                                            if (!context.mounted) return;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (_) => ProductDetailsScreen(
+                                                      productModel: product,
+                                                      url:
+                                                          newArrivalProvider
+                                                              .newArrivals
+                                                              ?.url ??
+                                                          "",
+                                                    ),
+                                              ),
+                                            );
+                                          }
+                                        });
+                                  },
                                   child: HomeScreenProductContainer(
                                     imageUrl:
                                         "https://admin.argiltiles.com/${newArrivalProvider.newArrivals?.url}/${item.mainImg}",
