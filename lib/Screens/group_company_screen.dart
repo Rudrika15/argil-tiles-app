@@ -9,16 +9,14 @@ import 'package:argil_tiles/Screens/contact_us_screen.dart';
 import 'package:argil_tiles/Screens/favourite_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/product_screen.dart';
-
+import 'package:sizer/sizer.dart';
 
 class GroupCompanyScreen extends StatelessWidget {
   const GroupCompanyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-   
     return PopAndRedirectToHome(
-      
       child: Scaffold(
         backgroundColor: const Color(0xFFFAF6F1),
         appBar: AppBar(
@@ -48,9 +46,9 @@ class GroupCompanyScreen extends StatelessWidget {
           children: [
             Center(
               child: Opacity(
-                opacity: 0.05,
+                opacity: 0.1,
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo_triangle.png',
                   width: 200,
                   fit: BoxFit.contain,
                 ),
@@ -60,13 +58,13 @@ class GroupCompanyScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 16),
                       child: Image(
                         image: AssetImage('assets/images/logo.png'),
-                        height: 50,
+                        height: 10.h,
                       ),
                     ),
                   ),

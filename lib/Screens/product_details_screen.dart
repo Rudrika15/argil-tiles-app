@@ -1,6 +1,10 @@
+import 'package:argil_tiles/app_const/app_color.dart';
+import 'package:argil_tiles/app_const/app_size.dart';
+import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/inquiry_form.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import '../model/common_product_model.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -91,10 +95,15 @@ class ProductDetailsScreen extends StatelessWidget {
   // ========== Widgets Below ==========
 
   Widget _buildProductImage() {
-    return SizedBox(
-      height: 200,
+    return CustomContainer(
+      borderColor: AppColors.greyColor,
+      borderWidth: 0.4,
+      margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      backGroundColor: AppColors.whiteColor,
+      height: 20.h,
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+        borderRadius: BorderRadius.circular(AppSize.size10),
         child: Image.network(
           'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
           fit: BoxFit.cover,
