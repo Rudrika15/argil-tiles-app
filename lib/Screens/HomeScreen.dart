@@ -291,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               scrollDirection: Axis.horizontal,
                               itemCount:
                                   newArrivalProvider.getProductList().length,
-                              itemBuilder: (context, index) {
+                              itemBuilder: (listContext, index) {
                                 final ProductModel item =
                                     newArrivalProvider
                                         .newArrivals!
@@ -299,45 +299,74 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                 debugPrint(item.names);
                                 return GestureDetector(
                                   onTap: () async {
-                                    if (newArrivalProvider.navigateUrl ==
-                                            null ||
-                                        newArrivalProvider
-                                                .navigateUrl
-                                                ?.isEmpty ==
-                                            true) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Product link not available",
+                                    final navUrl =
+                                        newArrivalProvider.navigateUrl;
+
+                                    if (navUrl == null || navUrl.isEmpty) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Product link not available",
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                       return;
                                     }
-                                    await newArrivalProvider
-                                        .getNewArrivalAndRedirectToProductPage()
-                                        .then((product) {
-                                          if (product != null) {
-                                            if (!context.mounted) return;
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (_) => ProductDetailsScreen(
-                                                      productModel: product,
-                                                      url:
-                                                          newArrivalProvider
-                                                              .newArrivals
-                                                              ?.url ??
-                                                          "",
-                                                    ),
+
+                                    try {
+                                      final product =
+                                          await newArrivalProvider
+                                              .getNewArrivalAndRedirectToProductPage();
+
+                                      if (!context.mounted) return;
+
+                                      if (product == null) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Product not found or failed to fetch.",
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (_) => ProductDetailsScreen(
+                                                productModel: product,
+                                                url:
+                                                    newArrivalProvider
+                                                        .newArrivals
+                                                        ?.url ??
+                                                    "",
                                               ),
-                                            );
-                                          }
-                                        });
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      debugPrint("Navigation error: $e");
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Something went wrong during navigation.",
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
                                   },
+
                                   child: HomeScreenProductContainer(
                                     imageUrl:
                                         "https://admin.argiltiles.com/${newArrivalProvider.newArrivals?.url}/${item.mainImg}",
