@@ -139,9 +139,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           _buildSectionTitle(title: 'Quartz Products'),
 
                           if (!showAllQuartz &&
-                              quartzProvider.products!.length > 5)
-                            TextButton(
-                              onPressed: () {
+                              quartzProvider.products!.length > 3)
+                            ViewAllBtn(
+                              onTap: () {
                                 setState(() => showAllQuartz = true);
                                 Navigator.push(
                                   context,
@@ -152,14 +152,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                           url: "quartz",
                                           products:
                                               quartzProvider.products ?? [],
-                                        ), // Assuming ProductScreen is the target
+                                        ),
                                   ),
                                 );
                               },
-                              child: const Text(
-                                "View All",
-                                style: TextStyle(color: AppColors.whiteColor),
-                              ),
                             ),
                         ],
                       ),
@@ -180,8 +176,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ? quartzProvider.products?.length
                                       : ((quartzProvider.products?.length ??
                                                   0) >
-                                              5
-                                          ? 5
+                                              3
+                                          ? 3
                                           : quartzProvider.products!.length),
                               itemBuilder: (context, index) {
                                 final ProductModel product =
@@ -215,9 +211,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                         children: [
                           _buildSectionTitle(title: 'SPC Products'),
 
-                          if (!showAllSpc && spcProvider.products!.length > 5)
-                            TextButton(
-                              onPressed: () {
+                          if (!showAllSpc && spcProvider.products!.length > 3)
+                            ViewAllBtn(
+                              onTap: () {
                                 setState(() => showAllSpc = true);
                                 // Navigate to the Product Screen for SPC
                                 Navigator.push(
@@ -232,10 +228,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   ),
                                 );
                               },
-                              child: Text(
-                                "View All",
-                                style: TextStyle(color: AppColors.whiteColor),
-                              ),
                             ),
                         ],
                       ),
@@ -254,8 +246,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               itemCount:
                                   showAllSpc
                                       ? spcProvider.products!.length
-                                      : (spcProvider.products!.length > 5
-                                          ? 5
+                                      : (spcProvider.products!.length > 3
+                                          ? 3
                                           : spcProvider.products!.length),
                               itemBuilder: (context, index) {
                                 final ProductModel product =
@@ -375,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   },
 
                                   child: HomeScreenProductContainer(
+                                    width: 85.w,
                                     imageUrl:
                                         "https://admin.argiltiles.com/${newArrivalProvider.newArrivals?.url}/${item.mainImg}",
                                   ),
@@ -404,19 +397,41 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
 }
 
 class HomeScreenProductContainer extends StatelessWidget {
-  const HomeScreenProductContainer({super.key, required this.imageUrl});
-
+  const HomeScreenProductContainer({
+    super.key,
+    required this.imageUrl,
+    this.width,
+  });
+  final double? width;
   final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       backGroundColor: AppColors.whiteColor,
-      width: 30.w,
+      width: width ?? 30.w,
       margin: EdgeInsets.symmetric(horizontal: 2.w),
       borderRadius: BorderRadius.circular(AppSize.size10),
       boxShadow: [BoxShadowHelper.shadow],
       image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
+    );
+  }
+}
+
+class ViewAllBtn extends StatelessWidget {
+  const ViewAllBtn({super.key, required this.onTap});
+  final void Function()? onTap;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: CustomContainer(
+        margin: EdgeInsets.only(right: 2.w),
+        backGroundColor: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+        child: Text("View All", style: TextStyle(color: AppColors.blackColor)),
+      ),
     );
   }
 }

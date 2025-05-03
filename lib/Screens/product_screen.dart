@@ -78,12 +78,15 @@ class ProductScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Positioned(
+                      Positioned(
                         top: AppSize.size10,
                         right: AppSize.size10,
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: AppColors.whiteColor,
+                        child: InkWell(
+                          onTap: () => {},
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: AppColors.whiteColor,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -106,16 +109,6 @@ class ProductScreen extends StatelessWidget {
                 },
               ),
             ),
-            // const SizedBox(height: 8),
-            // Container(
-            //   height: 5,
-            //   width: 60,
-            //   decoration: BoxDecoration(
-            //     color: Colors.brown,
-            //     borderRadius: BorderRadius.circular(5),
-            //   ),
-            //   margin: const EdgeInsets.only(bottom: 12),
-            // ),
           ],
         ),
       ),
