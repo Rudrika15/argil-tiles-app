@@ -1,3 +1,5 @@
+import 'package:argil_tiles/utils/shared_preference/shared_prefrence.dart';
+
 class ProductModel {
   int? id;
   String? names;
@@ -19,6 +21,8 @@ class ProductModel {
   String? status;
   String? image;
   String? navigateUrl;
+  String? imageUrl;
+  bool? isFavorite;
 
   ProductModel({
     this.id,
@@ -41,6 +45,8 @@ class ProductModel {
     this.status,
     this.image,
     this.navigateUrl,
+    this.imageUrl,
+    this.isFavorite,
   });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
@@ -63,7 +69,16 @@ class ProductModel {
     subImg5 = json['subImg5'];
     status = json['status'];
     image = json['image'];
+    imageUrl = json['imageURL'];
     navigateUrl = json['navigate_url'];
+  }
+
+  void getIsFavorite({
+    required String key,
+    required Function()? setState,
+  }) async {
+    isFavorite = await SharedPrefs.getBool(key: key);
+    setState;
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +102,7 @@ class ProductModel {
     data['subImg5'] = this.subImg5;
     data['status'] = this.status;
     data['image'] = this.image;
+    data['imageURL'] = this.imageUrl;
     data['navigate_url'] = this.navigateUrl;
     return data;
   }

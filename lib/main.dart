@@ -4,6 +4,7 @@ import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/provider/contact_us_provider.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
+import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
 import 'package:argil_tiles/provider/product_inquiry_provider.dart';
 import 'package:argil_tiles/provider/quartzproducts_provider.dart';
@@ -26,6 +27,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => DrawerProvider()),
         ChangeNotifierProvider(create: (context) => NewDrawerProvider()),
         ChangeNotifierProvider(create: (context) => ContactUsProvider()),
+        ChangeNotifierProvider(create: (context) => FavoriteProvider()),
       ],
       child: const MyApp(),
     ),

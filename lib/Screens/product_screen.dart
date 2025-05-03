@@ -1,12 +1,15 @@
 import 'package:argil_tiles/app_const/app_size.dart';
+import 'package:argil_tiles/provider/favroite_provider.dart';
+import 'package:argil_tiles/utils/shared_preference/shared_prefrence.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_color.dart';
 import '../model/common_product_model.dart';
 import '../widgets/custom_container.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   final String title;
   final String url;
   final List<ProductModel> products;
@@ -18,8 +21,14 @@ class ProductScreen extends StatelessWidget {
   });
 
   @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  @override
   Widget build(BuildContext context) {
-    if (products.isEmpty) {
+    FavoriteProvider favoriteProvider = context.watch<FavoriteProvider>();
+    if (widget.products.isEmpty) {
       return Center(child: Text("No Products To Be Found !!"));
     }
     return PopAndRedirectToHome(
@@ -30,7 +39,10 @@ class ProductScreen extends StatelessWidget {
           surfaceTintColor: const Color(0xFFD3C8BA),
           foregroundColor: AppColors.blackColor,
           elevation: 0,
-          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(
+            widget.title,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           centerTitle: true,
           actions: [],
         ),
@@ -56,7 +68,7 @@ class ProductScreen extends StatelessWidget {
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                itemCount: products.length,
+                itemCount: widget.products.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
@@ -64,44 +76,59 @@ class ProductScreen extends StatelessWidget {
                   childAspectRatio: 0.8 / 1,
                 ),
                 itemBuilder: (context, index) {
-                  ProductModel item = products[index];
+                  ProductModel item = widget.products[index];
+                  item.imageUrl = widget.url;
                   return Stack(
                     children: [
                       CustomContainer(
                         backGroundColor: AppColors.whiteColor,
-                        // boxShadow: [BoxShadowHelper.shadow],
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            "https://admin.argiltiles.com/public/$url/${item.mainImg}",
+                            "https://admin.argiltiles.com/public/${widget.url}/${item.mainImg}",
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: AppSize.size10,
-                        right: AppSize.size10,
-                        child: InkWell(
-                          onTap: () => {},
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: AppColors.whiteColor,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 8,
-                        left: 8,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          child: Text(
-                            item.names ?? "",
-                            style: const TextStyle(color: AppColors.whiteColor),
-                          ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: AppSize.size10,
+                              right: AppSize.size10,
+                              child: InkWell(
+                                onTap:
+                                    () async =>
+                                        favoriteProvider.toggleFavorite(item),
+                                child: Icon(
+                                  favoriteProvider.isFavorite(item)
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_border,
+                                  color:
+                                      favoriteProvider.isFavorite(item)
+                                          ? AppColors.brown
+                                          : AppColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              width: 42.w,
+                              child: CustomContainer(
+                                borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(AppSize.size10),
+                                ),
+                                alignment: Alignment.bottomCenter,
+                                backGroundColor: AppColors.blackColor
+                                    .withOpacity(0.5),
+                                child: Text(
+                                  item.names ?? "",
+                                  style: const TextStyle(
+                                    color: AppColors.whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

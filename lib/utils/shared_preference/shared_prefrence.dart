@@ -1,18 +1,24 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static const String tokenKey = 'ORAGANICTOKEN';
-  static const String registerTokenKey = 'INQYRYREGISTERTOKEN';
-  static const String refKey = 'REFKEY';
-  static const String userIdKey = 'USER_ID';
-  static const String businessUserIdKey = 'BUSINESS_USER_ID';
-  static const String businessIdKey = 'BUSINESS_ID';
-  static const String permissionListKey = 'PERMISSION_LIST';
+  static const String tokenKey = 'ARGILTOKEN';
 
   // for save token
-  static Future<void> saveToken(String token) async {
+  static Future<void> saveString({
+    required String key,
+    required String value,
+  }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(tokenKey, token);
+    await prefs.setString(key, value);
+  }
+
+  /// save bool
+  static Future<void> saveBool({
+    required String key,
+    required bool value,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
   }
 
   // to get token
@@ -21,6 +27,16 @@ class SharedPrefs {
     return prefs.getString(tokenKey) ?? '';
   }
 
+  // to get string
+  static Future<String> getString({required String key}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key) ?? '';
+  }
+  // to get string
+  static Future<bool> getBool({required String key}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key) ?? false;
+  }
   // clear token
   static Future<bool> clearToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
