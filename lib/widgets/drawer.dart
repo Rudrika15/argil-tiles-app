@@ -1,4 +1,7 @@
+import 'package:argil_tiles/provider/quartzproducts_provider.dart';
+import 'package:argil_tiles/provider/spcproducts_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../Screens/about_screen.dart';
 import '../Screens/achievements_screen.dart';
@@ -16,6 +19,9 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SpcProductProvider spcProductProvider = context.watch<SpcProductProvider>();
+    QuartzproductsProvider quartzproductsProvider =
+        context.watch<QuartzproductsProvider>();
     return Drawer(
       width: 60.w,
       backgroundColor: AppColors.blackColor,
@@ -45,14 +51,22 @@ class DrawerWidget extends StatelessWidget {
 
                 icon: null,
                 index: 1,
-                screen: ProductScreen(),
+                screen: ProductScreen(
+                  title: "Dura Quartz Surface",
+                  url: "quartz",
+                  products: quartzproductsProvider.products ?? [],
+                ),
               ),
               DrawerItem(
                 title: "SPC Products",
 
                 icon: null,
                 index: 2,
-                screen: ProductScreen(),
+                screen: ProductScreen(
+                  title: "SPC Products",
+                  url: "spc",
+                  products: spcProductProvider.products ?? [],
+                ),
               ),
             ],
           ),

@@ -147,8 +147,12 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) =>
-                                            ProductScreen(), // Assuming ProductScreen is the target
+                                        (context) => ProductScreen(
+                                          title: "Dura Quartz Surface",
+                                          url: "quartz",
+                                          products:
+                                              quartzProvider.products ?? [],
+                                        ), // Assuming ProductScreen is the target
                                   ),
                                 );
                               },
@@ -220,8 +224,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (context) =>
-                                            ProductScreen(), // Navigate to ProductScreen
+                                        (context) => ProductScreen(
+                                          title: "SPC Products",
+                                          url: "spc",
+                                          products: spcProvider.products ?? [],
+                                        ), // Navigate to ProductScreen
                                   ),
                                 );
                               },
