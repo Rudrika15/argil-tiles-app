@@ -12,17 +12,13 @@ class GroupCompanyScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFFAF6F1),
         appBar: AppBar(
-          backgroundColor: const Color(0xFFFAF6F1),
+          backgroundColor: const Color(0xFFD3C8BA),
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            'Group Company',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
+          title: const Text('Group Company'),
           actions: [
             Builder(
               builder:

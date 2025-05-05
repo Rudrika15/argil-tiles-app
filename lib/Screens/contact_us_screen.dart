@@ -29,9 +29,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
-          title: const Text('Contact Us', style: TextStyle(fontSize: 18)),
+          title: const Text('Contact Us'),
           leading: const BackButton(),
-          centerTitle: true,
           foregroundColor: Colors.black,
           elevation: 0,
         ),

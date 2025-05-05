@@ -19,10 +19,6 @@ class ProductDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFD3C8BA),
         title: Text(productModel?.names ?? ''),
-        titleTextStyle: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
       ),
       endDrawer: DrawerWidget(),
 

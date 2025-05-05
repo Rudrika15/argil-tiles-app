@@ -73,6 +73,7 @@ class InquiryForm extends StatelessWidget {
                   CustomTextFormField(
                     controller: inquiryProvider.contactController,
                     hintText: "Contact No",
+                    maxLength: 10,
                     keyboardType: TextInputType.phone,
                     validator:
                         (value) =>
@@ -93,6 +94,8 @@ class InquiryForm extends StatelessWidget {
                   Row(
                     children: [
                       Checkbox(
+                        // activeColor: WidgetStatePropertyAll(AppColors.brown),
+                        activeColor: AppColors.brown,
                         value: inquiryProvider.requestSample,
                         onChanged:
                             (bool? value) =>

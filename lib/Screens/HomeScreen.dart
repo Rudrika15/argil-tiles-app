@@ -427,10 +427,12 @@ class ViewAllBtn extends StatelessWidget {
       onTap: onTap,
       child: CustomContainer(
         margin: EdgeInsets.only(right: 2.w),
-        backGroundColor: AppColors.whiteColor,
+        // backGroundColor: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(AppSize.size10),
-        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-        child: Text("View All", style: TextStyle(color: AppColors.blackColor)),
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+        image: DecorationImage(
+          image: AssetImage("assets/images/right-arrow.png"),
+        ),
       ),
     );
   }
