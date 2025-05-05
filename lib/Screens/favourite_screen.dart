@@ -22,6 +22,7 @@ class FavoriteScreenState extends State<FavoriteScreen> {
           backgroundColor: const Color(0xFFD3C8BA),
           title: const Text("Favorites"),
         ),
+        endDrawer: DrawerWidget(),
         body:
             favoriteProvider.favorites.isEmpty
                 ? const Center(
