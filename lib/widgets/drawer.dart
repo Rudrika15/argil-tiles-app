@@ -40,6 +40,7 @@ class DrawerWidget extends StatelessWidget {
             ),
           ),
           ExpansionTile(
+            iconColor: AppColors.whiteColor,
             leading: const Icon(Icons.category, color: Colors.white),
             title: const Text(
               "Products",
@@ -78,6 +79,7 @@ class DrawerWidget extends StatelessWidget {
             screen: FavoriteScreen(),
           ),
           ExpansionTile(
+            iconColor: AppColors.whiteColor,
             leading: const Icon(Icons.business, color: AppColors.whiteColor),
             title: const Text(
               "Corporate",
@@ -86,29 +88,26 @@ class DrawerWidget extends StatelessWidget {
             children: [
               DrawerItem(
                 title: "Group Company",
-
-                icon: Icons.favorite_border,
+                icon: null,
                 index: 4,
                 screen: GroupCompanyScreen(),
               ),
               DrawerItem(
                 title: "Achievements",
-
-                icon: Icons.favorite_border,
+                icon: null,
                 index: 5,
                 screen: AchievementsScreen(),
               ),
               DrawerItem(
                 title: "Quality",
-
-                icon: Icons.favorite_border,
+                icon: null,
                 index: 6,
                 screen: QualityScreen(),
               ),
               DrawerItem(
                 title: "Company Profile",
 
-                icon: Icons.favorite_border,
+                icon: null,
                 index: 7,
                 screen: CompanyProfileScreen(),
               ),

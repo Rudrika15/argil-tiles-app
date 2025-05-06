@@ -78,9 +78,9 @@ class AchievementsScreen extends StatelessWidget {
                           );
                         }).toList(),
                   ),
-                  SizedBox(height: 2.h),
-                  Image.asset('assets/images/award.png', height: 15.h),
-                  SizedBox(height: 2.h),
+                  // SizedBox(height: 2.h),
+                  // Image.asset('assets/images/award.png', height: 15.h),
+                  SizedBox(height: 5.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: Text(
