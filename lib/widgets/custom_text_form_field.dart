@@ -68,9 +68,11 @@ class CustomTextFormField extends StatelessWidget {
               horizontal: 10,
               vertical: 12,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
+            border: brownBorder(),
+            enabledBorder: brownBorder(),
+            focusedBorder: brownBorder(),
+            errorBorder: errorBorder(),
+            focusedErrorBorder: errorBorder(),
           ),
       focusNode: focusNode,
       keyboardType: keyboardType ?? TextInputType.text,
@@ -83,6 +85,20 @@ class CustomTextFormField extends StatelessWidget {
       style: style,
       textAlign: textAlign,
       validator: validator,
+    );
+  }
+
+  OutlineInputBorder brownBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.brown),
+      borderRadius: BorderRadius.circular(8.0),
+    );
+  }
+
+  OutlineInputBorder errorBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.brown),
+      borderRadius: BorderRadius.circular(8.0),
     );
   }
 }

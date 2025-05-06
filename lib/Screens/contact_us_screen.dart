@@ -22,6 +22,19 @@ class ContactUsScreen extends StatefulWidget {
 class _ContactUsScreenState extends State<ContactUsScreen> {
   final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
+  ///
+  void _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Can't open this link"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ContactUsProvider contactUsProvider = context.watch<ContactUsProvider>();
@@ -239,54 +252,42 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Social media or links icons (e.g., Facebook, Twitter, LinkedIn)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Facebook icon link (replace with actual URL)
               IconButton(
-                icon: const Icon(Icons.facebook),
+                icon: const FaIcon(
+                  FontAwesomeIcons.facebook,
+                  color: Color(0xFF1877F2),
+                ),
                 onPressed: () {
-                  // Add your URL opening logic here
-                  print("https://www.facebook.com/argilgroup");
+                  _launchURL("https://www.facebook.com/argilgroup");
                 },
               ),
-              // Twitter icon link (replace with actual URL)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.instagram),
-                    onPressed: () {
-                      _launchURL(
-                        'https://www.instagram.com/argilgroup?igsh=MnZkeWpvNmZqYXh0',
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.linkedin),
-                    onPressed: () {
-                      _launchURL(
-                        'https://www.linkedin.com/company/argilgroup/',
-                      );
-                    },
-                  ),
-                ],
+              IconButton(
+                icon: const FaIcon(
+                  FontAwesomeIcons.instagram,
+                  color: Color(0xFFC13584),
+                ),
+                onPressed: () {
+                  _launchURL('https://www.instagram.com/argilgroup/');
+                },
+              ),
+              IconButton(
+                icon: const FaIcon(
+                  FontAwesomeIcons.linkedin,
+                  color: Color(0xFF0A66C2),
+                ),
+                onPressed: () {
+                  _launchURL(
+                    'https://www.linkedin.com/company/argilgroup/?viewAsMember=true',
+                  );
+                },
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  void _launchURL(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
