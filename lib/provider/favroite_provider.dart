@@ -31,7 +31,7 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   bool isFavorite(ProductModel product) {
-    return _favorites.any((p) => p.id == product.id);
+    return _favorites.any((p) => p.names == product.names);
   }
 
   Future<void> _saveFavorites() async {
