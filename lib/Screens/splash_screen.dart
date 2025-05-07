@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:argil_tiles/Screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import '../utils/method_helper/gradient_helper.dart';
+import '../widgets/custom_container.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,8 +28,12 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Color(0xFFD3C8BA),
+      body: CustomContainer(
+        gradient: LinearGradient(
+          colors: BoxShadowHelper.homeGradient,
+          begin: AlignmentDirectional.topCenter,
+          end: AlignmentDirectional.bottomCenter,
+        ),
         child: Stack(
           children: [
             // Centered Logo

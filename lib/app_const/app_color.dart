@@ -9,4 +9,7 @@ class AppColors {
   static const Color blackColor = Colors.black;
   static const Color orange = Colors.orange;
   static const Color brown = Colors.brown;
+  static const Color appBar = Color.fromARGB(255, 230, 214, 195);
+  static const Color homeGradient2 = Color.fromARGB(255, 230, 214, 195);
+  static const Color homeGradient3 = Color.fromRGBO(244, 244, 243, 1);
 }

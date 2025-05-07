@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFD3C8BA),
+        backgroundColor: AppColors.appBar,
         surfaceTintColor: const Color(0xFFD3C8BA),
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -85,10 +85,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       endDrawer: DrawerWidget(),
       body: CustomContainer(
         gradient: LinearGradient(
-          colors: [Color(0xFFD3C8BA), Color.fromRGBO(244, 243, 241, 1)],
+          colors: BoxShadowHelper.homeGradient,
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          stops: [0.1, 1.0],
         ),
         child:
             homeScreenProvider.isLoading
