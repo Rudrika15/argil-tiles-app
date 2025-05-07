@@ -5,6 +5,8 @@ import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'product_details_screen.dart';
+
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
@@ -45,52 +47,65 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                     itemBuilder: (context, index) {
                       final ProductModel item =
                           favoriteProvider.favorites[index];
-                      return Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              "https://admin.argiltiles.com/public/${item.imageUrl}/${item.mainImg}",
-                              width: double.infinity,
-                              height: double.infinity,
-                              fit: BoxFit.cover,
+                      return InkWell(
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ProductDetailsScreen(
+                                      url: item.imageUrl ?? "",
+                                      productModel: item,
+                                    ),
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: GestureDetector(
-                              onTap:
-                                  () => favoriteProvider.removeFavorite(item),
-                              child: const CircleAvatar(
-                                radius: 14,
-                                backgroundColor: Colors.black54,
-                                child: Icon(
-                                  Icons.close,
-                                  size: 16,
-                                  color: Colors.white,
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                "https://admin.argiltiles.com/public/${item.imageUrl}/${item.mainImg}",
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: GestureDetector(
+                                onTap:
+                                    () => favoriteProvider.removeFavorite(item),
+                                child: const CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor: Colors.black54,
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              color: Colors.black.withOpacity(0.6),
-                              child: Text(
-                                item.names ?? "",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                color: Colors.black.withOpacity(0.6),
+                                child: Text(
+                                  item.names ?? "",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     },
                   ),
