@@ -178,8 +178,8 @@ class ProductDetailsScreen extends StatelessWidget {
   CustomContainer iconImageContainer(String iconPath) {
     return CustomContainer(
       margin: EdgeInsets.only(right: 3.w),
-      height: AppSize.size20,
-      width: AppSize.size20,
+      height: 15,
+      width: 15,
       image: DecorationImage(image: AssetImage(iconPath)),
     );
   }

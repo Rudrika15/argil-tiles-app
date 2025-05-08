@@ -5,13 +5,14 @@ import 'package:argil_tiles/Screens/favourite_screen.dart';
 import 'package:argil_tiles/Screens/group_company_screen.dart';
 import 'package:argil_tiles/Screens/quality_screen.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
+import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
-import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class CompanyProfileScreen extends StatelessWidget {
   const CompanyProfileScreen({super.key});
@@ -50,16 +51,31 @@ class CompanyProfileScreen extends StatelessWidget {
               ),
             ),
             SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(AppSize.size20),
               child: Column(
-                children: const [
-                  Image(
-                    image: AssetImage('assets/images/logo.png'),
-                    height: 100,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Image(
+                      image: AssetImage('assets/images/logo.png'),
+                      height: 100,
+                    ),
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: 3.h),
                   Text(
                     "Argil, where we have travelled from Tradition to technology, we feel the journey is growing longer and better with every passing day. We have always respected our traditions and culture and have whole heartedly embraced technology to take us forward without any exceptions. May this journey be never ending and always challenging us to soar greater height of success and achievement. The management of Argil has always accomplished the big goals set out by us together. Unarguably, they have done it with ethics and moral of our community. Throughout their journey they have upheld the principles of sharing the growth with all stakeholders, leaving faces smiling and hearts warm with affection and respect for the brand. I would like to congratulate you on the same and motivate you to always be this humble and serving to your brand and people associated.",
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(fontSize: 14, height: 1.5),
+                  ),
+                  SizedBox(height: 3.h),
+                  Text(
+                    "Success is a never ending journey",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 3.h),
+                  Text(
+                    'The employees of the company have learnt the culture of sharing and growing from the management. We pride ourselves to be one of the most employee friendly brands. The employees work hard ceaselessly to achieve what we set forth as goals. Their efforts are always in alignment with the philosophy of the company. The customers of our brands though demanding are very loyal, within their heart and minds, ARGIL has established a sure shot spot. They always demand better products, smarter functionality and exquisite designs to make ARGIL forefront in the market. This is the biggest remuneration they have given us. I thank them for always helping us keep on our toes and never be complacent.The channel partners of ARGIL, retailers, distributors and dealers, have always had faith in the company and the management. Every time we have introduced a new sub brand or a product range they have been eagerly waiting to introduce and promote the same to the customers and prospects. They have maintained good relations with the influencers in their region to instill confidence and faith in the brand. lt is a matterofhonorto have such partners in business. This year, 2016, we have set a new goal and a long term vision for the ARGIL GROUP. I am confident that we will achieve it as always. Let us all remember, "We are agents of betterment, and betterment of life is our sole purpose."',
                     textAlign: TextAlign.justify,
                     style: TextStyle(fontSize: 14, height: 1.5),
                   ),
