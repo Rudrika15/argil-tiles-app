@@ -12,6 +12,5 @@ class BoxShadowHelper {
   static List<Color> homeGradient = [
     AppColors.appBar,
     AppColors.homeGradient2,
-    AppColors.homeGradient3,
   ];
 }

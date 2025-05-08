@@ -1,5 +1,6 @@
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
+import 'package:argil_tiles/utils/method_helper/gradient_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/inquiry_form.dart';
@@ -103,6 +104,7 @@ class ProductDetailsScreen extends StatelessWidget {
       padding: EdgeInsets.all(2),
       borderRadius: BorderRadius.circular(AppSize.size10),
       backGroundColor: AppColors.whiteColor,
+      boxShadow: [BoxShadowHelper.shadow],
       height: 20.h,
       child:
           productModel?.availableImages.isNotEmpty == true
