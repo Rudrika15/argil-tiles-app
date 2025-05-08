@@ -6,18 +6,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProductInquiryService {
-
-
   Future<InquiryRequestDoneModel?> submitInquiry(
     ProductInquiryModel inquiry,
   ) async {
     final url = Uri.parse(ApiHelper.inquiry);
-
+    log(inquiry.toJson().toString());
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(inquiry.toJson()),
+        body: jsonEncode(inquiry),
       );
 
       log(response.body);

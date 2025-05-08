@@ -8,8 +8,9 @@ import 'package:sizer/sizer.dart';
 import 'custom_container.dart';
 
 class InquiryForm extends StatelessWidget {
-  InquiryForm({super.key, required this.productName});
+  InquiryForm({super.key, required this.productName, required this.category});
   final String productName;
+  final String category;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -116,9 +117,11 @@ class InquiryForm extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           bool success = await inquiryProvider.sendInquiry(
                             productName: productName,
+                            url: category,
                           );
 
                           if (success) {
+                            inquiryProvider.resetController();
                             // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

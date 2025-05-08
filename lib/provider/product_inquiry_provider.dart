@@ -25,7 +25,10 @@ class ProductInquiryProvider with ChangeNotifier {
   InquiryRequestDoneModel? get inquiryRequestDoneModel =>
       _inquiryRequestDoneModel;
 
-  Future<bool> sendInquiry({required String productName}) async {
+  Future<bool> sendInquiry({
+    required String productName,
+    required String url,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
@@ -38,12 +41,20 @@ class ProductInquiryProvider with ChangeNotifier {
         phone: contactController.text.trim(),
         message: messageController.text.trim(),
         subject: "Product Inquiry",
-        details: "Additional product details",
+        details: "$url _ $productName",
         requestSample: _requestSample,
       ),
     );
     _isLoading = false;
     notifyListeners();
     return _inquiryRequestDoneModel?.status == true;
+  }
+
+  void resetController() {
+    nameController.clear();
+    emailController.clear();
+    contactController.clear();
+    messageController.clear();
+    notifyListeners();
   }
 }

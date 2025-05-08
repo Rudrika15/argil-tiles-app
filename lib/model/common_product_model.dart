@@ -73,12 +73,24 @@ class ProductModel {
     navigateUrl = json['navigate_url'];
   }
 
+  /// get which product is favorite
   void getIsFavorite({
     required String key,
     required Function()? setState,
   }) async {
     isFavorite = await SharedPrefs.getBool(key: key);
     setState;
+  }
+
+  List<String> get availableImages {
+    return [subImg1, subImg2, subImg3, subImg4, subImg5]
+        .where((image) => image != null && image.isNotEmpty)
+        .cast<String>()
+        .toList();
+  }
+
+  String? getImageByIndex({required int index}) {
+    return availableImages[index];
   }
 
   Map<String, dynamic> toJson() {

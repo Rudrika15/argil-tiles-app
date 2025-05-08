@@ -34,6 +34,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 _buildInfoCard(
+                  iconPath: "assets/images/spaces_icon.png",
                   title: "Spaces",
                   rows: [
                     _infoRow(
@@ -48,6 +49,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 _buildInfoCard(
+                  iconPath: "assets/images/sizes_icon.png",
                   title: "Sizes",
                   rows: [
                     _infoRow("Thickness", productModel?.thicknesses ?? ''),
@@ -56,7 +58,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
 
-                _buildApplicationsCard(),
+                _buildApplicationsCard(
+                  iconPath: "assets/images/application_icon.png",
+                ),
               ],
             ),
           ),
@@ -76,6 +80,7 @@ class ProductDetailsScreen extends StatelessWidget {
                             (context) => Dialog(
                               child: InquiryForm(
                                 productName: productModel?.names ?? "Not Found",
+                                category: url,
                               ),
                             ),
                       ),
@@ -95,16 +100,32 @@ class ProductDetailsScreen extends StatelessWidget {
       borderColor: AppColors.greyColor,
       borderWidth: 0.4,
       margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      padding: EdgeInsets.all(2),
       borderRadius: BorderRadius.circular(AppSize.size10),
       backGroundColor: AppColors.whiteColor,
       height: 20.h,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSize.size10),
-        child: Image.network(
-          'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
-          fit: BoxFit.cover,
-        ),
-      ),
+      child:
+          productModel?.availableImages.isNotEmpty == true
+              ? PageView.builder(
+                itemCount: productModel?.availableImages.length ?? 0,
+                itemBuilder:
+                    (context, index) => CustomContainer(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: Image.network(
+                          'https://admin.argiltiles.com/$url/${productModel?.getImageByIndex(index: index)}',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+              )
+              : ClipRRect(
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                child: Image.network(
+                  'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
+                  fit: BoxFit.cover,
+                ),
+              ),
     );
   }
 
@@ -121,7 +142,11 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard({required String title, required List<Widget> rows}) {
+  Widget _buildInfoCard({
+    required String title,
+    required List<Widget> rows,
+    required String iconPath,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -133,12 +158,29 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            Row(
+              children: [
+                iconImageContainer(iconPath),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
             const SizedBox(height: 8),
             ...rows,
           ],
         ),
       ),
+    );
+  }
+
+  CustomContainer iconImageContainer(String iconPath) {
+    return CustomContainer(
+      margin: EdgeInsets.only(right: 3.w),
+      height: AppSize.size20,
+      width: AppSize.size20,
+      image: DecorationImage(image: AssetImage(iconPath)),
     );
   }
 
@@ -154,7 +196,7 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildApplicationsCard() {
+  Widget _buildApplicationsCard({required String iconPath}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -166,9 +208,14 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Applications",
-              style: TextStyle(fontWeight: FontWeight.w600),
+            Row(
+              children: [
+                iconImageContainer(iconPath),
+                const Text(
+                  "Applications",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             _applicationRow("Flooring", true, true),
