@@ -1,24 +1,23 @@
+import 'package:argil_tiles/model/quartzproduct_model.dart';
 import 'package:argil_tiles/sevices/quartzproducts_service.dart';
 import 'package:flutter/material.dart';
-import '../model/common_product_model.dart';
 
 class QuartzproductsProvider with ChangeNotifier {
   final QuartzproductsService _service = QuartzproductsService();
 
-  List<ProductModel>? _products = [];
+  /// if provider is Loading
   bool _isLoading = false;
-  String? _error;
-
-  List<ProductModel>? get products => _products;
   bool get isLoading => _isLoading;
-  String? get error => _error;
 
-  Future<void> loadQuartzProducts() async {
+  QuartzProductModel? _quartzProductModel;
+  QuartzProductModel? get quartzProductModel => _quartzProductModel;
+
+  Future<void> loadQuartzProducts({required BuildContext context}) async {
     _isLoading = true;
-    _error = null;
+
     notifyListeners();
 
-    _products = await _service.fetchSpcProducts();
+    _quartzProductModel = await _service.fetchSpcProducts(context: context);
     _isLoading = false;
     notifyListeners();
   }

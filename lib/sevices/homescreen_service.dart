@@ -1,23 +1,25 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
-import 'package:http/http.dart' as http;
+import 'package:argil_tiles/utils/http_helper/http_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:argil_tiles/model/homescreen_model.dart';
-import 'package:http/http.dart';
 
 class HomeScreenService {
- 
-  Future<List<HomescreenModel>?> fetchHomeScreenData() async {
+  Future<HomeSliderModel?> fetchHomeScreenData({
+    required BuildContext context,
+  }) async {
     try {
-      Response response = await http.get(Uri.parse(ApiHelper.getSliders));
-      if (response.statusCode == 200) {
-        List data = jsonDecode(response.body);
-        return data.map((item) => HomescreenModel.fromJson(item)).toList();
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getSliders,
+      );
+      if (response.isNotEmpty) {
+        return HomeSliderModel.fromJson(response);
       } else {
         return null;
       }
     } catch (e) {
-      log('error while ====> $e');
+      log('error while getting home sliders ====> $e');
       return null;
     }
   }

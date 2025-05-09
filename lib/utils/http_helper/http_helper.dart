@@ -1,21 +1,24 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:argil_tiles/utils/enviorment%20helper/enviorment_helper.dart';
-import 'package:argil_tiles/utils/shared_preference/shared_prefrence.dart';
+import 'package:argil_tiles/app_const/app_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
 import 'package:http/http.dart' as http;
+import '../shared_preference/shared_prefrence.dart';
+import '../widget_helper/widhet_helper.dart';
 
 class HttpHelper {
   static final client = RetryClient(http.Client());
-  static bool isDebugMode = Environment.debugMode;
+  static bool isDebugMode = kDebugMode;
   // Generalized response handler
   static Future<Map<String, dynamic>> processResponse({
     required Response response,
     required BuildContext context,
   }) async {
     try {
+      if (!context.mounted) return {};
       if (isDebugMode) {
         log(response.body);
       }
@@ -23,26 +26,25 @@ class HttpHelper {
 
       // Handle 500 Internal Server Error
       if (response.statusCode == 500) {
-        log("response handle 500");
-        // WidgetHelper.customSnackBar(
-        //   isError: true,
-        //   context: context,
-        //   title: "Internal Server Error (500)",
-        //   color: AppColors.errorColor,
-        // );
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Internal Server Error (500)",
+          color: AppColors.errorColor,
+        );
         throw Exception("Server error");
       }
 
       // Handle unauthorized access (401)
       if (response.statusCode == 401) {
-        // WidgetHelper.customSnackBar(
-        //   isError: true,
-        //   context: context,
-        //   title: "Session expired. Please log in again.",
-        //   color: AppColors.errorColor,
-        // );
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Session expired. Please log in again.",
+          color: AppColors.errorColor,
+        );
         // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(builder: (context) => LoginPage()),
+        //   MaterialPageRoute(builder: (context) => LoginScreen()),
         //   (route) => false,
         // );
         return {}; // Empty map since user is logged out
@@ -51,36 +53,36 @@ class HttpHelper {
       // Ensure status is 200 even for validation errors
       if (response.statusCode == 200) {
         if (data.containsKey('success') && !data['success']) {
-          // WidgetHelper.customSnackBar(
-          //   isError: true,
-          //   context: context,
-          //   title: data['message'] ?? "Something went wrong",
-          //   color: AppColors.errorColor,
-          // );
+          WidgetHelper.customSnackBar(
+            isError: true,
+            context: context,
+            title: data['message'] ?? "Something went wrong",
+            color: AppColors.errorColor,
+          );
           return data; // Return data even if unsuccessful
         }
         return data; // If success is true, return the data
       }
 
       // Handle unexpected errors
-      // WidgetHelper.customSnackBar(
-      //   isError: true,
-      //   context: context,
-      //   title: "Unexpected Error",
-      //   color: AppColors.errorColor,
-      // );
+      WidgetHelper.customSnackBar(
+        isError: true,
+        context: context,
+        title: "Unexpected Error",
+        color: AppColors.errorColor,
+      );
       return {};
     } catch (e) {
       if (isDebugMode) {
         log("Error processing response: $e");
       }
-
-      // WidgetHelper.customSnackBar(
-      //   isError: true,
-      //   context: context,
-      //   title: "Something went wrong",
-      //   color: AppColors.errorColor,
-      // );
+      ;
+      WidgetHelper.customSnackBar(
+        isError: true,
+        context: context,
+        title: "Something went wrong",
+        color: AppColors.errorColor,
+      );
       return {};
     }
   }
@@ -96,6 +98,7 @@ class HttpHelper {
       var header = {'Authorization': 'Bearer $token'};
 
       var url = Uri.parse(uri);
+      log(uri);
       var response = await client.get(url, headers: headers ?? header);
 
       if (context.mounted) {
@@ -105,13 +108,13 @@ class HttpHelper {
       if (isDebugMode) {
         log("GET request error: $e");
       }
-      // log();
-      // WidgetHelper.customSnackBar(
-      //   context: context,
-      //   isError: true,
-      //   title: "Something went wrong!",
-      //   color: AppColors.errorColor,
-      // );
+      if (!context.mounted) return {};
+      WidgetHelper.customSnackBar(
+        context: context,
+        isError: true,
+        title: "Something went wrong!",
+        color: AppColors.errorColor,
+      );
     }
     return {}; // Return an empty map on failure
   }
@@ -139,11 +142,8 @@ class HttpHelper {
         log('post ===> ${response.statusCode} && ${response.body}');
       }
 
-      // if (context.mounted) {
+      if (!context.mounted) return {};
       return processResponse(response: response, context: context);
-      // } else {
-      //   return processResponse(response: response, context: context);
-      // }
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
     }
@@ -170,9 +170,8 @@ class HttpHelper {
         encoding: encoding,
       );
 
-      if (context.mounted) {
-        return processResponse(response: response, context: context);
-      }
+      if (!context.mounted) return {};
+      return processResponse(response: response, context: context);
     } catch (e) {
       if (isDebugMode) {
         log("PUT request error: $e");
@@ -199,9 +198,8 @@ class HttpHelper {
         body: body,
       );
 
-      if (context.mounted) {
-        return processResponse(response: response, context: context);
-      }
+      if (!context.mounted) return {};
+      return processResponse(response: response, context: context);
     } catch (e) {
       if (isDebugMode) {
         log("DELETE request error: $e");
@@ -214,7 +212,11 @@ class HttpHelper {
   static Future<MultipartRequest> multipart({required String uri}) async {
     try {
       var token = await SharedPrefs.getToken();
-      Map<String, String> headers = {'Authorization': 'Bearer $token'};
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        // "content-type": "application/json",
+        // "Content-Type": "multipart/form-data",
+      };
 
       MultipartRequest request = http.MultipartRequest('POST', Uri.parse(uri));
       request.headers.addAll(headers);

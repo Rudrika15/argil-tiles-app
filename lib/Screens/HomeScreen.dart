@@ -32,10 +32,12 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<HomeScreenProvider>().loadHomeScreenData();
-      context.read<QuartzproductsProvider>().loadQuartzProducts();
-      context.read<SpcProductProvider>().loadSpcProducts();
-      context.read<NewarrivalProvider>().fetchNewArrivals();
+      context.read<HomeScreenProvider>().loadHomeScreenData(context: context);
+      context.read<QuartzproductsProvider>().loadQuartzProducts(
+        context: context,
+      );
+      context.read<SpcProductProvider>().loadSpcProducts(context: context);
+      context.read<NewarrivalProvider>().fetchNewArrivals(context: context);
     });
   }
 
@@ -99,7 +101,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 2.h),
                       _buildSectionTitle(title: 'Featured Products'),
                       SizedBox(height: 2.h),
-                      if (homeScreenProvider.homeItems?.isNotEmpty == true)
+                      if (homeScreenProvider
+                              .homeSliderModel
+                              ?.data
+                              ?.isNotEmpty ==
+                          true)
                         CarouselSlider(
                           options: CarouselOptions(
                             height: 25.h,
@@ -107,7 +113,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                             enlargeCenterPage: true,
                           ),
                           items:
-                              homeScreenProvider.homeItems!.map((item) {
+                              homeScreenProvider.homeSliderModel?.data?.map((
+                                item,
+                              ) {
                                 return CustomContainer(
                                   backGroundColor: AppColors.whiteColor,
                                   margin: EdgeInsets.symmetric(
@@ -138,7 +146,12 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           _buildSectionTitle(title: 'Quartz Products'),
 
                           if (!showAllQuartz &&
-                              quartzProvider.products!.length > 3)
+                              (quartzProvider
+                                          .quartzProductModel
+                                          ?.data
+                                          ?.length ??
+                                      0) >
+                                  3)
                             ViewAllBtn(
                               onTap: () {
                                 setState(() => showAllQuartz = true);
@@ -150,7 +163,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                           title: "Dura Quartz Surface",
                                           url: "quartz",
                                           products:
-                                              quartzProvider.products ?? [],
+                                              quartzProvider
+                                                  .quartzProductModel
+                                                  ?.data ??
+                                              [],
                                         ),
                                   ),
                                 );
@@ -161,7 +177,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 1.h),
                       quartzProvider.isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : quartzProvider.products?.isNotEmpty == true
+                          : quartzProvider
+                                  .quartzProductModel
+                                  ?.data
+                                  ?.isNotEmpty ==
+                              true
                           ? SizedBox(
                             height: 25.h,
                             child: ListView.builder(
@@ -172,15 +192,26 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               scrollDirection: Axis.horizontal,
                               itemCount:
                                   showAllQuartz
-                                      ? quartzProvider.products?.length
-                                      : ((quartzProvider.products?.length ??
+                                      ? quartzProvider
+                                          .quartzProductModel
+                                          ?.data
+                                          ?.length
+                                      : ((quartzProvider
+                                                      .quartzProductModel
+                                                      ?.data
+                                                      ?.length ??
                                                   0) >
                                               3
                                           ? 3
-                                          : quartzProvider.products!.length),
+                                          : quartzProvider
+                                              .quartzProductModel
+                                              ?.data!
+                                              .length),
                               itemBuilder: (context, index) {
-                                final ProductModel product =
-                                    quartzProvider.products![index];
+                                final ProductModel? product =
+                                    quartzProvider
+                                        .quartzProductModel
+                                        ?.data![index];
                                 return GestureDetector(
                                   onTap:
                                       () => Navigator.push(
@@ -195,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ),
                                   child: HomeScreenProductContainer(
                                     imageUrl:
-                                        'https://admin.argiltiles.com/public/quartz/${product.mainImg}',
+                                        'https://admin.argiltiles.com/public/quartz/${product?.mainImg}',
                                   ),
                                 );
                               },
@@ -210,7 +241,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                         children: [
                           _buildSectionTitle(title: 'SPC Products'),
 
-                          if (!showAllSpc && spcProvider.products!.length > 3)
+                          if (!showAllSpc &&
+                              (spcProvider.spcProductModel?.data?.length ?? 0) >
+                                  3)
                             ViewAllBtn(
                               onTap: () {
                                 setState(() => showAllSpc = true);
@@ -222,7 +255,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         (context) => ProductScreen(
                                           title: "SPC Products",
                                           url: "spc",
-                                          products: spcProvider.products ?? [],
+                                          products:
+                                              spcProvider
+                                                  .spcProductModel
+                                                  ?.data ??
+                                              [],
                                         ), // Navigate to ProductScreen
                                   ),
                                 );
@@ -233,7 +270,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 1.h),
                       spcProvider.isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : spcProvider.products?.isNotEmpty == true
+                          : spcProvider.spcProductModel?.data?.isNotEmpty ==
+                              true
                           ? SizedBox(
                             height: 25.h,
                             child: ListView.builder(
@@ -244,13 +282,24 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               scrollDirection: Axis.horizontal,
                               itemCount:
                                   showAllSpc
-                                      ? spcProvider.products!.length
-                                      : (spcProvider.products!.length > 3
+                                      ? spcProvider
+                                          .spcProductModel
+                                          ?.data
+                                          ?.length
+                                      : ((spcProvider
+                                                      .spcProductModel
+                                                      ?.data
+                                                      ?.length ??
+                                                  0) >
+                                              3
                                           ? 3
-                                          : spcProvider.products!.length),
+                                          : spcProvider
+                                              .spcProductModel
+                                              ?.data
+                                              ?.length),
                               itemBuilder: (context, index) {
-                                final ProductModel product =
-                                    spcProvider.products![index];
+                                final ProductModel? product =
+                                    spcProvider.spcProductModel?.data?[index];
                                 return GestureDetector(
                                   onTap:
                                       () => Navigator.push(
@@ -265,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ),
                                   child: HomeScreenProductContainer(
                                     imageUrl:
-                                        'https://admin.argiltiles.com/public/spc/${product.mainImg}',
+                                        'https://admin.argiltiles.com/public/spc/${product?.mainImg}',
                                   ),
                                 );
                               },
@@ -277,7 +326,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 1.h),
                       newArrivalProvider.isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : newArrivalProvider.newArrivals?.data?.isNotEmpty ==
+                          : newArrivalProvider
+                                  .newArrivalModel
+                                  ?.data
+                                  ?.isNotEmpty ==
                               true
                           ? SizedBox(
                             height: 25.h,
@@ -290,11 +342,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               itemCount:
                                   newArrivalProvider.getProductList().length,
                               itemBuilder: (listContext, index) {
-                                final ProductModel item =
+                                final ProductModel? item =
                                     newArrivalProvider
-                                        .newArrivals!
-                                        .data![index];
-                                debugPrint(item.names);
+                                        .newArrivalModel
+                                        ?.data?[index];
+                                debugPrint(item?.names);
                                 return GestureDetector(
                                   onTap: () async {
                                     final navUrl =
@@ -316,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     }
 
                                     try {
-                                      final product =
+                                      final ProductModel? product =
                                           await newArrivalProvider
                                               .getNewArrivalAndRedirectToProductPage();
 
@@ -341,11 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                           builder:
                                               (_) => ProductDetailsScreen(
                                                 productModel: product,
-                                                url:
-                                                    newArrivalProvider
-                                                        .newArrivals
-                                                        ?.url ??
-                                                    "",
+                                                url: product.imageUrl ?? "",
                                               ),
                                         ),
                                       );
@@ -368,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   child: HomeScreenProductContainer(
                                     width: 85.w,
                                     imageUrl:
-                                        "https://admin.argiltiles.com/${newArrivalProvider.newArrivals?.url}/${item.mainImg}",
+                                        "https://admin.argiltiles.com/${item?.imageUrl}/${item?.mainImg}",
                                   ),
                                 );
                               },

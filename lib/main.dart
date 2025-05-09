@@ -10,12 +10,18 @@ import 'package:argil_tiles/provider/product_inquiry_provider.dart';
 import 'package:argil_tiles/provider/quartzproducts_provider.dart';
 import 'package:argil_tiles/provider/spcproducts_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:argil_tiles/provider/homescreen_provider.dart';
 import 'package:argil_tiles/Screens/splash_screen.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     MultiProvider(
       providers: [

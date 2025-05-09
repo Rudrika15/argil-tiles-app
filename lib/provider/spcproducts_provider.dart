@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-
 import 'package:argil_tiles/sevices/spcproducts_service.dart';
+import '../model/spcproduct_model.dart';
 
-import '../model/common_product_model.dart';
 
 class SpcProductProvider with ChangeNotifier {
   final SpcProductService _service = SpcProductService();
 
-  List<ProductModel>? _products = [];
+  /// if provider is Loading
   bool _isLoading = false;
-  String? _error;
-
-  List<ProductModel>? get products => _products;
   bool get isLoading => _isLoading;
-  String? get error => _error;
 
-  Future<void> loadSpcProducts() async {
+  SpcProductModel? _spcProductModel;
+  SpcProductModel? get spcProductModel => _spcProductModel;
+
+  Future<void> loadSpcProducts({required BuildContext context}) async {
     _isLoading = true;
-    _error = null;
     notifyListeners();
 
-    _products = await _service.fetchSpcProducts();
+    _spcProductModel = await _service.fetchSpcProducts(context: context);
     _isLoading = false;
     notifyListeners();
   }

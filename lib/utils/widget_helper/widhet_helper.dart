@@ -3,20 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toastification/toastification.dart';
 
-
 mixin WidgetHelper {
   // custom sizedBox for height
   SizedBox height(double height) {
-    return SizedBox(
-      height: height,
-    );
+    return SizedBox(height: height);
   }
 
   // custom sizedBox for width
   SizedBox width(double width) {
-    return SizedBox(
-      width: width,
-    );
+    return SizedBox(width: width);
   }
 
   // default pin put theme
@@ -36,12 +31,7 @@ mixin WidgetHelper {
 
   // bottom sheet divider
   SizedBox customBottomSheetDivider() {
-    return SizedBox(
-      width: 9.w,
-      child: Divider(
-        thickness: 0.5.h,
-      ),
-    );
+    return SizedBox(width: 9.w, child: Divider(thickness: 0.5.h));
   }
 
   // show dialog
@@ -64,12 +54,10 @@ mixin WidgetHelper {
         type: ToastificationType.error,
         showProgressBar: false,
         alignment: Alignment.bottomCenter,
-        style: ToastificationStyle.fillColored, dragToClose: true,
+        style: ToastificationStyle.fillColored,
+        dragToClose: true,
         context: context, // optional if you use ToastificationWrapper
-        title: Text(
-          title,
-          style: TextStyle(color: AppColors.whiteColor),
-        ),
+        title: Text(title, style: TextStyle(color: AppColors.whiteColor)),
         autoCloseDuration: const Duration(seconds: 2),
       );
     } else {
