@@ -1,12 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/model/newarrival_model.dart';
 import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:argil_tiles/utils/http_helper/http_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/src/response.dart';
 
 class NewArrivalService {
   Future<NewArrivalModel?> getNewArrivals({
@@ -30,18 +27,23 @@ class NewArrivalService {
   }
 
   ///
-  Future<ProductModel?> getNewArrivalProduct({required String url}) async {
+  Future<ProductModel?> getNewArrivalProduct({
+    required BuildContext context,
+    required String url,
+  }) async {
     try {
-      Response response = await http.get(Uri.parse(url));
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: url,
+      );
 
-      if (response.statusCode == 200) {
-        return ProductModel.fromJson(jsonDecode(response.body));
+      if (response.isNotEmpty) {
+        return ProductModel.fromJson(response['data']);
       } else {
-        log('Error: Status code ${response.body}');
         return null;
       }
     } catch (e) {
-      log('Exception occurred: $e');
+      log('error while getting new arrival product from $url => $e');
       return null;
     }
   }

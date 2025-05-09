@@ -30,6 +30,7 @@ class NewarrivalProvider with ChangeNotifier {
     );
 
     _navigateUrl = navItem?.navigateUrl;
+
     log("navigate_url ==> $_navigateUrl");
 
     _isLoading = false;
@@ -44,17 +45,21 @@ class NewarrivalProvider with ChangeNotifier {
         [];
   }
 
+  ProductModel? _productModel;
+  ProductModel? get productModel => _productModel;
   // Trigger navigation using stored URL
-  Future<ProductModel?> getNewArrivalAndRedirectToProductPage() async {
+  Future<void> getNewArrivalAndRedirectToProductPage({
+    required BuildContext context,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
-    ProductModel? product = await _service.getNewArrivalProduct(
+    _productModel = await _service.getNewArrivalProduct(
       url: _navigateUrl!,
+      context: context,
     );
-    log(product?.toJson().toString() ?? "not");
+
     _isLoading = false;
     notifyListeners();
-    return product;
   }
 }

@@ -31,14 +31,20 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<HomeScreenProvider>().loadHomeScreenData(context: context);
-      context.read<QuartzproductsProvider>().loadQuartzProducts(
-        context: context,
-      );
-      context.read<SpcProductProvider>().loadSpcProducts(context: context);
-      context.read<NewarrivalProvider>().fetchNewArrivals(context: context);
+    Future.microtask(() async {
+      initHomeScreenData(context: context);
     });
+  }
+
+  void initHomeScreenData({required BuildContext context}) async {
+    await context.read<HomeScreenProvider>().loadHomeScreenData(
+      context: context,
+    );
+    await context.read<QuartzproductsProvider>().loadQuartzProducts(
+      context: context,
+    );
+    await context.read<SpcProductProvider>().loadSpcProducts(context: context);
+    await context.read<NewarrivalProvider>().fetchNewArrivals(context: context);
   }
 
   @override
@@ -94,9 +100,12 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
         child:
             homeScreenProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                : RefreshIndicator(
+                  backgroundColor: AppColors.whiteColor,
+                  color: AppColors.brown,
+                  onRefresh: () async => initHomeScreenData(context: context),
+                  child: ListView(
+                    shrinkWrap: true,
                     children: [
                       SizedBox(height: 2.h),
                       _buildSectionTitle(title: 'Featured Products'),
@@ -205,13 +214,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                           ? 3
                                           : quartzProvider
                                               .quartzProductModel
-                                              ?.data!
-                                              .length),
+                                              ?.data
+                                              ?.length),
                               itemBuilder: (context, index) {
                                 final ProductModel? product =
                                     quartzProvider
                                         .quartzProductModel
-                                        ?.data![index];
+                                        ?.data?[index];
                                 return GestureDetector(
                                   onTap:
                                       () => Navigator.push(
@@ -346,7 +355,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     newArrivalProvider
                                         .newArrivalModel
                                         ?.data?[index];
-                                debugPrint(item?.names);
                                 return GestureDetector(
                                   onTap: () async {
                                     final navUrl =
@@ -368,13 +376,15 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     }
 
                                     try {
-                                      final ProductModel? product =
-                                          await newArrivalProvider
-                                              .getNewArrivalAndRedirectToProductPage();
+                                      await newArrivalProvider
+                                          .getNewArrivalAndRedirectToProductPage(
+                                            context: context,
+                                          );
 
                                       if (!context.mounted) return;
 
-                                      if (product == null) {
+                                      if (newArrivalProvider.productModel ==
+                                          null) {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
@@ -392,8 +402,14 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         MaterialPageRoute(
                                           builder:
                                               (_) => ProductDetailsScreen(
-                                                productModel: product,
-                                                url: product.imageUrl ?? "",
+                                                productModel:
+                                                    newArrivalProvider
+                                                        .productModel,
+                                                url:
+                                                    newArrivalProvider
+                                                        .newArrivalModel
+                                                        ?.url ??
+                                                    "",
                                               ),
                                         ),
                                       );
@@ -416,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   child: HomeScreenProductContainer(
                                     width: 85.w,
                                     imageUrl:
-                                        "https://admin.argiltiles.com/${item?.imageUrl}/${item?.mainImg}",
+                                        "https://admin.argiltiles.com/${newArrivalProvider.newArrivalModel?.url}/${item?.mainImg}",
                                   ),
                                 );
                               },
