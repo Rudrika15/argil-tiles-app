@@ -5,6 +5,7 @@ import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/custom_network_image.dart';
 import 'product_details_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -63,11 +64,12 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                "https://admin.argiltiles.com/public/${item.imageUrl}/${item.mainImg}",
+                              child: CustomNetworkImage(
                                 width: double.infinity,
                                 height: double.infinity,
-                                fit: BoxFit.cover,
+                                boxFit: BoxFit.cover,
+                                imageUrl:
+                                    "https://admin.argiltiles.com/public/${item.imageUrl}/${item.mainImg}",
                               ),
                             ),
                             Positioned(

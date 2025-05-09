@@ -3,23 +3,23 @@ import 'dart:developer';
 import 'package:argil_tiles/model/contact_model.dart';
 import 'package:argil_tiles/model/contact_us_query_done_model.dart';
 import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/src/response.dart';
+import 'package:argil_tiles/utils/http_helper/http_helper.dart';
+import 'package:flutter/material.dart';
 
 class ContactService {
-
   Future<ContactUsQueryDone?> submitContact({
     required ContactModel contact,
+    required BuildContext context,
   }) async {
-    Uri url = Uri.parse(ApiHelper.contactUs);
     try {
-      Response response = await http.post(
-        url,
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.contactUs,
+        context: context,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(contact.toJson()),
+        body: jsonEncode(contact),
       );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return ContactUsQueryDone.fromJson(jsonDecode(response.body));
+      if (response.isNotEmpty) {
+        return ContactUsQueryDone.fromJson(response);
       }
       return null;
     } catch (e) {

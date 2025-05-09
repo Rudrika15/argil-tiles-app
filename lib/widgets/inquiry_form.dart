@@ -8,8 +8,9 @@ import 'package:sizer/sizer.dart';
 import 'custom_container.dart';
 
 class InquiryForm extends StatelessWidget {
-  InquiryForm({super.key, required this.productName, required this.category});
+  InquiryForm({super.key, required this.productName, required this.category,required this.productId});
   final String productName;
+  final int productId;
   final String category;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
@@ -116,6 +117,7 @@ class InquiryForm extends StatelessWidget {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           await inquiryProvider.sendInquiry(
+                            id: productId,
                             productName: productName,
                             url: category,
                             context: context,

@@ -2,6 +2,7 @@ import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/utils/method_helper/gradient_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
+import 'package:argil_tiles/widgets/custom_network_image.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/inquiry_form.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         builder:
                             (context) => Dialog(
                               child: InquiryForm(
+                                productId: productModel?.id ?? -1,
                                 productName: productModel?.names ?? "Not Found",
                                 category: url,
                               ),
@@ -114,18 +116,18 @@ class ProductDetailsScreen extends StatelessWidget {
                     (context, index) => CustomContainer(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: Image.network(
-                          'https://admin.argiltiles.com/$url/${productModel?.getImageByIndex(index: index)}',
-                          fit: BoxFit.cover,
+                        child: CustomNetworkImage(
+                          imageUrl:
+                              'https://admin.argiltiles.com/$url/${productModel?.getImageByIndex(index: index)}',
                         ),
                       ),
                     ),
               )
               : ClipRRect(
                 borderRadius: BorderRadius.circular(AppSize.size10),
-                child: Image.network(
-                  'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
-                  fit: BoxFit.cover,
+                child: CustomNetworkImage(
+                  imageUrl:
+                      'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
                 ),
               ),
     );

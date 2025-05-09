@@ -28,6 +28,7 @@ class ProductInquiryProvider with ChangeNotifier {
   Future<void> sendInquiry({
     required String productName,
     required String url,
+    required int id,
     required BuildContext context,
   }) async {
     _isLoading = true;
@@ -36,6 +37,7 @@ class ProductInquiryProvider with ChangeNotifier {
     /// send inquiry
     _inquiryRequestDoneModel = await _service.submitInquiry(
       inquiry: ProductInquiryModel(
+        id: id,
         productName: productName,
         name: nameController.text.trim(),
         email: emailController.text.trim(),

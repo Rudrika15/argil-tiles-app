@@ -12,6 +12,7 @@ class ProductInquiryService {
     required BuildContext context,
   }) async {
     try {
+      log(jsonEncode(inquiry));
       Map<String, dynamic> response = await HttpHelper.post(
         context: context,
         uri: ApiHelper.inquiry,

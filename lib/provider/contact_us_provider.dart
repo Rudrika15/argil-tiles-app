@@ -19,13 +19,14 @@ class ContactUsProvider extends ChangeNotifier {
   TextEditingController contactController = TextEditingController();
   TextEditingController messageController = TextEditingController();
 
-  Future<bool> contactUs() async {
+  Future<bool> contactUs({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
 
     /// get response after contact request
     _contactUsQueryDone = await contactUsService.submitContact(
+      context: context,
       contact: ContactModel(
         contactno: contactController.text,
         email: emailController.text,
@@ -34,7 +35,7 @@ class ContactUsProvider extends ChangeNotifier {
       ),
     );
 
-    if (_contactUsQueryDone?.status == true) {
+    if (_contactUsQueryDone?.success == true) {
       /// reset controllers and form
       resetContactUsForm();
       return true;

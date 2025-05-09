@@ -1,6 +1,4 @@
-import 'package:argil_tiles/model/contact_model.dart';
 import 'package:argil_tiles/provider/contact_us_provider.dart';
-import 'package:argil_tiles/sevices/contact_service.dart';
 import 'package:argil_tiles/widgets/custom_text_form_field.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
@@ -91,6 +89,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       CustomTextFormField(
                         controller: contactUsProvider.contactController,
                         hintText: "Contact No",
+                        maxLength: 10,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -130,8 +129,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                     if (contactUsProvider.formKey.currentState
                                             ?.validate() ??
                                         false) {
-                                      bool success =
-                                          await contactUsProvider.contactUs();
+                                      bool success = await contactUsProvider
+                                          .contactUs(context: context);
                                       if (success) {
                                         ScaffoldMessenger.of(
                                           context,
@@ -144,21 +143,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                                       .contactUsQueryDone
                                                       ?.message ??
                                                   "",
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            backgroundColor:
-                                                AppColors.errorColor,
-                                            content: Text(
-                                              contactUsProvider
-                                                      .contactUsQueryDone
-                                                      ?.message ??
-                                                  "Something Went wrong",
                                             ),
                                           ),
                                         );
