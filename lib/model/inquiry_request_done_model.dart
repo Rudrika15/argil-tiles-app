@@ -1,19 +1,19 @@
 class InquiryRequestDoneModel {
-  bool? status;
+  bool? success;
   String? message;
   Data? data;
 
-  InquiryRequestDoneModel({this.status, this.message, this.data});
+  InquiryRequestDoneModel({this.success, this.message, this.data});
 
   InquiryRequestDoneModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    success = json['success'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
+    data['success'] = this.success;
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();

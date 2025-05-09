@@ -25,16 +25,17 @@ class ProductInquiryProvider with ChangeNotifier {
   InquiryRequestDoneModel? get inquiryRequestDoneModel =>
       _inquiryRequestDoneModel;
 
-  Future<bool> sendInquiry({
+  Future<void> sendInquiry({
     required String productName,
     required String url,
+    required BuildContext context,
   }) async {
     _isLoading = true;
     notifyListeners();
 
     /// send inquiry
     _inquiryRequestDoneModel = await _service.submitInquiry(
-      ProductInquiryModel(
+      inquiry: ProductInquiryModel(
         productName: productName,
         name: nameController.text.trim(),
         email: emailController.text.trim(),
@@ -44,10 +45,30 @@ class ProductInquiryProvider with ChangeNotifier {
         details: "$url _ $productName",
         requestSample: _requestSample,
       ),
+      context: context,
     );
     _isLoading = false;
     notifyListeners();
-    return _inquiryRequestDoneModel?.status == true;
+
+    if (_inquiryRequestDoneModel?.success == true) {
+      resetController();
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Inquiry submitted successfully!")),
+      );
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    } else {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            inquiryRequestDoneModel?.message ?? "Something Went Wrong",
+          ),
+        ),
+      );
+    }
   }
 
   void resetController() {

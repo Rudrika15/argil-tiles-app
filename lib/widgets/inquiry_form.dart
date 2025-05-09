@@ -115,36 +115,11 @@ class InquiryForm extends StatelessWidget {
                       ),
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          bool success = await inquiryProvider.sendInquiry(
+                          await inquiryProvider.sendInquiry(
                             productName: productName,
                             url: category,
+                            context: context,
                           );
-
-                          if (success) {
-                            inquiryProvider.resetController();
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Inquiry submitted successfully!",
-                                ),
-                              ),
-                            );
-                            formKey.currentState?.reset();
-                            Navigator.pop(context);
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  inquiryProvider
-                                          .inquiryRequestDoneModel
-                                          ?.message ??
-                                      "Something Went Wrong",
-                                ),
-                              ),
-                            );
-                          }
                         }
                       },
                       child:

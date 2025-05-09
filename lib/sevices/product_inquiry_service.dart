@@ -1,30 +1,29 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:argil_tiles/model/inquiry_request_done_model.dart';
 import 'package:argil_tiles/model/product_inquiry_model.dart';
 import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:argil_tiles/utils/http_helper/http_helper.dart';
+import 'package:flutter/material.dart';
 
 class ProductInquiryService {
-  Future<InquiryRequestDoneModel?> submitInquiry(
-    ProductInquiryModel inquiry,
-  ) async {
-    final url = Uri.parse(ApiHelper.inquiry);
-    log(inquiry.toJson().toString());
+  Future<InquiryRequestDoneModel?> submitInquiry({
+    required ProductInquiryModel inquiry,
+    required BuildContext context,
+  }) async {
     try {
-      final response = await http.post(
-        url,
+      Map<String, dynamic> response = await HttpHelper.post(
+        context: context,
+        uri: ApiHelper.inquiry,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(inquiry),
       );
 
-      log(response.body);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return InquiryRequestDoneModel.fromJson(jsonDecode(response.body));
-      } else {
-        log("Failed to submit inquiry: ${response.body}");
-        return null;
+      if (response.isNotEmpty) {
+        return InquiryRequestDoneModel.fromJson(response);
       }
+
+      return null;
     } catch (e) {
       log("Error during inquiry submission: $e");
       return null;
