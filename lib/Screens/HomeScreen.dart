@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     QuartzproductsProvider quartzProvider =
         context.watch<QuartzproductsProvider>();
     SpcProductProvider spcProvider = context.watch<SpcProductProvider>();
-    NewarrivalProvider newArrivalProvider = context.watch<NewarrivalProvider>();
+    // NewarrivalProvider newArrivalProvider = context.watch<NewarrivalProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -331,102 +331,102 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           )
                           : const Text("No SPC Products found."),
                       SizedBox(height: 2.h),
-                      _buildSectionTitle(title: 'New Arrivals'),
-                      SizedBox(height: 1.h),
-                      newArrivalProvider.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : newArrivalProvider
-                                  .newArrivalModel
-                                  ?.data
-                                  ?.navigateUrl
-                                  ?.isNotEmpty ==
-                              true
-                          ? GestureDetector(
-                            onTap: () async {
-                              final String navUrl =
-                                  newArrivalProvider
-                                      .newArrivalModel
-                                      ?.data
-                                      ?.navigateUrl ??
-                                  "";
-                              if (navUrl.isEmpty) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Product link not available",
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return;
-                              }
+                      // _buildSectionTitle(title: 'New Arrivals'),
+                      // SizedBox(height: 1.h),
+                      // newArrivalProvider.isLoading
+                      //     ? const Center(child: CircularProgressIndicator())
+                      //     : newArrivalProvider
+                      //             .newArrivalModel
+                      //             ?.data
+                      //             ?.navigateUrl
+                      //             ?.isNotEmpty ==
+                      //         true
+                      //     ? GestureDetector(
+                      //       onTap: () async {
+                      //         final String navUrl =
+                      //             newArrivalProvider
+                      //                 .newArrivalModel
+                      //                 ?.data
+                      //                 ?.navigateUrl ??
+                      //             "";
+                      //         if (navUrl.isEmpty) {
+                      //           if (context.mounted) {
+                      //             ScaffoldMessenger.of(context).showSnackBar(
+                      //               const SnackBar(
+                      //                 content: Text(
+                      //                   "Product link not available",
+                      //                 ),
+                      //               ),
+                      //             );
+                      //           }
+                      //           return;
+                      //         }
 
-                              try {
-                                await newArrivalProvider
-                                    .getNewArrivalAndRedirectToProductPage(
-                                      context: context,
-                                    );
+                      //         try {
+                      //           await newArrivalProvider
+                      //               .getNewArrivalAndRedirectToProductPage(
+                      //                 context: context,
+                      //               );
 
-                                if (!context.mounted) return;
+                      //           if (!context.mounted) return;
 
-                                if (newArrivalProvider.productModel == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Product not found or failed to fetch.",
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
+                      //           if (newArrivalProvider.productModel == null) {
+                      //             ScaffoldMessenger.of(context).showSnackBar(
+                      //               const SnackBar(
+                      //                 content: Text(
+                      //                   "Product not found or failed to fetch.",
+                      //                 ),
+                      //               ),
+                      //             );
+                      //             return;
+                      //           }
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) => ProductDetailsScreen(
-                                          productModel:
-                                              newArrivalProvider.productModel,
-                                          url:
-                                              newArrivalProvider
-                                                  .newArrivalModel
-                                                  ?.data
-                                                  ?.navigateUrl ??
-                                              "",
-                                        ),
-                                  ),
-                                );
-                              } catch (e) {
-                                debugPrint("Navigation error: $e");
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Something went wrong during navigation.",
-                                      ),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                            child: CustomContainer(
-                              height: 25.h,
-                              margin: EdgeInsets.only(
-                                bottom: 2.h,
-                                left: 2.w,
-                                right: 2.w,
-                              ),
-                              child: HomeScreenProductContainer(
-                                width: 85.w,
-                                imageUrl:
-                                    "https://argiltiles.com/${newArrivalProvider.newArrivalModel?.data?.image}",
-                              ),
-                            ),
-                          )
-                          : const Center(
-                            child: Text('No new arrivals available.'),
-                          ),
+                      //           Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //               builder:
+                      //                   (_) => ProductDetailsScreen(
+                      //                     productModel:
+                      //                         newArrivalProvider.productModel,
+                      //                     url:
+                      //                         newArrivalProvider
+                      //                             .newArrivalModel
+                      //                             ?.data
+                      //                             ?.navigateUrl ??
+                      //                         "",
+                      //                   ),
+                      //             ),
+                      //           );
+                      //         } catch (e) {
+                      //           debugPrint("Navigation error: $e");
+                      //           if (context.mounted) {
+                      //             ScaffoldMessenger.of(context).showSnackBar(
+                      //               const SnackBar(
+                      //                 content: Text(
+                      //                   "Something went wrong during navigation.",
+                      //                 ),
+                      //               ),
+                      //             );
+                      //           }
+                      //         }
+                      //       },
+                      //       child: CustomContainer(
+                      //         height: 25.h,
+                      //         margin: EdgeInsets.only(
+                      //           bottom: 2.h,
+                      //           left: 2.w,
+                      //           right: 2.w,
+                      //         ),
+                      //         child: HomeScreenProductContainer(
+                      //           width: 85.w,
+                      //           imageUrl:
+                      //               "https://argiltiles.com/${newArrivalProvider.newArrivalModel?.data?.image}",
+                      //         ),
+                      //       ),
+                      //     )
+                      //     : const Center(
+                      //       child: Text('No new arrivals available.'),
+                      //     ),
                     ],
                   ),
                 ),
