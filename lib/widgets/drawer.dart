@@ -73,8 +73,7 @@ class DrawerWidget extends StatelessWidget {
             ],
           ),
           DrawerItem(
-            title: "Favourite",
-
+            title: "Favorite",
             icon: Icons.favorite_border,
             index: 3,
             screen: FavoriteScreen(),

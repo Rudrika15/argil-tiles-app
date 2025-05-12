@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
@@ -7,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_color.dart';
 import '../model/common_product_model.dart';
+import '../utils/api_helper/api_hepler.dart';
 import '../widgets/custom_container.dart';
 import 'favourite_screen.dart';
 
@@ -133,6 +136,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     itemBuilder: (context, index) {
                       ProductModel item = searchProduct[index];
                       item.imageUrl = widget.url;
+                      log(" ===${item.imageUrl}");
                       return InkWell(
                         onTap:
                             () => Navigator.of(context).push(
@@ -154,7 +158,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                  "https://admin.argiltiles.com/public/${widget.url}/${item.mainImg}",
+                                  "${ApiHelper.assetsUrl}${widget.url}/${item.mainImg}",
                                 ),
                               ),
                               child: Stack(

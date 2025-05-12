@@ -42,9 +42,9 @@ class CompanyProfileScreen extends StatelessWidget {
           children: [
             Center(
               child: Opacity(
-                opacity: 0.05,
+                opacity: 0.1,
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo_triangle.png',
                   width: 250,
                   fit: BoxFit.contain,
                 ),

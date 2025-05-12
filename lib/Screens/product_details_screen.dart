@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
+import 'package:argil_tiles/provider/favroite_provider.dart';
+import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:argil_tiles/utils/method_helper/gradient_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:argil_tiles/widgets/custom_network_image.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/inquiry_form.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../model/common_product_model.dart';
 
@@ -17,6 +22,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FavoriteProvider favoriteProvider = context.watch<FavoriteProvider>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFD3C8BA),
@@ -32,7 +39,12 @@ class ProductDetailsScreen extends StatelessWidget {
               children: [
                 _buildProductImage(),
                 const SizedBox(height: 16),
-                _buildSectionTitle("Product Information"),
+                _buildSectionTitle(
+                  title: "Product Information",
+                  favoriteProvider: favoriteProvider,
+                  item: productModel ?? ProductModel(),
+                  url: url,
+                ),
                 const SizedBox(height: 12),
 
                 _buildInfoCard(
@@ -118,7 +130,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         child: CustomNetworkImage(
                           imageUrl:
-                              'https://admin.argiltiles.com/$url/${productModel?.getImageByIndex(index: index)}',
+                              '${ApiHelper.assetsUrl}/$url/${productModel?.getImageByIndex(index: index)}',
                         ),
                       ),
                     ),
@@ -127,21 +139,51 @@ class ProductDetailsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSize.size10),
                 child: CustomNetworkImage(
                   imageUrl:
-                      'https://admin.argiltiles.com/$url/${productModel?.mainImg}',
+                      '${ApiHelper.assetsUrl}/$url/${productModel?.mainImg}',
                 ),
               ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle({
+    required String title,
+    required FavoriteProvider favoriteProvider,
+    required ProductModel item,
+    required String url,
+  }) {
+    log(" ===${item.imageUrl}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          InkWell(
+            onTap:
+                () async => {
+                  item.imageUrl = url,
+                  favoriteProvider.toggleFavorite(item),
+                },
+            child: CustomContainer(
+              shape: BoxShape.circle,
+              child: Icon(
+                favoriteProvider.isFavorite(item)
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border,
+                color:
+                    favoriteProvider.isFavorite(item)
+                        ? AppColors.errorColor
+                        : AppColors.blackColor,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

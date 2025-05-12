@@ -32,7 +32,7 @@ class AboutScreen extends StatelessWidget {
               child: Opacity(
                 opacity: 0.05,
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'assets/images/logo_triangle.png',
                   width: 250,
                   fit: BoxFit.contain,
                 ),

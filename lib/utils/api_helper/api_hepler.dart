@@ -1,5 +1,6 @@
 class ApiHelper {
   static String baseUrl = "https://argiltiles.com/api";
+  static String assetsUrl = "https://argiltiles.com/";
 
   /// sliders
   static String getSliders = "$baseUrl/slider";

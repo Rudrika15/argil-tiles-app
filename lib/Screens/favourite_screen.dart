@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utils/api_helper/api_hepler.dart';
+import '../widgets/custom_container.dart';
 import '../widgets/custom_network_image.dart';
 import 'product_details_screen.dart';
 
@@ -22,14 +26,14 @@ class FavoriteScreenState extends State<FavoriteScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
-          title: const Text("Favourites"),
+          title: const Text("Favorite"),
         ),
         endDrawer: DrawerWidget(),
         body:
             favoriteProvider.favorites.isEmpty
                 ? const Center(
                   child: Text(
-                    "No favorite items yet!",
+                    "No Favorite Products yet!",
                     style: TextStyle(fontSize: 16),
                   ),
                 )
@@ -47,6 +51,9 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                     itemBuilder: (context, index) {
                       final ProductModel item =
                           favoriteProvider.favorites[index];
+                      log(
+                        "${ApiHelper.assetsUrl}${item.imageUrl}/${item.mainImg}",
+                      );
                       return InkWell(
                         onTap:
                             () => Navigator.push(
@@ -68,7 +75,7 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                                 height: double.infinity,
                                 boxFit: BoxFit.cover,
                                 imageUrl:
-                                    "https://admin.argiltiles.com/public/${item.imageUrl}/${item.mainImg}",
+                                    "${ApiHelper.assetsUrl}${item.imageUrl}/${item.mainImg}",
                               ),
                             ),
                             Positioned(
@@ -92,9 +99,12 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                               bottom: 0,
                               left: 0,
                               right: 0,
-                              child: Container(
+                              child: CustomContainer(
                                 padding: const EdgeInsets.all(6),
-                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(12),
+                                ),
+                                backGroundColor: Colors.black.withOpacity(0.6),
                                 child: Text(
                                   item.names ?? "",
                                   textAlign: TextAlign.center,

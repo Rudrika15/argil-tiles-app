@@ -15,6 +15,7 @@ import '../provider/quartzproducts_provider.dart';
 import '../provider/spcproducts_provider.dart';
 import '../Screens/favourite_screen.dart';
 import '../Screens/product_screen.dart';
+import '../utils/api_helper/api_hepler.dart';
 import '../utils/method_helper/gradient_helper.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -133,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   ),
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                      'https://admin.argiltiles.com/public/slider/${item.sliderimg}',
+                                      '${ApiHelper.assetsUrl}slider/${item.sliderimg}',
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -235,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ),
                                   child: HomeScreenProductContainer(
                                     imageUrl:
-                                        'https://admin.argiltiles.com/public/quartz/${product?.mainImg}',
+                                        '${ApiHelper.assetsUrl}quartz/${product?.mainImg}',
                                   ),
                                 );
                               },
@@ -323,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ),
                                   child: HomeScreenProductContainer(
                                     imageUrl:
-                                        'https://admin.argiltiles.com/public/spc/${product?.mainImg}',
+                                        '${ApiHelper.assetsUrl}spc/${product?.mainImg}',
                                   ),
                                 );
                               },
