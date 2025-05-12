@@ -338,104 +338,90 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           : newArrivalProvider
                                   .newArrivalModel
                                   ?.data
+                                  ?.navigateUrl
                                   ?.isNotEmpty ==
                               true
-                          ? SizedBox(
-                            height: 25.h,
-                            child: ListView.builder(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 2.h,
-                                horizontal: 5.w,
-                              ),
-                              scrollDirection: Axis.horizontal,
-                              itemCount:
-                                  newArrivalProvider.getProductList().length,
-                              itemBuilder: (listContext, index) {
-                                final ProductModel? item =
-                                    newArrivalProvider
-                                        .newArrivalModel
-                                        ?.data?[index];
-                                return GestureDetector(
-                                  onTap: () async {
-                                    final navUrl =
-                                        newArrivalProvider.navigateUrl;
+                          ? GestureDetector(
+                            onTap: () async {
+                              final String navUrl =
+                                  newArrivalProvider
+                                      .newArrivalModel
+                                      ?.data
+                                      ?.navigateUrl ??
+                                  "";
+                              if (navUrl.isEmpty) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Product link not available",
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return;
+                              }
 
-                                    if (navUrl == null || navUrl.isEmpty) {
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              "Product link not available",
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return;
-                                    }
+                              try {
+                                await newArrivalProvider
+                                    .getNewArrivalAndRedirectToProductPage(
+                                      context: context,
+                                    );
 
-                                    try {
-                                      await newArrivalProvider
-                                          .getNewArrivalAndRedirectToProductPage(
-                                            context: context,
-                                          );
+                                if (!context.mounted) return;
 
-                                      if (!context.mounted) return;
+                                if (newArrivalProvider.productModel == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Product not found or failed to fetch.",
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
 
-                                      if (newArrivalProvider.productModel ==
-                                          null) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              "Product not found or failed to fetch.",
-                                            ),
-                                          ),
-                                        );
-                                        return;
-                                      }
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) => ProductDetailsScreen(
-                                                productModel:
-                                                    newArrivalProvider
-                                                        .productModel,
-                                                url:
-                                                    newArrivalProvider
-                                                        .newArrivalModel
-                                                        ?.url ??
-                                                    "",
-                                              ),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => ProductDetailsScreen(
+                                          productModel:
+                                              newArrivalProvider.productModel,
+                                          url:
+                                              newArrivalProvider
+                                                  .newArrivalModel
+                                                  ?.data
+                                                  ?.navigateUrl ??
+                                              "",
                                         ),
-                                      );
-                                    } catch (e) {
-                                      debugPrint("Navigation error: $e");
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              "Something went wrong during navigation.",
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  },
-
-                                  child: HomeScreenProductContainer(
-                                    width: 85.w,
-                                    imageUrl:
-                                        "https://admin.argiltiles.com/${newArrivalProvider.newArrivalModel?.url}/${item?.mainImg}",
                                   ),
                                 );
-                              },
+                              } catch (e) {
+                                debugPrint("Navigation error: $e");
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Something went wrong during navigation.",
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: CustomContainer(
+                              height: 25.h,
+                              margin: EdgeInsets.only(
+                                bottom: 2.h,
+                                left: 2.w,
+                                right: 2.w,
+                              ),
+                              child: HomeScreenProductContainer(
+                                width: 85.w,
+                                imageUrl:
+                                    "https://argiltiles.com/${newArrivalProvider.newArrivalModel?.data?.image}",
+                              ),
                             ),
                           )
                           : const Center(
