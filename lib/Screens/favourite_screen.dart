@@ -4,7 +4,6 @@ import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../widgets/custom_network_image.dart';
 import 'product_details_screen.dart';
 

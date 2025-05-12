@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../app_const/app_color.dart';
 
 class BoxShadowHelper {
@@ -9,7 +8,8 @@ class BoxShadowHelper {
     blurRadius: 8,
     spreadRadius: -2,
   );
-  static List<Color> homeGradient = [
+  static List<Color> homeGradient = [AppColors.homeGradient2, AppColors.appBar];
+  static List<Color> splashScreenGradient = [
     AppColors.appBar,
     AppColors.homeGradient2,
   ];

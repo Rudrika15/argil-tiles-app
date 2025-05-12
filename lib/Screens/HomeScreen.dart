@@ -57,8 +57,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.appBar,
-        surfaceTintColor: AppColors.appBar,
+        backgroundColor: AppColors.homeGradient2,
+        surfaceTintColor: AppColors.homeGradient2,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: CustomContainer(
