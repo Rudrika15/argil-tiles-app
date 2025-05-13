@@ -1,6 +1,7 @@
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
+import 'package:argil_tiles/widgets/water_mark_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -33,16 +34,7 @@ class GroupCompanyScreen extends StatelessWidget {
         endDrawer: DrawerWidget(),
         body: Stack(
           children: [
-            Center(
-              child: Opacity(
-                opacity: 0.1,
-                child: Image.asset(
-                  'assets/images/logo_triangle.png',
-                  width: 200,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
+            WaterMarkLogo(),
             SingleChildScrollView(
               padding: const EdgeInsets.all(AppSize.size20),
               child: Column(

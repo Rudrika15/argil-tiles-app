@@ -9,6 +9,7 @@ import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
+import 'package:argil_tiles/widgets/water_mark_logo.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,16 +41,7 @@ class CompanyProfileScreen extends StatelessWidget {
         endDrawer: DrawerWidget(),
         body: Stack(
           children: [
-            Center(
-              child: Opacity(
-                opacity: 0.1,
-                child: Image.asset(
-                  'assets/images/logo_triangle.png',
-                  width: 250,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
+            WaterMarkLogo(),
             SingleChildScrollView(
               padding: EdgeInsets.all(AppSize.size20),
               child: Column(

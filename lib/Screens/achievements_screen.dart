@@ -3,6 +3,7 @@ import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/utils/size_helper/size_helper.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
+import 'package:argil_tiles/widgets/water_mark_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../utils/method_helper/gradient_helper.dart';
@@ -81,16 +82,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         endDrawer: DrawerWidget(),
         body: Stack(
           children: [
-            Center(
-              child: Opacity(
-                opacity: 0.1,
-                child: Image.asset(
-                  'assets/images/logo_triangle.png',
-                  width: 220,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
+            WaterMarkLogo(),
             ListView(
               children: [
                 SizedBox(height: 2.h),

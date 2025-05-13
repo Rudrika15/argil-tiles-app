@@ -100,7 +100,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
         ),
         child:
             homeScreenProvider.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                  child: CircularProgressIndicator(color: AppColors.brown),
+                )
                 : RefreshIndicator(
                   backgroundColor: AppColors.whiteColor,
                   color: AppColors.brown,
@@ -186,7 +188,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       ),
                       SizedBox(height: 1.h),
                       quartzProvider.isLoading
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.brown,
+                            ),
+                          )
                           : quartzProvider
                                   .quartzProductModel
                                   ?.data
@@ -279,7 +285,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       ),
                       SizedBox(height: 1.h),
                       spcProvider.isLoading
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.brown,
+                            ),
+                          )
                           : spcProvider.spcProductModel?.data?.isNotEmpty ==
                               true
                           ? SizedBox(

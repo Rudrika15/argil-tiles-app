@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';

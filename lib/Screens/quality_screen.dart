@@ -1,5 +1,6 @@
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
+import 'package:argil_tiles/widgets/water_mark_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:sizer/sizer.dart';
@@ -28,16 +29,7 @@ class QualityScreen extends StatelessWidget {
         endDrawer: DrawerWidget(),
         body: Stack(
           children: [
-            Center(
-              child: Opacity(
-                opacity: 0.05,
-                child: Image.asset(
-                  'assets/images/logo_triangle.png',
-                  width: 25.h,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            WaterMarkLogo(),
             SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
