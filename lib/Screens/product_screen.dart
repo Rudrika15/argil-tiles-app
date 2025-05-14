@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
+import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -155,14 +157,20 @@ class _ProductScreenState extends State<ProductScreen> {
                               borderRadius: BorderRadius.circular(
                                 AppSize.size10,
                               ),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                  "${ApiHelper.assetsUrl}${widget.url}/${item.mainImg}",
-                                ),
-                              ),
                               child: Stack(
                                 children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      AppSize.size10,
+                                    ),
+                                    child: CustomImageWithLoader(
+                                      height: 35.h,
+                                      width: 50.w,
+                                      showImageInPanel: false,
+                                      imageUrl:
+                                          "${ApiHelper.assetsUrl}${widget.url}/${item.mainImg}",
+                                    ),
+                                  ),
                                   Positioned(
                                     top: AppSize.size10,
                                     right: AppSize.size10,
@@ -239,15 +247,15 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 }
 
-class ProductDetailScreen extends StatelessWidget {
-  final String imagePath;
-  const ProductDetailScreen({super.key, required this.imagePath});
+// class ProductDetailScreen extends StatelessWidget {
+//   final String imagePath;
+//   const ProductDetailScreen({super.key, required this.imagePath});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Product Detail")),
-      body: Center(child: Image.asset(imagePath)),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Product Detail")),
+//       body: Center(child: Image.asset(imagePath)),
+//     );
+//   }
+// }

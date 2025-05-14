@@ -4,6 +4,7 @@ import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/provider/newarraival_provider.dart';
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
+import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,10 +109,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                   color: AppColors.brown,
                   onRefresh: () async => initHomeScreenData(context: context),
                   child: ListView(
-                    shrinkWrap: true,
+                    // shrinkWrap: true,
                     children: [
                       SizedBox(height: 2.h),
-                      _buildSectionTitle(title: 'Featured Products'),
+                      // _buildSectionTitle(title: 'Featured Products'), // hide heading as per told
                       SizedBox(height: 2.h),
                       if (homeScreenProvider
                               .homeSliderModel
@@ -134,15 +135,20 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     horizontal: 1.w,
                                     vertical: 2.h,
                                   ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      '${ApiHelper.assetsUrl}slider/${item.sliderimg}',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
+
                                   boxShadow: [BoxShadowHelper.shadow],
                                   borderRadius: BorderRadius.circular(
                                     AppSize.size10,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      AppSize.size10,
+                                    ),
+                                    child: CustomImageWithLoader(
+                                      showImageInPanel: false,
+                                      imageUrl:
+                                          '${ApiHelper.assetsUrl}slider/${item.sliderimg}',
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -152,39 +158,40 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 2.h),
 
                       // Quartz Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildSectionTitle(title: 'Quartz Products'),
-
-                          if (!showAllQuartz &&
-                              (quartzProvider
-                                          .quartzProductModel
-                                          ?.data
-                                          ?.length ??
-                                      0) >
-                                  3)
-                            ViewAllBtn(
-                              onTap: () {
-                                setState(() => showAllQuartz = true);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => ProductScreen(
-                                          title: "Dura Quartz Surface",
-                                          url: "quartz",
-                                          products:
-                                              quartzProvider
-                                                  .quartzProductModel
-                                                  ?.data ??
-                                              [],
-                                        ),
+                      InkWell(
+                        onTap: () {
+                          setState(() => showAllQuartz = true);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => ProductScreen(
+                                    title: "Dura Quartz Surface",
+                                    url: "quartz",
+                                    products:
+                                        quartzProvider
+                                            .quartzProductModel
+                                            ?.data ??
+                                        [],
                                   ),
-                                );
-                              },
                             ),
-                        ],
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildSectionTitle(title: 'Quartz Products'),
+
+                            if (!showAllQuartz &&
+                                (quartzProvider
+                                            .quartzProductModel
+                                            ?.data
+                                            ?.length ??
+                                        0) >
+                                    3)
+                              ViewAllBtn(),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 1.h),
                       quartzProvider.isLoading
@@ -199,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   ?.isNotEmpty ==
                               true
                           ? SizedBox(
-                            height: 25.h,
+                            height: 20.h,
                             child: ListView.builder(
                               padding: EdgeInsets.symmetric(
                                 vertical: 2.h,
@@ -241,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         ),
                                       ),
                                   child: HomeScreenProductContainer(
+                                    width: 60.w,
                                     imageUrl:
                                         '${ApiHelper.assetsUrl}quartz/${product?.mainImg}',
                                   ),
@@ -252,36 +260,35 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizedBox(height: 2.h),
 
                       // SPC Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildSectionTitle(title: 'SPC Products'),
-
-                          if (!showAllSpc &&
-                              (spcProvider.spcProductModel?.data?.length ?? 0) >
-                                  3)
-                            ViewAllBtn(
-                              onTap: () {
-                                setState(() => showAllSpc = true);
-                                // Navigate to the Product Screen for SPC
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => ProductScreen(
-                                          title: "SPC Products",
-                                          url: "spc",
-                                          products:
-                                              spcProvider
-                                                  .spcProductModel
-                                                  ?.data ??
-                                              [],
-                                        ), // Navigate to ProductScreen
-                                  ),
-                                );
-                              },
+                      InkWell(
+                        onTap: () {
+                          setState(() => showAllSpc = true);
+                          // Navigate to the Product Screen for SPC
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => ProductScreen(
+                                    title: "SPC Products",
+                                    url: "spc",
+                                    products:
+                                        spcProvider.spcProductModel?.data ?? [],
+                                  ), // Navigate to ProductScreen
                             ),
-                        ],
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildSectionTitle(title: 'SPC Products'),
+
+                            if (!showAllSpc &&
+                                (spcProvider.spcProductModel?.data?.length ??
+                                        0) >
+                                    3)
+                              ViewAllBtn(),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 1.h),
                       spcProvider.isLoading
@@ -473,26 +480,28 @@ class HomeScreenProductContainer extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 2.w),
       borderRadius: BorderRadius.circular(AppSize.size10),
       boxShadow: [BoxShadowHelper.shadow],
-      image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        child: CustomImageWithLoader(
+          imageUrl: imageUrl,
+          showImageInPanel: false,
+        ),
+      ),
     );
   }
 }
 
 class ViewAllBtn extends StatelessWidget {
-  const ViewAllBtn({super.key, required this.onTap});
-  final void Function()? onTap;
+  const ViewAllBtn({super.key});
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: CustomContainer(
-        margin: EdgeInsets.only(right: 2.w),
-        // backGroundColor: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(AppSize.size10),
-        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-        image: DecorationImage(
-          image: AssetImage("assets/images/right-arrow.png"),
-        ),
+    return CustomContainer(
+      margin: EdgeInsets.only(right: 2.w),
+      // backGroundColor: AppColors.whiteColor,
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+      image: DecorationImage(
+        image: AssetImage("assets/images/right-arrow.png"),
       ),
     );
   }

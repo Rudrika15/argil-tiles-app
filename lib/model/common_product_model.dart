@@ -83,7 +83,7 @@ class ProductModel {
   }
 
   List<String> get availableImages {
-    return [subImg1, subImg2, subImg3, subImg4, subImg5]
+    return [mainImg, subImg1, subImg2, subImg3, subImg4, subImg5]
         .where((image) => image != null && image.isNotEmpty)
         .cast<String>()
         .toList();

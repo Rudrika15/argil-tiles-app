@@ -1,11 +1,12 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/utils/api_helper/api_hepler.dart';
 import 'package:argil_tiles/utils/method_helper/gradient_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
-import 'package:argil_tiles/widgets/custom_network_image.dart';
+import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/inquiry_form.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ import '../model/common_product_model.dart';
 class ProductDetailsScreen extends StatelessWidget {
   final String url;
   final ProductModel? productModel;
-
   const ProductDetailsScreen({super.key, this.productModel, required this.url});
 
   @override
@@ -36,7 +36,8 @@ class ProductDetailsScreen extends StatelessWidget {
           Expanded(
             child: ListView(
               children: [
-                _buildProductImage(),
+                ProductImageCarousel(productModel: productModel, url: url),
+
                 const SizedBox(height: 16),
                 _buildSectionTitle(
                   title: "Product Information",
@@ -104,43 +105,6 @@ class ProductDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  // ========== Widgets Below ==========
-
-  Widget _buildProductImage() {
-    return CustomContainer(
-      borderColor: AppColors.greyColor,
-      borderWidth: 0.4,
-      margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-      padding: EdgeInsets.all(2),
-      borderRadius: BorderRadius.circular(AppSize.size10),
-      backGroundColor: AppColors.whiteColor,
-      boxShadow: [BoxShadowHelper.shadow],
-      height: 20.h,
-      child:
-          productModel?.availableImages.isNotEmpty == true
-              ? PageView.builder(
-                itemCount: productModel?.availableImages.length ?? 0,
-                itemBuilder:
-                    (context, index) => CustomContainer(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomNetworkImage(
-                          imageUrl:
-                              '${ApiHelper.assetsUrl}/$url/${productModel?.getImageByIndex(index: index)}',
-                        ),
-                      ),
-                    ),
-              )
-              : ClipRRect(
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                child: CustomNetworkImage(
-                  imageUrl:
-                      '${ApiHelper.assetsUrl}/$url/${productModel?.mainImg}',
-                ),
-              ),
     );
   }
 
@@ -323,6 +287,121 @@ class ProductDetailsScreen extends StatelessWidget {
           ),
         ),
         child: Text(label, style: const TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}
+
+class ProductImageCarousel extends StatefulWidget {
+  final ProductModel? productModel;
+  final String url;
+
+  const ProductImageCarousel({
+    super.key,
+    required this.productModel,
+    required this.url,
+  });
+
+  @override
+  State<ProductImageCarousel> createState() => _ProductImageCarouselState();
+}
+
+class _ProductImageCarouselState extends State<ProductImageCarousel> {
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  void _goToPage(int delta) {
+    final totalPages = widget.productModel?.availableImages.length ?? 0;
+    final newPage = (_currentPage + delta).clamp(0, totalPages - 1);
+    if (newPage != _currentPage) {
+      _pageController.animateToPage(
+        newPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      setState(() => _currentPage = newPage);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final imageCount = widget.productModel?.availableImages.length ?? 0;
+
+    return CustomContainer(
+      borderColor: AppColors.greyColor,
+      borderWidth: 0.4,
+      margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      padding: const EdgeInsets.all(2),
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      backGroundColor: AppColors.whiteColor,
+      boxShadow: [BoxShadowHelper.shadow],
+      height: widget.url == "spc" ? 25.h : 20.h,
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            itemCount: imageCount,
+            onPageChanged: (index) => setState(() => _currentPage = index),
+            itemBuilder:
+                (context, index) => CustomContainer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSize.size10),
+                    child: CustomImageWithLoader(
+                      imageUrl:
+                          '${ApiHelper.assetsUrl}/${widget.url}/${widget.productModel?.getImageByIndex(index: index)}',
+                    ),
+                  ),
+                ),
+          ),
+          if (imageCount > 1) ...[
+            // Left button
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: InkWell(
+                onTap: () => _goToPage(-1),
+                child: CustomContainer(
+                  borderRadius: BorderRadius.circular(AppSize.size10),
+                  gradient: RadialGradient(
+                    colors: [AppColors.brown, Colors.transparent],
+                    center: Alignment.center,
+                  ),
+                  child: const Icon(
+                    Icons.chevron_left,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ),
+            ),
+            // Right button
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: InkWell(
+                onTap: () => _goToPage(1),
+                child: CustomContainer(
+                  borderRadius: BorderRadius.circular(AppSize.size10),
+                  gradient: RadialGradient(
+                    colors: [AppColors.brown, Colors.transparent],
+                    center: Alignment.center,
+                  ),
+                  child: const Icon(
+                    Icons.chevron_right,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
