@@ -1,15 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:argil_tiles/Screens/HomeScreen.dart';
 import 'package:argil_tiles/app_const/app_color.dart';
+import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/retry.dart';
 import 'package:http/http.dart' as http;
+import '../../Screens/no_internet_page.dart';
 import '../shared_preference/shared_prefrence.dart';
 import '../widget_helper/widhet_helper.dart';
 
-class HttpHelper {
+class HttpHelper with NavigateHelper {
   static final client = RetryClient(http.Client());
   static bool isDebugMode = kDebugMode;
   // Generalized response handler
@@ -115,6 +119,7 @@ class HttpHelper {
         title: "Something went wrong!",
         color: AppColors.errorColor,
       );
+      internetExceptionHandle(context: context, e: e);
     }
     return {}; // Return an empty map on failure
   }
@@ -146,6 +151,7 @@ class HttpHelper {
       return processResponse(response: response, context: context);
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
+      internetExceptionHandle(context: context, e: e);
     }
     return {};
   }
@@ -176,6 +182,7 @@ class HttpHelper {
       if (isDebugMode) {
         log("PUT request error: $e");
       }
+      internetExceptionHandle(context: context, e: e);
     }
     return {};
   }
@@ -204,6 +211,7 @@ class HttpHelper {
       if (isDebugMode) {
         log("DELETE request error: $e");
       }
+      internetExceptionHandle(context: context, e: e);
     }
     return {};
   }
@@ -228,5 +236,26 @@ class HttpHelper {
       }
       throw Exception("Multipart request failed");
     }
+  }
+}
+
+void internetExceptionHandle({
+  required BuildContext context,
+  required Object e,
+}) {
+  if (e is SocketException) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder:
+            (context) => NoConnectionPage(
+              onRetry:
+                  () => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    (route) => false,
+                  ),
+            ),
+      ),
+      (route) => false,
+    );
   }
 }

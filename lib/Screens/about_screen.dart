@@ -12,6 +12,7 @@ class AboutScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
+          surfaceTintColor: const Color(0xFFD3C8BA),
           title: const Text('About Us'),
           leading: const BackButton(),
           actions: [

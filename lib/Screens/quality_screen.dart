@@ -14,6 +14,7 @@ class QualityScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
+          surfaceTintColor: const Color(0xFFD3C8BA),
           title: const Text('Quality'),
           leading: const BackButton(),
           actions: [

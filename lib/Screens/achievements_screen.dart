@@ -65,6 +65,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
+          surfaceTintColor: const Color(0xFFD3C8BA),
           title: const Text('Achievements'),
           leading: const BackButton(),
           actions: [

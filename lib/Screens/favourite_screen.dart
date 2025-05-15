@@ -26,6 +26,7 @@ class FavoriteScreenState extends State<FavoriteScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
+          surfaceTintColor: const Color(0xFFD3C8BA),
           title: const Text("Favorite"),
         ),
         endDrawer: DrawerWidget(),

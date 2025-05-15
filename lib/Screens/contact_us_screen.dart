@@ -7,7 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../app_const/app_color.dart';
 
 class ContactUsScreen extends StatefulWidget {
@@ -40,6 +39,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
+          surfaceTintColor: const Color(0xFFD3C8BA),
           title: const Text('Contact Us'),
           leading: const BackButton(),
           foregroundColor: Colors.black,
