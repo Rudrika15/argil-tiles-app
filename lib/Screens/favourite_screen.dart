@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
+import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/drawer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import '../utils/api_helper/api_hepler.dart';
 import '../widgets/custom_container.dart';
 import '../widgets/custom_network_image.dart';
@@ -71,10 +73,10 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: CustomNetworkImage(
-                                width: double.infinity,
-                                height: double.infinity,
-                                boxFit: BoxFit.cover,
+                              child: CustomImageWithLoader(
+                                showImageInPanel: false,
+                                width: 50.w,
+                                height: 30.h,
                                 imageUrl:
                                     "${ApiHelper.assetsUrl}${item.imageUrl}/${item.mainImg}",
                               ),
