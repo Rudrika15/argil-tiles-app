@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       WidgetHelper.customSnackBar(
         context: context,
         title: 'Press back again to exit',
+        color: AppColors.brown,
         isError: true,
       );
       return false;

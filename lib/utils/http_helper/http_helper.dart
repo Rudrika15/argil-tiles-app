@@ -27,7 +27,6 @@ class HttpHelper with NavigateHelper {
         log(response.body);
       }
       Map<String, dynamic> data = jsonDecode(response.body);
-
       // Handle 500 Internal Server Error
       if (response.statusCode == 500) {
         WidgetHelper.customSnackBar(
@@ -80,13 +79,14 @@ class HttpHelper with NavigateHelper {
       if (isDebugMode) {
         log("Error processing response: $e");
       }
-      ;
-      WidgetHelper.customSnackBar(
-        isError: true,
-        context: context,
-        title: "Something went wrong",
-        color: AppColors.errorColor,
-      );
+      if (e is SocketException) {
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Something went wrong",
+          color: AppColors.errorColor,
+        );
+      }
       return {};
     }
   }
@@ -113,12 +113,15 @@ class HttpHelper with NavigateHelper {
         log("GET request error: $e");
       }
       if (!context.mounted) return {};
-      WidgetHelper.customSnackBar(
-        context: context,
-        isError: true,
-        title: "Something went wrong!",
-        color: AppColors.errorColor,
-      );
+      // Don't show snackbar if it's a SocketException
+      if (e is! SocketException) {
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Something went wrong get api call",
+          color: AppColors.errorColor,
+        );
+      }
       internetExceptionHandle(context: context, e: e);
     }
     return {}; // Return an empty map on failure
@@ -151,6 +154,15 @@ class HttpHelper with NavigateHelper {
       return processResponse(response: response, context: context);
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
+      // Don't show snackbar if it's a SocketException
+      if (e is SocketException) {
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Something went wrong post api call",
+          color: AppColors.errorColor,
+        );
+      }
       internetExceptionHandle(context: context, e: e);
     }
     return {};
@@ -181,6 +193,15 @@ class HttpHelper with NavigateHelper {
     } catch (e) {
       if (isDebugMode) {
         log("PUT request error: $e");
+      }
+      // Don't show snackbar if it's a SocketException
+      if (e is SocketException) {
+        WidgetHelper.customSnackBar(
+          isError: true,
+          context: context,
+          title: "Something went wrong in multipart api call",
+          color: AppColors.errorColor,
+        );
       }
       internetExceptionHandle(context: context, e: e);
     }
@@ -234,6 +255,7 @@ class HttpHelper with NavigateHelper {
       if (isDebugMode) {
         log("Multipart request error: $e");
       }
+
       throw Exception("Multipart request failed");
     }
   }

@@ -51,14 +51,15 @@ mixin WidgetHelper {
         // backgroundColor: AppColors.errorColor,
         // primaryColor: ColorHelper.kPrimary,
         closeButtonShowType: CloseButtonShowType.none,
-        type: ToastificationType.error,
-        showProgressBar: false,
+        // type: ToastificationType.error,
+        icon: SizedBox.shrink(),
+        showProgressBar: true,
         alignment: Alignment.bottomCenter,
         style: ToastificationStyle.fillColored,
         dragToClose: true,
         context: context, // optional if you use ToastificationWrapper
         title: Text(title, style: TextStyle(color: AppColors.whiteColor)),
-        autoCloseDuration: const Duration(seconds: 2),
+        autoCloseDuration: const Duration(seconds: 3),
       );
     } else {
       toastification.dismissAll();
@@ -67,13 +68,14 @@ mixin WidgetHelper {
         foregroundColor: AppColors.whiteColor,
         backgroundColor: color ?? AppColors.whiteColor,
         closeButtonShowType: CloseButtonShowType.none,
-        type: ToastificationType.success,
+        // type: ToastificationType.success,
+        icon: SizedBox.shrink(),
         style: ToastificationStyle.fillColored,
-        showProgressBar: false,
+        showProgressBar: true,
         alignment: Alignment.bottomCenter,
         context: context, // optional if you use ToastificationWrapper
         title: Text(title),
-        autoCloseDuration: const Duration(seconds: 2),
+        autoCloseDuration: const Duration(seconds: 3),
       );
     }
   }
