@@ -1,5 +1,6 @@
 import 'package:argil_tiles/model/product_inquiry_model.dart';
 import 'package:argil_tiles/sevices/product_inquiry_service.dart';
+import 'package:argil_tiles/utils/widget_helper/widhet_helper.dart';
 import 'package:flutter/material.dart';
 import '../model/inquiry_request_done_model.dart';
 
@@ -55,20 +56,19 @@ class ProductInquiryProvider with ChangeNotifier {
     if (_inquiryRequestDoneModel?.success == true) {
       resetController();
 
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Inquiry submitted successfully!")),
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: "Inquiry submitted successfully!",
       );
+
       if (!context.mounted) return;
       Navigator.of(context).pop();
     } else {
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            inquiryRequestDoneModel?.message ?? "Something Went Wrong",
-          ),
-        ),
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: inquiryRequestDoneModel?.message ?? "Something Went Wrong",
+        isError: true,
       );
     }
   }

@@ -34,6 +34,7 @@ class _NoConnectionPageState extends State<NoConnectionPage> {
       WidgetHelper.customSnackBar(
         context: context,
         title: 'Press back again to exit',
+        color: AppColors.brown,
         isError: true,
       );
       return false;
