@@ -3,9 +3,9 @@ import 'package:argil_tiles/Screens/HomeScreen.dart';
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:upgrader/upgrader.dart';
 import '../utils/method_helper/gradient_helper.dart';
 import '../widgets/custom_container.dart';
-import 'dart:math' as math;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
