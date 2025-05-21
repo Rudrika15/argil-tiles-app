@@ -53,5 +53,9 @@ class ContactUsProvider extends ChangeNotifier {
     emailController.clear();
     contactController.clear();
     messageController.clear();
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 }

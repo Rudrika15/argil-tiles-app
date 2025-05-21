@@ -64,8 +64,9 @@ mixin WidgetHelper {
       toastification.dismissAll();
 
       toastification.show(
+        primaryColor: color,
         foregroundColor: AppColors.whiteColor,
-        backgroundColor: color ?? AppColors.whiteColor,
+        backgroundColor: AppColors.whiteColor,
         closeButtonShowType: CloseButtonShowType.none,
         type: ToastificationType.success,
         style: ToastificationStyle.fillColored,

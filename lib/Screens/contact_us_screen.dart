@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../app_const/app_color.dart';
+import '../utils/widget_helper/widhet_helper.dart';
 
 class ContactUsScreen extends StatefulWidget {
   const ContactUsScreen({super.key});
@@ -132,19 +133,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                       bool success = await contactUsProvider
                                           .contactUs(context: context);
                                       if (success) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            backgroundColor:
-                                                AppColors.primaryColor,
-                                            content: Text(
+                                        WidgetHelper.customSnackBar(
+                                          context: context,
+                                          title:
                                               contactUsProvider
-                                                      .contactUsQueryDone
-                                                      ?.message ??
-                                                  "",
-                                            ),
-                                          ),
+                                                  .contactUsQueryDone
+                                                  ?.message ??
+                                              "",
+                                          color: AppColors.brown,
                                         );
                                       }
                                     }
