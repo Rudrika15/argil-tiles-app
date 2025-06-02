@@ -65,6 +65,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     children: [
                       CustomTextFormField(
                         controller: contactUsProvider.nameController,
+                        onChanged:
+                            (value) =>
+                                contactUsProvider.formKey.currentState
+                                    ?.validate(),
                         hintText: "Name",
                         validator:
                             (value) =>
@@ -75,6 +79,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       SizedBox(height: 2.h),
                       CustomTextFormField(
                         controller: contactUsProvider.emailController,
+                        onChanged:
+                            (value) =>
+                                contactUsProvider.formKey.currentState
+                                    ?.validate(),
                         hintText: "Email",
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
@@ -89,6 +97,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       SizedBox(height: 2.h),
                       CustomTextFormField(
                         controller: contactUsProvider.contactController,
+                        onChanged:
+                            (value) =>
+                                contactUsProvider.formKey.currentState
+                                    ?.validate(),
                         hintText: "Contact No",
                         maxLength: 10,
                         keyboardType: TextInputType.phone,
@@ -104,6 +116,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       SizedBox(height: 2.h),
                       CustomTextFormField(
                         controller: contactUsProvider.messageController,
+                        onChanged:
+                            (value) =>
+                                contactUsProvider.formKey.currentState
+                                    ?.validate(),
                         hintText: "Message",
                         maxLines: 4,
                         validator:

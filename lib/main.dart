@@ -24,7 +24,7 @@ void main() async {
   ]);
   runApp(
     MultiProvider(
-      providers: [
+      providers: [  
         ChangeNotifierProvider(create: (context) => HomeScreenProvider()),
         ChangeNotifierProvider(create: (context) => QuartzproductsProvider()),
         ChangeNotifierProvider(create: (context) => SpcProductProvider()),

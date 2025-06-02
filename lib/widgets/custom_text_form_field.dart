@@ -21,6 +21,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final InputDecoration? decoration;
   final bool enabled;
+  final void Function(String)? onChanged;
 
   const CustomTextFormField({
     super.key,
@@ -41,6 +42,7 @@ class CustomTextFormField extends StatelessWidget {
     this.enabled = true,
     this.hintText,
     this.labelText,
+    this.onChanged
   });
 
   @override
@@ -77,6 +79,7 @@ class CustomTextFormField extends StatelessWidget {
       focusNode: focusNode,
       keyboardType: keyboardType ?? TextInputType.text,
       obscureText: obscureText,
+      onChanged: onChanged,
       onTapOutside: (event) => Navigator.of(context).focusNode.unfocus(),
       maxLength: maxLength,
       maxLines: maxLines,
