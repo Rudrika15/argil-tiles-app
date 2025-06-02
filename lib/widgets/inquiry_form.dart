@@ -8,7 +8,12 @@ import 'package:sizer/sizer.dart';
 import 'custom_container.dart';
 
 class InquiryForm extends StatelessWidget {
-  InquiryForm({super.key, required this.productName, required this.category,required this.productId});
+  InquiryForm({
+    super.key,
+    required this.productName,
+    required this.category,
+    required this.productId,
+  });
   final String productName;
   final int productId;
   final String category;
@@ -51,12 +56,14 @@ class InquiryForm extends StatelessWidget {
                 children: [
                   CustomTextFormField(
                     controller: inquiryProvider.nameController,
+                    onChanged: (value) => formKey.currentState?.validate(),
                     hintText: "Name",
                     validator: (value) => value!.isEmpty ? "Enter name" : null,
                   ),
                   const SizedBox(height: 10),
                   CustomTextFormField(
                     controller: inquiryProvider.emailController,
+                    onChanged: (value) => formKey.currentState?.validate(),
                     hintText: "Email",
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -74,6 +81,7 @@ class InquiryForm extends StatelessWidget {
                   const SizedBox(height: 10),
                   CustomTextFormField(
                     controller: inquiryProvider.contactController,
+                    onChanged: (value) => formKey.currentState?.validate(),
                     hintText: "Contact No",
                     maxLength: 10,
                     keyboardType: TextInputType.phone,
@@ -86,6 +94,7 @@ class InquiryForm extends StatelessWidget {
                   const SizedBox(height: 10),
                   CustomTextFormField(
                     controller: inquiryProvider.messageController,
+                    onChanged: (value) => formKey.currentState?.validate(),
                     hintText: "Message",
                     maxLines: 3,
                     validator:
