@@ -277,9 +277,27 @@ class AllInquiriesPage extends StatelessWidget {
         itemCount: data.length,
         itemBuilder: (_, index) {
           final item = data[index];
-          return ListTile(
-            title: Text(item.subject ?? ""),
-            subtitle: Text(item.details ?? ""),
+          return CustomContainer(
+            borderColor: AppColors.brown,
+            margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+            borderRadius: BorderRadius.circular(AppSize.size10),
+            borderWidth: 0.3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizeHelper.height(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [Text(item.createdAt ?? ""), SizeHelper.width()],
+                ),
+                ListTile(
+                  title: Text(item.name ?? ""),
+                  subtitle: Text(item.message ?? ""),
+                ),
+              ],
+            ),
           );
         },
       ),
