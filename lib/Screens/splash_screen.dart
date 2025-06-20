@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'package:argil_tiles/Screens/HomeScreen.dart';
-import 'package:argil_tiles/app_const/app_color.dart';
+import 'package:argil_tiles/Screens/dashboard_screen.dart';
+import 'package:argil_tiles/Screens/login_screen.dart';
+import 'package:argil_tiles/provider/auth_provider.dart';
+import 'package:argil_tiles/utils/shared_preference/shared_prefrence.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:upgrader/upgrader.dart';
 import '../utils/method_helper/gradient_helper.dart';
 import '../widgets/custom_container.dart';
 
@@ -27,14 +30,34 @@ class SplashScreenState extends State<SplashScreen> {
         _opacity = 1.0;
       });
     });
+    // start
+    Future.delayed(Duration(seconds: 3), () => redirectUserToScreen());
+  }
 
-    // Optionally navigate after 3 seconds
-    Timer(Duration(seconds: 3), () {
+  /// check if token than to dashboard, if both empty
+  void redirectUserToScreen() async {
+    final String token = await SharedPrefs.getToken();
+    final String visited = await SharedPrefs.getString(key: "visited");
+    if (token.isNotEmpty) {
+      context.read<AuthProvider>().setAdminLoginStatus(
+        status: token.isNotEmpty,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
+    } else if (token.isEmpty && visited.isEmpty) {
+      await SharedPrefs.saveString(key: "visited", value: "visited");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
-    });
+    }
   }
 
   @override

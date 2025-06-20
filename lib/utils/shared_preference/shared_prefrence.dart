@@ -26,7 +26,10 @@ class SharedPrefs {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(tokenKey) ?? '';
   }
-
+  static Future<void> saveToken({required String token})async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(tokenKey , token);
+  }
   // to get string
   static Future<String> getString({required String key}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

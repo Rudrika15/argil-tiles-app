@@ -1,7 +1,9 @@
 // import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
 // import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/app_const/app_color.dart';
+import 'package:argil_tiles/provider/auth_provider.dart';
 import 'package:argil_tiles/provider/contact_us_provider.dart';
+import 'package:argil_tiles/provider/dashboard_provider.dart';
 import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
@@ -24,7 +26,7 @@ void main() async {
   ]);
   runApp(
     MultiProvider(
-      providers: [  
+      providers: [
         ChangeNotifierProvider(create: (context) => HomeScreenProvider()),
         ChangeNotifierProvider(create: (context) => QuartzproductsProvider()),
         ChangeNotifierProvider(create: (context) => SpcProductProvider()),
@@ -34,6 +36,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => NewDrawerProvider()),
         ChangeNotifierProvider(create: (context) => ContactUsProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => DashboardProvider()),
       ],
       child: const MyApp(),
     ),

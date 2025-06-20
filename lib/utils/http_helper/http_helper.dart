@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:argil_tiles/Screens/HomeScreen.dart';
+import 'package:argil_tiles/Screens/login_screen.dart';
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -46,10 +47,11 @@ class HttpHelper with NavigateHelper {
           title: "Session expired. Please log in again.",
           color: AppColors.errorColor,
         );
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(builder: (context) => LoginScreen()),
-        //   (route) => false,
-        // );
+        await SharedPrefs.clearShared();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false,
+        );
         return {}; // Empty map since user is logged out
       }
 

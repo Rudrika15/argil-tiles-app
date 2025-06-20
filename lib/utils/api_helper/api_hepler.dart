@@ -19,4 +19,8 @@ class ApiHelper {
 
   /// spc product
   static String spcProduct = "$baseUrl/spcproduct";
+  /// spc product
+  static String login = "$baseUrl/login";
+  /// spc product
+  static String dashboard = "$baseUrl/dashboard";
 }

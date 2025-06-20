@@ -1,3 +1,4 @@
+import 'package:argil_tiles/provider/auth_provider.dart';
 import 'package:argil_tiles/provider/quartzproducts_provider.dart';
 import 'package:argil_tiles/provider/spcproducts_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import '../Screens/company_profile_screen.dart';
 import '../Screens/contact_us_screen.dart';
 import '../Screens/favourite_screen.dart';
 import '../Screens/group_company_screen.dart';
+import '../Screens/login_screen.dart';
 import '../Screens/product_screen.dart';
 import '../Screens/quality_screen.dart';
 import '../app_const/app_color.dart';
@@ -20,6 +22,7 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SpcProductProvider spcProductProvider = context.watch<SpcProductProvider>();
+    AuthProvider authProvider = context.watch<AuthProvider>();
     QuartzproductsProvider quartzproductsProvider =
         context.watch<QuartzproductsProvider>();
     return Drawer(
@@ -125,6 +128,13 @@ class DrawerWidget extends StatelessWidget {
             index: 9,
             title: "Contact Us",
             screen: ContactUsScreen(),
+          ),
+          DrawerItem(
+            icon: authProvider.isAdminLoggedIn ? Icons.logout : Icons.login,
+            index: 10,
+            title: authProvider.isAdminLoggedIn ? "Logout" : "Login",
+            screen: LoginPage(),
+            shouldPushRemove: authProvider.isAdminLoggedIn,
           ),
         ],
       ),
