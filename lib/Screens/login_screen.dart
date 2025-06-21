@@ -63,6 +63,9 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        onTapOutside:
+                            (event) =>
+                                Navigator.of(context).focusNode.unfocus(),
                         decoration: InputDecoration(
                           labelText: 'Email',
                           enabledBorder: brownBorder(),
@@ -73,14 +76,17 @@ class _LoginPageState extends State<LoginPage> {
                           prefixIcon: Icon(Icons.email_outlined),
                           border: OutlineInputBorder(),
                         ),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return "Enter email";
                           }
-                          if (!value.contains('@')) {
-                            return 'Enter a valid email';
-                          }
-                          return null;
+                          final emailRegex = RegExp(
+                            r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
+                          );
+                          return emailRegex.hasMatch(value)
+                              ? null
+                              : "Enter valid email";
                         },
                       ),
                       SizeHelper.height(),
@@ -89,6 +95,10 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        onTapOutside:
+                            (event) =>
+                                Navigator.of(context).focusNode.unfocus(),
                         decoration: InputDecoration(
                           enabledBorder: brownBorder(),
                           focusedBorder: brownBorder(),

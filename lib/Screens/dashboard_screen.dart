@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_color.dart';
 import '../model/dashboard_model.dart';
+import '../provider/quartzproducts_provider.dart';
+import '../provider/spcproducts_provider.dart';
 import '../utils/widget_helper/widhet_helper.dart';
 import '../widgets/custom_container.dart';
 import '../widgets/drawer.dart';
@@ -32,6 +34,12 @@ class _DashboardPageState extends State<DashboardPage> {
     DashboardProvider dashboardProvider = context.read<DashboardProvider>();
     Future.microtask(() async {
       await dashboardProvider.getDashboard(context: context);
+      await context.read<QuartzproductsProvider>().loadQuartzProducts(
+        context: context,
+      );
+      await context.read<SpcProductProvider>().loadSpcProducts(
+        context: context,
+      );
     });
   }
 
@@ -94,78 +102,93 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
         endDrawer: DrawerWidget(),
-        body: RefreshIndicator(
-          onRefresh:
-              () async =>
-                  await dashboardProvider.getDashboard(context: context),
-          backgroundColor: AppColors.brown,
-          color: AppColors.appBar,
-          child: ListView(
-            children: [
-              CustomContainer(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: StatCard(
-                        label: "Inquiries",
-                        count: data?.inquiryCount ?? 0,
+        body:
+            dashboardProvider.isLoading
+                ? Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: AppColors.brown,
+                    color: AppColors.appBar,
+                  ),
+                )
+                : RefreshIndicator(
+                  onRefresh:
+                      () async => await dashboardProvider.getDashboard(
+                        context: context,
                       ),
-                    ),
-                    SizeHelper.width(),
-                    Expanded(
-                      child: StatCard(
-                        label: "Contacts",
-                        count: data?.contactCount ?? 0,
+                  backgroundColor: AppColors.brown,
+                  color: AppColors.appBar,
+                  child: ListView(
+                    children: [
+                      CustomContainer(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 2.h,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: StatCard(
+                                label: "Inquiries",
+                                count: data?.inquiryCount ?? 0,
+                              ),
+                            ),
+                            SizeHelper.width(),
+                            Expanded(
+                              child: StatCard(
+                                label: "Contacts",
+                                count: data?.contactCount ?? 0,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      SizeHelper.height(),
+                      SectionHeader(
+                        title: "Recent Inquiries",
+                        onViewAll: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => AllInquiriesPage(
+                                    data: data?.inquiryData ?? [],
+                                  ),
+                            ),
+                          );
+                        },
+                      ),
+                      ...List.generate(
+                        (data?.inquiryData?.take(3).length ?? 0),
+                        (index) => InfoTile(
+                          title: data!.inquiryData![index].subject ?? "",
+                          subtitle: data.inquiryData![index].message ?? "",
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SectionHeader(
+                        title: "Recent Contacts",
+                        onViewAll: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => AllContactsPage(
+                                    data: data?.contactData ?? [],
+                                  ),
+                            ),
+                          );
+                        },
+                      ),
+                      ...List.generate(
+                        (data?.contactData?.take(3).length ?? 0),
+                        (index) => InfoTile(
+                          title: data!.contactData![index].name ?? "",
+                          subtitle: data.contactData![index].message ?? "",
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizeHelper.height(),
-              SectionHeader(
-                title: "Recent Inquiries",
-                onViewAll: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) =>
-                              AllInquiriesPage(data: data?.inquiryData ?? []),
-                    ),
-                  );
-                },
-              ),
-              ...List.generate(
-                (data?.inquiryData?.take(3).length ?? 0),
-                (index) => InfoTile(
-                  title: data!.inquiryData![index].subject ?? "",
-                  subtitle: data.inquiryData![index].message ?? "",
-                ),
-              ),
-              const SizedBox(height: 16),
-              SectionHeader(
-                title: "Recent Contacts",
-                onViewAll: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => AllContactsPage(data: data?.contactData ?? []),
-                    ),
-                  );
-                },
-              ),
-              ...List.generate(
-                (data?.contactData?.take(3).length ?? 0),
-                (index) => InfoTile(
-                  title: data!.contactData![index].name ?? "",
-                  subtitle: data.contactData![index].message ?? "",
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

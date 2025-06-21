@@ -1,11 +1,9 @@
 import 'dart:developer';
-
 import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';

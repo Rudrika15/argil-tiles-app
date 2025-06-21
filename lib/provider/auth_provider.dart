@@ -37,6 +37,7 @@ class AuthProvider extends ChangeNotifier {
       context: context,
     );
     if (_auth?.success == true) {
+      _isAdminLoggedIn = true;
       await SharedPrefs.saveToken(token: _auth?.data?.token ?? "");
       WidgetHelper.customSnackBar(context: context, title: "Logged In");
     }
