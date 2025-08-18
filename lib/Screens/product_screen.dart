@@ -15,6 +15,7 @@ import 'favourite_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   final String title;
+  final bool isSpcProduct;
   final String url;
   final List<ProductModel> products;
   const ProductScreen({
@@ -22,6 +23,7 @@ class ProductScreen extends StatefulWidget {
     required this.title,
     required this.products,
     required this.url,
+    required this.isSpcProduct
   });
 
   @override
@@ -136,7 +138,6 @@ class _ProductScreenState extends State<ProductScreen> {
                     itemBuilder: (context, index) {
                       ProductModel item = searchProduct[index];
                       item.imageUrl = widget.url;
-                      log(" ===${item.imageUrl}");
                       return InkWell(
                         onTap:
                             () => Navigator.of(context).push(
@@ -145,6 +146,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     (context) => ProductDetailsScreen(
                                       url: widget.url,
                                       productModel: item,
+                                      isSpcProduct: widget.isSpcProduct,
                                     ),
                               ),
                             ),

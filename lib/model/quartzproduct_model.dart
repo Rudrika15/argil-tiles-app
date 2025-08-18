@@ -70,7 +70,9 @@ class QuartzProductModel {
     if (json['data'] != null) {
       data = <ProductModel>[];
       json['data'].forEach((v) {
-        data!.add(new ProductModel.fromJson(v));
+        /// here this `false` is for wethere this product is `SPC` product
+        /// `false` meaning its not a SPC product
+        data!.add(new ProductModel.fromJson(v,false));
       });
     }
     message = json['message'];

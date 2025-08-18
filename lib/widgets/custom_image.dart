@@ -1,11 +1,11 @@
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
-import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import '../app_const/app_color.dart';
 import '../app_const/app_size.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'photo_view.dart';
 
 class CustomImageWithLoader extends StatelessWidget with NavigateHelper {
   const CustomImageWithLoader({
@@ -53,84 +53,15 @@ class CustomImageWithLoader extends StatelessWidget with NavigateHelper {
     return showImageInPanel
         ? GestureDetector(
           onTap:
-              () =>
-              // push(
-              //   context: context,
-              //   widget: ViewImageInPage(imageUrl: imageUrl),
-              //   transition: FadeForwardsPageTransitionsBuilder(),
-              // ),
-              showDialog(
-                context: context,
-                builder:
-                    (context) => Dialog(
-                      backgroundColor: Colors.transparent,
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: CustomContainer(
-                          width: 100.w,
-                          height: 100.h,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            child: InteractiveViewer(
-                              scaleEnabled: true,
-                              child: CustomImageWithLoader(
-                                fit: BoxFit.contain,
-                                imageUrl: imageUrl,
-                                showImageInPanel: false,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+              () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PhotoViewWidget(imageUrl: imageUrl),
+                ),
               ),
+
           child: image,
         )
         : image;
   }
 }
 
-// class CustomLoaderImage extends StatelessWidget {
-//   const CustomLoaderImage({
-//     super.key,
-//     this.backGroundColor,
-//     required this.imageUrl,
-//     this.radius,
-//   });
-//   final Color? backGroundColor;
-//   final String imageUrl;
-//   final double? radius;
-//   @override
-//   Widget build(BuildContext context) {
-//     return CircleAvatar(
-//       radius: radius ?? AppSize.size50,
-//       backgroundColor: backGroundColor ?? AppColors.whiteColor,
-//       backgroundImage: AssetImage(AppImageStrings.spinner),
-//       foregroundImage: NetworkImage(imageUrl),
-//     );
-//   }
-// }
-// class ViewImageInPage extends StatelessWidget {
-//   const ViewImageInPage({super.key, required this.imageUrl});
-//   final String imageUrl;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       floatingActionButton: FloatingActionButton(onPressed: () {}),
-//       body: CustomContainer(
-//         width: 100.w,
-//         height: 100.h,
-//         child: InteractiveViewer(
-//           child: InteractiveViewer(
-//             scaleEnabled: true,
-//             child: CustomImageWithLoader(
-//               fit: BoxFit.contain,
-//               imageUrl: imageUrl,
-//               showImageInPanel: false,
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

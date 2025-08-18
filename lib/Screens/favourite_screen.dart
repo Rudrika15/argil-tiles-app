@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:argil_tiles/model/common_product_model.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/widgets/custom_image.dart';
@@ -10,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../utils/api_helper/api_hepler.dart';
 import '../widgets/custom_container.dart';
-import '../widgets/custom_network_image.dart';
 import 'product_details_screen.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -66,6 +64,7 @@ class FavoriteScreenState extends State<FavoriteScreen> {
                                     (context) => ProductDetailsScreen(
                                       url: item.imageUrl ?? "",
                                       productModel: item,
+                                      isSpcProduct: item.isSpcProduct,
                                     ),
                               ),
                             ),

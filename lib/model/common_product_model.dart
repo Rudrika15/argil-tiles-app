@@ -23,6 +23,9 @@ class ProductModel {
   String? navigateUrl;
   String? imageUrl;
   bool? isFavorite;
+  String? finishType;
+  String? sizes;
+  late final bool isSpcProduct;
 
   ProductModel({
     this.id,
@@ -47,9 +50,12 @@ class ProductModel {
     this.navigateUrl,
     this.imageUrl,
     this.isFavorite,
+    this.finishType,
+    this.sizes,
+    required this.isSpcProduct,
   });
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
+  ProductModel.fromJson(Map<String, dynamic> json, bool? isSpc) {
     id = json['id'];
     names = json['names'] == null ? json['name'] : json['names'];
     thicknesses = json['thicknesses'];
@@ -71,6 +77,11 @@ class ProductModel {
     image = json['image'];
     imageUrl = json['imageURL'];
     navigateUrl = json['navigate_url'];
+    finishType = json['finishType'];
+    sizes = json['sizes'];
+
+    /// init isSpcProduct from either directly with `isSpc` or from json itself
+    isSpcProduct = isSpc ?? json['isSpc'];
   }
 
   /// get which product is favorite
@@ -116,6 +127,11 @@ class ProductModel {
     data['image'] = this.image;
     data['imageURL'] = this.imageUrl;
     data['navigate_url'] = this.navigateUrl;
+    data['finishType'] = this.finishType;
+    data['sizes'] = this.sizes;
+
+    /// will save the isSpc for `FavouriteProducts`
+    data['isSpc'] = this.isSpcProduct;
     return data;
   }
 }

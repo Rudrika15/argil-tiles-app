@@ -44,9 +44,13 @@ class FavoriteProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final favJson = prefs.getStringList(_prefsKey) ?? [];
     _favorites =
-        favJson
-            .map((jsonStr) => ProductModel.fromJson(json.decode(jsonStr)))
-            .toList();
+        favJson.map((jsonStr) {
+          final productJson = json.decode(jsonStr);
+          return ProductModel.fromJson(
+            productJson,
+            productJson['isSpc'] as bool || false,
+          );
+        }).toList();
     notifyListeners();
   }
 }

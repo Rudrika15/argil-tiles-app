@@ -57,6 +57,7 @@ class DrawerWidget extends StatelessWidget {
                 index: 1,
                 screen: ProductScreen(
                   title: "Dura Quartz Surface",
+                  isSpcProduct: false,
                   url: "quartz",
                   products:
                       quartzproductsProvider.quartzProductModel?.data ?? [],
@@ -69,6 +70,7 @@ class DrawerWidget extends StatelessWidget {
                 index: 2,
                 screen: ProductScreen(
                   title: "SPC Products",
+                  isSpcProduct: true,
                   url: "spc",
                   products: spcProductProvider.spcProductModel?.data ?? [],
                 ),

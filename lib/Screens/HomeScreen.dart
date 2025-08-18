@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       context: context,
     );
     await context.read<SpcProductProvider>().loadSpcProducts(context: context);
-    await context.read<NewarrivalProvider>().fetchNewArrivals(context: context);
+    // await context.read<NewarrivalProvider>().fetchNewArrivals(context: context);
   }
 
   Future<bool> _onWillPop() async {
@@ -204,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       (context) => ProductScreen(
                                         title: "Dura Quartz Surface",
                                         url: "quartz",
+                                        isSpcProduct: false,
                                         products:
                                             quartzProvider
                                                 .quartzProductModel
@@ -216,7 +217,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildSectionTitle(title: 'Quartz Products'),
+                                _buildSectionTitle(
+                                  title: 'DURA QUARTZ SURFACE',
+                                ),
 
                                 if (!showAllQuartz &&
                                     (quartzProvider
@@ -280,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                                   (context) =>
                                                       ProductDetailsScreen(
                                                         url: "quartz",
+                                                        isSpcProduct: false,
                                                         productModel: product,
                                                       ),
                                             ),
@@ -307,6 +311,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   builder:
                                       (context) => ProductScreen(
                                         title: "SPC Products",
+                                        isSpcProduct: true,
                                         url: "spc",
                                         products:
                                             spcProvider.spcProductModel?.data ??
@@ -318,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildSectionTitle(title: 'SPC Products'),
+                                _buildSectionTitle(title: 'SPC FLOORING'),
 
                                 if (!showAllSpc &&
                                     (spcProvider
@@ -379,6 +384,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                                   (context) =>
                                                       ProductDetailsScreen(
                                                         url: "spc",
+                                                        isSpcProduct: true,
                                                         productModel: product,
                                                       ),
                                             ),

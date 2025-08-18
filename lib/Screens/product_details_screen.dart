@@ -16,8 +16,14 @@ import '../model/common_product_model.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String url;
+  final bool isSpcProduct;
   final ProductModel? productModel;
-  const ProductDetailsScreen({super.key, this.productModel, required this.url});
+  const ProductDetailsScreen({
+    super.key,
+    this.productModel,
+    required this.url,
+    required this.isSpcProduct,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +48,8 @@ class ProductDetailsScreen extends StatelessWidget {
                 _buildSectionTitle(
                   title: "Product Information",
                   favoriteProvider: favoriteProvider,
-                  item: productModel ?? ProductModel(),
+                  item:
+                      productModel ?? ProductModel(isSpcProduct: isSpcProduct),
                   url: url,
                 ),
                 const SizedBox(height: 12),
@@ -57,7 +64,10 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     _infoRow("Stock", productModel?.status ?? ''),
                     _infoRow("Book Match", productModel?.bookmatch ?? ''),
-                    _infoRow("Available Finish", "Polished"),
+                    _infoRow(
+                      "Available Finish",
+                      productModel?.finishType ?? "",
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -67,7 +77,8 @@ class ProductDetailsScreen extends StatelessWidget {
                   title: "Sizes",
                   rows: [
                     _infoRow("Thickness", productModel?.thicknesses ?? ''),
-                    _infoRow("Slab Size", "1600 X 3200 MM"),
+                    if (!isSpcProduct)
+                      _infoRow("Slab Size", productModel?.sizes ?? ""),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -196,12 +207,15 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget _infoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(flex: 2, child: Text("$label :")),
-          Expanded(flex: 3, child: Text(value)),
-        ],
-      ),
+      child:
+          value.trim().isNotEmpty
+              ? Row(
+                children: [
+                  Expanded(flex: 2, child: Text("$label :")),
+                  Expanded(flex: 3, child: Text(value)),
+                ],
+              )
+              : SizedBox.shrink(),
     );
   }
 
@@ -228,9 +242,9 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _applicationRow("Flooring", true, true),
-            _applicationRow("Counters", true, true),
+            if (!isSpcProduct) _applicationRow("Counters", true, true),
             _applicationRow("Wall", true, true),
-            _applicationRow("Other", true, false),
+            // _applicationRow("Other", true, false),
           ],
         ),
       ),

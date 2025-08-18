@@ -27,24 +27,24 @@ class NewArrivalService {
   }
 
   ///
-  Future<ProductModel?> getNewArrivalProduct({
-    required BuildContext context,
-    required String url,
-  }) async {
-    try {
-      Map<String, dynamic> response = await HttpHelper.get(
-        context: context,
-        uri: url,
-      );
+  // Future<ProductModel?> getNewArrivalProduct({
+  //   required BuildContext context,
+  //   required String url,
+  // }) async {
+  //   try {
+  //     Map<String, dynamic> response = await HttpHelper.get(
+  //       context: context,
+  //       uri: url,
+  //     );
 
-      if (response.isNotEmpty) {
-        return ProductModel.fromJson(response['data']);
-      } else {
-        return null;
-      }
-    } catch (e) {
-      log('error while getting new arrival product from $url => $e');
-      return null;
-    }
-  }
+  //     // if (response.isNotEmpty) {
+  //     //   return ProductModel.fromJson(response['data']);
+  //     // } else {
+  //     //   return null;
+  //     // }
+  //   } catch (e) {
+  //     log('error while getting new arrival product from $url => $e');
+  //     return null;
+  //   }
+  // }
 }
