@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/dashboard_provider.dart';
 import 'package:argil_tiles/utils/size_helper/size_helper.dart';
 import 'package:argil_tiles/utils/text_style_helper/text_style_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_color.dart';
@@ -159,10 +157,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       ...List.generate(
                         (data?.inquiryData?.take(3).length ?? 0),
-                        (index) => InfoTile(
-                          title: data!.inquiryData![index].subject ?? "",
-                          subtitle: data.inquiryData![index].message ?? "",
-                        ),
+                        (index) {
+                          final item = data?.inquiryData?[index];
+                          return InquiryTile(
+                            name: item?.name,
+                            createdAt: item?.createdAt,
+                            email: item?.email,
+                            message: item?.message,
+                            phone: item?.phone,
+                            subject: item?.subject,
+                          );
+                        },
                       ),
                       const SizedBox(height: 16),
                       SectionHeader(
@@ -181,10 +186,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                       ...List.generate(
                         (data?.contactData?.take(3).length ?? 0),
-                        (index) => InfoTile(
-                          title: data!.contactData![index].name ?? "",
-                          subtitle: data.contactData![index].message ?? "",
-                        ),
+                        (index) {
+                          final item = data?.contactData?[index];
+                          return InquiryTile(
+                            name: item?.name,
+                            createdAt: item?.createdAt,
+                            email: item?.email,
+                            message: item?.message,
+                            phone: item?.contactno,
+                            // subject: item?.subject,
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -300,29 +312,97 @@ class AllInquiriesPage extends StatelessWidget {
         itemCount: data.length,
         itemBuilder: (_, index) {
           final item = data[index];
-          return CustomContainer(
-            borderColor: AppColors.brown,
-            margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-            borderRadius: BorderRadius.circular(AppSize.size10),
-            borderWidth: 0.3,
-            child: Column(
+          return InquiryTile(
+            name: item.name,
+            createdAt: item.createdAt,
+            email: item.email,
+            message: item.message,
+            phone: item.phone,
+            subject: item.subject,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class InquiryTile extends StatelessWidget {
+  const InquiryTile({
+    super.key,
+    this.createdAt,
+    this.email,
+    this.message,
+    this.name,
+    this.phone,
+    this.subject,
+  });
+  final String? createdAt;
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? subject;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    int textLineLength = 2;
+    return CustomContainer(
+      borderColor: AppColors.brown,
+      margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      borderWidth: 0.3,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizeHelper.height(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [Text(createdAt ?? ""), SizeHelper.width()],
+          ),
+          ListTile(
+            title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (name?.isNotEmpty == true)
+                  Text(name ?? "", style: TextStyleHelper.smallHeading),
+                if (email?.isNotEmpty == true) Text(email ?? ""),
+                if (phone?.isNotEmpty == true) Text(phone ?? ""),
                 SizeHelper.height(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Text(item.createdAt ?? ""), SizeHelper.width()],
-                ),
-                ListTile(
-                  title: Text(item.name ?? ""),
-                  subtitle: Text(item.message ?? ""),
-                ),
               ],
             ),
-          );
-        },
+            subtitle: StatefulBuilder(
+              builder:
+                  (context, setState) => InkWell(
+                    onTap: () {
+                      (textLineLength += 10) > 500
+                          ? textLineLength = 2
+                          : textLineLength += 10;
+                      setState(() {});
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (subject?.isNotEmpty == true)
+                          Text("Subject :- ${subject}"),
+                        if (message?.isNotEmpty == true) ...[
+                          Text(
+                            "Message :- ${message}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: textLineLength,
+                          ),
+                          SizeHelper.width(),
+                        ],
+                      ],
+                    ),
+                  ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -346,27 +426,13 @@ class AllContactsPage extends StatelessWidget {
         itemCount: data.length,
         itemBuilder: (_, index) {
           final item = data[index];
-          return CustomContainer(
-            borderColor: AppColors.brown,
-            margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-            borderRadius: BorderRadius.circular(AppSize.size10),
-            borderWidth: 0.3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizeHelper.height(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Text(item.createdAt ?? ""), SizeHelper.width()],
-                ),
-                ListTile(
-                  title: Text(item.name ?? ""),
-                  subtitle: Text(item.message ?? ""),
-                ),
-              ],
-            ),
+          return InquiryTile(
+            name: item.name,
+            createdAt: item.createdAt,
+            email: item.email,
+            message: item.message,
+            phone: item.contactno,
+            // subject: item?.subject,
           );
         },
       ),
