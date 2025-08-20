@@ -36,85 +36,89 @@ class ProductDetailsScreen extends StatelessWidget {
       ),
       endDrawer: DrawerWidget(),
 
-      body: Column(
-        children: [
-          // Top Content - Scrollable
-          Expanded(
-            child: ListView(
-              children: [
-                ProductImageCarousel(productModel: productModel, url: url),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top Content - Scrollable
+            Expanded(
+              child: ListView(
+                children: [
+                  ProductImageCarousel(productModel: productModel, url: url),
 
-                const SizedBox(height: 16),
-                _buildSectionTitle(
-                  title: "Product Information",
-                  favoriteProvider: favoriteProvider,
-                  item:
-                      productModel ?? ProductModel(isSpcProduct: isSpcProduct),
-                  url: url,
-                ),
-                const SizedBox(height: 12),
+                  const SizedBox(height: 16),
+                  _buildSectionTitle(
+                    title: "Product Information",
+                    favoriteProvider: favoriteProvider,
+                    item:
+                        productModel ??
+                        ProductModel(isSpcProduct: isSpcProduct),
+                    url: url,
+                  ),
+                  const SizedBox(height: 12),
 
-                _buildInfoCard(
-                  iconPath: "assets/images/spaces_icon.png",
-                  title: "Spaces",
-                  rows: [
-                    _infoRow(
-                      "Primary Color",
-                      productModel?.primarycolors ?? '',
-                    ),
-                    _infoRow("Stock", productModel?.status ?? ''),
-                    _infoRow("Book Match", productModel?.bookmatch ?? ''),
-                    _infoRow(
-                      "Available Finish",
-                      productModel?.finishType ?? "",
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                _buildInfoCard(
-                  iconPath: "assets/images/sizes_icon.png",
-                  title: "Sizes",
-                  rows: [
-                    _infoRow("Thickness", productModel?.thicknesses ?? ''),
-                    if (!isSpcProduct)
-                      _infoRow("Slab Size", productModel?.sizes ?? ""),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                _buildApplicationsCard(
-                  iconPath: "assets/images/application_icon.png",
-                ),
-              ],
-            ),
-          ),
-
-          // Bottom Buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Row(
-              children: [
-                _actionButton(
-                  context: context,
-                  label: "Inquiry Now",
-                  onPressed:
-                      () => showDialog(
-                        context: context,
-                        builder:
-                            (context) => Dialog(
-                              child: InquiryForm(
-                                productId: productModel?.id ?? -1,
-                                productName: productModel?.names ?? "Not Found",
-                                category: url,
-                              ),
-                            ),
+                  _buildInfoCard(
+                    iconPath: "assets/images/spaces_icon.png",
+                    title: "Spaces",
+                    rows: [
+                      _infoRow(
+                        "Primary Color",
+                        productModel?.primarycolors ?? '',
                       ),
-                ),
-              ],
+                      _infoRow("Stock", productModel?.status ?? ''),
+                      _infoRow("Book Match", productModel?.bookmatch ?? ''),
+                      _infoRow(
+                        "Available Finish",
+                        productModel?.finishType ?? "",
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  _buildInfoCard(
+                    iconPath: "assets/images/sizes_icon.png",
+                    title: "Sizes",
+                    rows: [
+                      _infoRow("Thickness", productModel?.thicknesses ?? ''),
+                      if (!isSpcProduct)
+                        _infoRow("Slab Size", productModel?.sizes ?? ""),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  _buildApplicationsCard(
+                    iconPath: "assets/images/application_icon.png",
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            // Bottom Buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  _actionButton(
+                    context: context,
+                    label: "Inquiry Now",
+                    onPressed:
+                        () => showDialog(
+                          context: context,
+                          builder:
+                              (context) => Dialog(
+                                child: InquiryForm(
+                                  productId: productModel?.id ?? -1,
+                                  productName:
+                                      productModel?.names ?? "Not Found",
+                                  category: url,
+                                ),
+                              ),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -223,10 +227,10 @@ class ProductDetailsScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSize.size10),
         decoration: BoxDecoration(
           color: const Color(0xFFFAF7F4),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSize.size10),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,7 +244,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSize.size10),
             _applicationRow("Flooring", true, true),
             if (!isSpcProduct) _applicationRow("Counters", true, true),
             _applicationRow("Wall", true, true),
@@ -258,25 +262,29 @@ class ProductDetailsScreen extends StatelessWidget {
         children: [
           Expanded(child: Text("$label :")),
           Expanded(
+            flex: 2,
             child: Row(
               children: [
-                const Text("Residential "),
-                Icon(
-                  residential ? Icons.check : Icons.close,
-                  size: 16,
-                  color: residential ? Colors.green : Colors.red,
+                Row(
+                  children: [
+                    const Text("Residential "),
+                    Icon(
+                      residential ? Icons.check : Icons.close,
+                      size: 16,
+                      color: residential ? Colors.green : Colors.red,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                const Text("Commercial "),
-                Icon(
-                  commercial ? Icons.check : Icons.close,
-                  size: 16,
-                  color: commercial ? Colors.green : Colors.red,
+                SizedBox(width: 5),
+                Row(
+                  children: [
+                    const Text("Commercial "),
+                    Icon(
+                      commercial ? Icons.check : Icons.close,
+                      size: 16,
+                      color: commercial ? Colors.green : Colors.red,
+                    ),
+                  ],
                 ),
               ],
             ),
