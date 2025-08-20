@@ -19,8 +19,18 @@ class ApiHelper {
 
   /// spc product
   static String spcProduct = "$baseUrl/spcproduct";
+
   /// spc product
   static String login = "$baseUrl/login";
+
   /// spc product
   static String dashboard = "$baseUrl/dashboard";
+
+  /// pagination links
+  static String spcProductPagination({required String page, String? query}) =>
+      "$baseUrl/spcproductpagination?page=$page&q=${query ?? ""}";
+  static String quartzProductPagination({
+    required String page,
+    String? query,
+  }) => "$baseUrl/quartzproductpagination?page=$page&q=${query ?? ""}";
 }

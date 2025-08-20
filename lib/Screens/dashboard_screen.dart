@@ -3,6 +3,7 @@ import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/dashboard_provider.dart';
 import 'package:argil_tiles/utils/size_helper/size_helper.dart';
 import 'package:argil_tiles/utils/text_style_helper/text_style_helper.dart';
+import 'package:argil_tiles/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -102,12 +103,7 @@ class _DashboardPageState extends State<DashboardPage> {
         endDrawer: DrawerWidget(),
         body:
             dashboardProvider.isLoading
-                ? Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: AppColors.brown,
-                    color: AppColors.appBar,
-                  ),
-                )
+                ? Loader()
                 : RefreshIndicator(
                   onRefresh:
                       () async => await dashboardProvider.getDashboard(
