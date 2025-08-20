@@ -205,11 +205,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         title: "Dura Quartz Surface",
                                         url: "quartz",
                                         isSpcProduct: false,
-                                        products:
-                                            quartzProvider
-                                                .quartzProductModel
-                                                ?.data ??
-                                            [],
                                       ),
                                 ),
                               );
@@ -313,9 +308,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         title: "SPC Products",
                                         isSpcProduct: true,
                                         url: "spc",
-                                        products:
-                                            spcProvider.spcProductModel?.data ??
-                                            [],
                                       ), // Navigate to ProductScreen
                                 ),
                               );

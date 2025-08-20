@@ -11,11 +11,14 @@ class QuartzproductsService {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,
-        uri: ApiHelper.quartzProduct,
+
+        /// depreicated
+        // uri: ApiHelper.quartzProduct,
+        uri: ApiHelper.quartzProductPagination(page: "1"),
       );
 
       if (response.isNotEmpty) {
-        return QuartzProductModel.fromJson(response);
+        return QuartzProductModel.fromJson(response['data']);
       } else {
         return null;
       }

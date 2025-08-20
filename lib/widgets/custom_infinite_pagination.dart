@@ -22,9 +22,10 @@ class UrlPagedList<T> extends StatefulWidget {
     this.padding,
     this.enableRefresh = true,
     this.isListView = true,
+    this.searchQuery = '',
   });
 
-  final String Function(String page) url;
+  final String Function(String page,String query) url;
   final Widget Function(BuildContext, T, int) itemBuilder;
   final FromJson<T> fromJson;
   final Map<String, String>? headers;
@@ -36,13 +37,15 @@ class UrlPagedList<T> extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final bool enableRefresh;
   final bool isListView;
+  final String searchQuery; // 👈 new
+
   @override
   State<UrlPagedList<T>> createState() => _UrlPagedListState<T>();
 }
 
 class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
   late final PagingController<int, T> _controller;
-
+  String _lastQuery = '';
   @override
   void initState() {
     super.initState();
@@ -55,14 +58,14 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
         return state.nextIntPageKey; // convenience extension for int keys
       },
       // Fetch a page and return the items.
-      fetchPage: (pageKey) async => _fetchPage(pageKey),
+      fetchPage: (pageKey) async => _fetchPage(pageKey,widget.searchQuery),
     );
   }
 
-  Future<List<T>> _fetchPage(int page) async {
+  Future<List<T>> _fetchPage(int page ,String query) async {
     final resp = await HttpHelper.get(
       context: context,
-      uri: widget.url(page.toString()),
+      uri: widget.url(page.toString(),query),
     );
 
     // Flexible extraction: supports top-level list or common keys like data/results/items.
@@ -77,6 +80,16 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
         .whereType<Map<String, dynamic>>()
         .map<T>((m) => widget.fromJson(m))
         .toList(growable: false);
+  }
+
+  @override
+  void didUpdateWidget(covariant UrlPagedList<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.searchQuery != widget.searchQuery) {
+      // 👈 If query changed, refresh
+      _lastQuery = widget.searchQuery;
+      _controller.refresh();
+    }
   }
 
   @override

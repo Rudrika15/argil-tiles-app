@@ -2,6 +2,7 @@ import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/widgets/custom_image.dart';
+import 'package:argil_tiles/widgets/debouncer.dart';
 import 'package:argil_tiles/widgets/pop_to_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +18,9 @@ class ProductScreen extends StatefulWidget {
   final String title;
   final bool isSpcProduct;
   final String url;
-  final List<ProductModel> products;
   const ProductScreen({
     super.key,
     required this.title,
-    required this.products,
     required this.url,
     required this.isSpcProduct,
   });
@@ -32,28 +31,18 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   final TextEditingController searchController = TextEditingController();
-  List<ProductModel> searchProduct = [];
+  String query = "";
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    searchProduct = widget.products;
-    searchController.addListener(onSearchChanged);
-  }
-
-  void onSearchChanged() {
-    final query = searchController.text.trim().toLowerCase();
-    setState(() {
-      if (query.isEmpty) {
-        searchProduct = widget.products;
-      } else {
-        searchProduct =
-            widget.products.where((p) {
-              final name = p.names?.toLowerCase() ?? '';
-              return name.contains(query);
-            }).toList();
-      }
-    });
+    searchController.addListener(
+      () => Debouncer().run(
+        () => setState(() {
+          query = searchController.text;
+        }),
+      ),
+    );
   }
 
   void clearSearch() {
@@ -63,7 +52,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void dispose() {
-    searchController.removeListener(onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -126,106 +114,107 @@ class _ProductScreenState extends State<ProductScreen> {
                   horizontal: 5.w,
                   vertical: 2.h,
                 ),
-                child: Expanded(
-                  child: UrlPagedList<ProductModel>(
-                    url:
-                        (page) =>
-                            widget.isSpcProduct
-                                ? ApiHelper.spcProductPagination(page: page)
-                                : ApiHelper.quartzProductPagination(page: page),
-                    pageParam: 'page',
-                    perPageParam: 'per_page',
-                    pageSize: 6,
-                    fromJson:
-                        (m) => ProductModel.fromJson(m, widget.isSpcProduct),
-                    isListView: false,
-                    itemBuilder: (ctx, product, i) {
-                      product.imageUrl = widget.url;
-                      return InkWell(
-                        onTap:
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => ProductDetailsScreen(
-                                      url: widget.url,
-                                      productModel: product,
-                                      isSpcProduct: widget.isSpcProduct,
-                                    ),
+                child: UrlPagedList<ProductModel>(
+                  url:
+                      (page, query) =>
+                          widget.isSpcProduct
+                              ? ApiHelper.spcProductPagination(
+                                page: page,
+                                query: query,
+                              )
+                              : ApiHelper.quartzProductPagination(
+                                page: page,
+                                query: query,
                               ),
+                  searchQuery: query,
+                  pageParam: 'page',
+                  perPageParam: 'per_page',
+                  pageSize: 6,
+                  fromJson:
+                      (m) => ProductModel.fromJson(m, widget.isSpcProduct),
+                  isListView: false,
+                  itemBuilder: (ctx, product, i) {
+                    product.imageUrl = widget.url;
+                    return InkWell(
+                      onTap:
+                          () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => ProductDetailsScreen(
+                                    url: widget.url,
+                                    productModel: product,
+                                    isSpcProduct: widget.isSpcProduct,
+                                  ),
                             ),
-                        child: Stack(
-                          children: [
-                            CustomContainer(
-                              backGroundColor: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                AppSize.size10,
-                              ),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      AppSize.size10,
-                                    ),
-                                    child: CustomImageWithLoader(
-                                      height: 35.h,
-                                      width: 50.w,
-                                      showImageInPanel: false,
-                                      imageUrl:
-                                          "${ApiHelper.assetsUrl}${widget.url}/${product.mainImg}",
-                                    ),
+                          ),
+                      child: Stack(
+                        children: [
+                          CustomContainer(
+                            backGroundColor: AppColors.whiteColor,
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSize.size10,
                                   ),
-                                  Positioned(
-                                    top: AppSize.size10,
-                                    right: AppSize.size10,
-                                    child: InkWell(
-                                      onTap:
-                                          () async => favoriteProvider
-                                              .toggleFavorite(product),
-                                      child: CustomContainer(
-                                        backGroundColor: AppColors.blackColor
-                                            .withOpacity(0.3),
-                                        shape: BoxShape.circle,
-                                        child: Icon(
-                                          favoriteProvider.isFavorite(product)
-                                              ? Icons.favorite_rounded
-                                              : Icons.favorite_border,
-                                          color:
-                                              favoriteProvider.isFavorite(
-                                                    product,
-                                                  )
-                                                  ? AppColors.errorColor
-                                                  : AppColors.whiteColor,
-                                        ),
-                                      ),
-                                    ),
+                                  child: CustomImageWithLoader(
+                                    height: 35.h,
+                                    width: 50.w,
+                                    showImageInPanel: false,
+                                    imageUrl:
+                                        "${ApiHelper.assetsUrl}${widget.url}/${product.mainImg}",
                                   ),
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    width: 42.w,
+                                ),
+                                Positioned(
+                                  top: AppSize.size10,
+                                  right: AppSize.size10,
+                                  child: InkWell(
+                                    onTap:
+                                        () async => favoriteProvider
+                                            .toggleFavorite(product),
                                     child: CustomContainer(
-                                      borderRadius: BorderRadius.vertical(
-                                        bottom: Radius.circular(AppSize.size10),
-                                      ),
-                                      alignment: Alignment.bottomCenter,
                                       backGroundColor: AppColors.blackColor
-                                          .withOpacity(0.5),
-                                      child: Text(
-                                        product.names ?? "",
-                                        style: const TextStyle(
-                                          color: AppColors.whiteColor,
-                                        ),
+                                          .withOpacity(0.3),
+                                      shape: BoxShape.circle,
+                                      child: Icon(
+                                        favoriteProvider.isFavorite(product)
+                                            ? Icons.favorite_rounded
+                                            : Icons.favorite_border,
+                                        color:
+                                            favoriteProvider.isFavorite(product)
+                                                ? AppColors.errorColor
+                                                : AppColors.whiteColor,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  width: 42.w,
+                                  child: CustomContainer(
+                                    borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(AppSize.size10),
+                                    ),
+                                    alignment: Alignment.bottomCenter,
+                                    backGroundColor: AppColors.blackColor
+                                        .withOpacity(0.5),
+                                    child: Text(
+                                      product.names ?? "",
+                                      style: const TextStyle(
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -233,22 +222,5 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ),
     );
-  }
-
-  void searchProducts(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        searchProduct = widget.products;
-      } else {
-        searchProduct =
-            widget.products
-                .where(
-                  (e) =>
-                      e.names?.toLowerCase().contains(value.toLowerCase()) ??
-                      false,
-                )
-                .toList();
-      }
-    });
   }
 }

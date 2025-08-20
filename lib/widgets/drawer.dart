@@ -59,8 +59,6 @@ class DrawerWidget extends StatelessWidget {
                   title: "Dura Quartz Surface",
                   isSpcProduct: false,
                   url: "quartz",
-                  products:
-                      quartzproductsProvider.quartzProductModel?.data ?? [],
                 ),
               ),
               DrawerItem(
@@ -72,7 +70,6 @@ class DrawerWidget extends StatelessWidget {
                   title: "SPC Products",
                   isSpcProduct: true,
                   url: "spc",
-                  products: spcProductProvider.spcProductModel?.data ?? [],
                 ),
               ),
             ],

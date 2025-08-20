@@ -11,10 +11,13 @@ class SpcProductService {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,
-        uri: ApiHelper.spcProduct,
+
+        /// depricated
+        // uri: ApiHelper.spcProduct,
+        uri: ApiHelper.spcProductPagination(page: "1"),
       );
       if (response.isNotEmpty) {
-        return SpcProductModel.fromJson(response);
+        return SpcProductModel.fromJson(response['data']);
       } else {
         return null;
       }

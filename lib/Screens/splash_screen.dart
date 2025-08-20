@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:argil_tiles/Screens/HomeScreen.dart';
 import 'package:argil_tiles/Screens/dashboard_screen.dart';
-import 'package:argil_tiles/Screens/login_screen.dart';
 import 'package:argil_tiles/provider/auth_provider.dart';
 import 'package:argil_tiles/utils/shared_preference/shared_prefrence.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,7 @@ class SplashScreenState extends State<SplashScreen> {
       await SharedPrefs.saveString(key: "visited", value: "visited");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } else {
       Navigator.pushReplacement(
