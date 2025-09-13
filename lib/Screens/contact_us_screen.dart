@@ -20,16 +20,41 @@ class ContactUsScreen extends StatefulWidget {
 class _ContactUsScreenState extends State<ContactUsScreen> {
   final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
+  /// contact details
+  final String phoneNumber = "+ 91 9925511465";
+  final String email = 'info@argiltiles.com';
+  final String address =
+      "Argil Group\n8-A, National Highway,\nMorbi(Gujarat)-363642\nIndia";
+
   ///
-  void _launchURL(String url) async {
-    final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text("Can't open this link"),
-          backgroundColor: Colors.red,
-        ),
+  Future<void> launchCustomUrl(String input) async {
+    Uri? uri;
+
+    // Detect Email
+    if (RegExp(r'^[\w\.\-]+@[\w\.\-]+\.\w+$').hasMatch(input)) {
+      uri = Uri(scheme: 'mailto', path: input);
+    }
+    // Detect Pure Text Address → Google Maps Search
+    else if (!input.startsWith('http') && !input.startsWith('geo:')) {
+      final encoded = Uri.encodeComponent(input);
+      uri = Uri.parse(
+        "https://www.google.com/maps/search/?api=1&query=$encoded",
       );
+    }
+    // Otherwise treat as general URL
+    else {
+      uri = Uri.parse(input);
+    }
+
+    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed To Open"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -214,37 +239,54 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           ),
           const SizedBox(height: 12),
 
-          Row(
-            children: [
-              const Icon(Icons.phone, size: 18),
-              const SizedBox(width: 8),
-              const Text('+91 2822 240628/29', style: TextStyle(fontSize: 12)),
-            ],
+          InkWell(
+            onTap: () async {
+              final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+              if (!await launchUrl(launchUri)) {
+                // Handle error, e.g., show a SnackBar or AlertDialog
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Failed To Open"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.phone, size: 18),
+                const SizedBox(width: 8),
+                Text(phoneNumber, style: TextStyle(fontSize: 12)),
+              ],
+            ),
           ),
           const SizedBox(height: 8),
 
-          Row(
-            children: [
-              const Icon(Icons.email, size: 18),
-              const SizedBox(width: 8),
-              const Text('info@argiltiles.com', style: TextStyle(fontSize: 12)),
-            ],
+          InkWell(
+            onTap: () => launchCustomUrl(email),
+            child: Row(
+              children: [
+                const Icon(Icons.email, size: 18),
+                const SizedBox(width: 8),
+                Text(email, style: TextStyle(fontSize: 12)),
+              ],
+            ),
           ),
           const SizedBox(height: 8),
 
           // Location row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.location_on, size: 18),
-              const SizedBox(width: 8),
-              Expanded(
-                child: const Text(
-                  'Mod Ceramic Industries Ltd.\n8-A, National Highway,\nMorbi (Gujarat), India 363 642',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ),
-            ],
+          InkWell(
+            onTap: () => launchCustomUrl(address),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.location_on, size: 18),
+                const SizedBox(width: 8),
+                Expanded(child: Text(address, style: TextStyle(fontSize: 12))),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
 
@@ -257,7 +299,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   color: Color(0xFF1877F2),
                 ),
                 onPressed: () {
-                  _launchURL("https://www.facebook.com/argilgroup");
+                  launchCustomUrl("https://www.facebook.com/argilgroup");
                 },
               ),
               IconButton(
@@ -266,7 +308,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   color: Color(0xFFC13584),
                 ),
                 onPressed: () {
-                  _launchURL('https://www.instagram.com/argilgroup/');
+                  launchCustomUrl('https://www.instagram.com/argilgroup/');
                 },
               ),
               IconButton(
@@ -275,7 +317,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   color: Color(0xFF0A66C2),
                 ),
                 onPressed: () {
-                  _launchURL(
+                  launchCustomUrl(
                     'https://www.linkedin.com/company/argilgroup/?viewAsMember=true',
                   );
                 },
