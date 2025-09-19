@@ -341,7 +341,7 @@ class InquiryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int textLineLength = 2;
+    bool isExpanded = false;
     return CustomContainer(
       borderColor: AppColors.brown,
       margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
@@ -371,31 +371,31 @@ class InquiryTile extends StatelessWidget {
               ],
             ),
             subtitle: StatefulBuilder(
-              builder:
-                  (context, setState) => InkWell(
-                    onTap: () {
-                      (textLineLength += 10) > 500
-                          ? textLineLength = 2
-                          : textLineLength += 10;
-                      setState(() {});
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (subject?.isNotEmpty == true)
-                          Text("Subject :- ${subject}"),
-                        if (message?.isNotEmpty == true) ...[
-                          Text(
-                            "Message :- ${message}",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: textLineLength,
-                          ),
-                          SizeHelper.width(),
-                        ],
+              builder: (context, setState) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (subject?.isNotEmpty == true)
+                        Text("Subject :- $subject"),
+
+                      if (message?.isNotEmpty == true) ...[
+                        // And in your widget's build method:
+                        Text(
+                          displayMessage(message ?? "", isExpanded),
+                          // overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
                       ],
-                    ),
+                    ],
                   ),
+                );
+              },
             ),
           ),
         ],
@@ -434,4 +434,21 @@ class AllContactsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+String displayMessage(String message, bool isExpanded) {
+  const int maxLength = 200;
+
+  if (isExpanded) {
+    return message;
+  }
+
+  if (message.length < maxLength) {
+    return message;
+  }
+
+  // Return the first 20% of the message for a shrinking effect
+  // as the total message length grows.
+  final int twentyPercentLength = (message.length * 0.2).toInt();
+  return message.substring(0, twentyPercentLength) + '...';
 }

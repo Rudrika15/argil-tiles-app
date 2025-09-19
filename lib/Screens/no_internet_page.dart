@@ -29,7 +29,7 @@ class _NoConnectionPageState extends State<NoConnectionPage> {
     if (_backPressTimer == null || !_backPressTimer!.isActive) {
       _backPressTimer = Timer(const Duration(seconds: _exitTimeInSec), () {
         _backPressTimer = null;
-      });
+      }); 
 
       WidgetHelper.customSnackBar(
         context: context,
