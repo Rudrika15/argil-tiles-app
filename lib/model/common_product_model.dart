@@ -27,6 +27,9 @@ class ProductModel {
   String? sizes;
   late final bool isSpcProduct;
 
+  /// new key added on 2025-12-06
+  String? stock;
+
   ProductModel({
     this.id,
     this.names,
@@ -53,6 +56,7 @@ class ProductModel {
     this.finishType,
     this.sizes,
     required this.isSpcProduct,
+    this.stock,
   });
 
   ProductModel.fromJson(Map<String, dynamic> json, bool? isSpc) {
@@ -79,6 +83,7 @@ class ProductModel {
     navigateUrl = json['navigate_url'];
     finishType = json['finishType'];
     sizes = json['sizes'];
+    stock = json['stock'];
 
     /// init isSpcProduct from either directly with `isSpc` or from json itself
     isSpcProduct = isSpc ?? json['isSpc'];
@@ -132,6 +137,30 @@ class ProductModel {
 
     /// will save the isSpc for `FavouriteProducts`
     data['isSpc'] = this.isSpcProduct;
+    data['stock'] = this.stock;
     return data;
   }
 }
+
+
+/// product model schema as of 2025-12-06
+// {
+//         "id": 27,
+//         "name": "201-MINERAL WHITE",
+//         "slug": "201-mineral-white",
+//         "sizes": "3200 X 6400 MM",
+//         "thicknesses": "20 X 30 MM",
+//         "finishType": "GLOSSY",
+//         "stock": "NEW",
+//         "primarycolors": "White",
+//         "bookmatch": "NA",
+//         "mainImg": "1765002062359445565.jpg",
+//         "subImg1": null,
+//         "subImg2": null,
+//         "subImg3": null,
+//         "subImg4": null,
+//         "subImg5": null,
+//         "status": "Active",
+//         "created_at": "2025-12-06T06:21:02.000000Z",
+//         "updated_at": "2025-12-06T06:21:02.000000Z"
+//       }

@@ -64,7 +64,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         "Primary Color",
                         productModel?.primarycolors ?? '',
                       ),
-                      _infoRow("Stock", productModel?.status ?? ''),
+                      _infoRow("Stock", productModel?.stock ?? ''),
                       _infoRow("Book Match", productModel?.bookmatch ?? ''),
                       _infoRow(
                         "Available Finish",
