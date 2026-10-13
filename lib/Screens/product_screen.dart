@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
+import '../utils/http_helper/http_helper.dart';
 import 'package:argil_tiles/provider/favroite_provider.dart';
 import 'package:argil_tiles/widgets/custom_image.dart';
 import 'package:argil_tiles/widgets/debouncer.dart';
@@ -58,6 +60,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     FavoriteProvider favoriteProvider = context.watch<FavoriteProvider>();
 
     return PopAndRedirectToHome(
@@ -68,12 +71,24 @@ class _ProductScreenState extends State<ProductScreen> {
           surfaceTintColor: const Color(0xFFD3C8BA),
           foregroundColor: AppColors.blackColor,
           elevation: 0,
-          title: Text(widget.title),
+          leading: BackButton(
+            style: ButtonStyle(
+              iconSize: WidgetStatePropertyAll(isTablet ? 26 : 22),
+            ),
+          ),
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: isTablet ? 22 : 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: [
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.favorite_border,
                 color: AppColors.blackColor,
+                size: isTablet ? 28 : 24,
               ),
               onPressed:
                   () => Navigator.push(
@@ -81,21 +96,35 @@ class _ProductScreenState extends State<ProductScreen> {
                     MaterialPageRoute(builder: (_) => FavoriteScreen()),
                   ),
             ),
+            const SizedBox(width: 8),
           ],
         ),
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomContainer(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: isTablet ? 3.w : 5.w,
+                vertical: isTablet ? 1.5.h : 2.h,
+              ),
               child: TextField(
                 controller: searchController,
+                style: TextStyle(fontSize: isTablet ? 16 : 14),
                 decoration: InputDecoration(
                   hintText: 'Search',
+                  hintStyle: TextStyle(fontSize: isTablet ? 16 : 14),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    size: isTablet ? 24 : 20,
+                    color: Colors.grey.shade600,
+                  ),
                   suffixIcon:
                       searchController.text.isNotEmpty
                           ? IconButton(
-                            icon: const Icon(Icons.clear),
+                            icon: Icon(
+                              Icons.clear,
+                              size: isTablet ? 22 : 18,
+                            ),
                             onPressed: clearSearch,
                           )
                           : null,
@@ -133,7 +162,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   fromJson:
                       (m) => ProductModel.fromJson(m, widget.isSpcProduct),
                   isListView: false,
-                  itemBuilder: (ctx, product, i) {
+                  itemBuilderWithList: (ctx, product, i, allProducts) {
                     product.imageUrl = widget.url;
                     return InkWell(
                       onTap:
@@ -144,6 +173,45 @@ class _ProductScreenState extends State<ProductScreen> {
                                     url: widget.url,
                                     productModel: product,
                                     isSpcProduct: widget.isSpcProduct,
+                                    products: allProducts,
+                                    initialIndex: i,
+                                    onLoadMore: (nextPage) async {
+                                      try {
+                                        final uri =
+                                            widget.isSpcProduct
+                                                ? ApiHelper.spcProductPagination(
+                                                  page: nextPage.toString(),
+                                                  query: query,
+                                                )
+                                                : ApiHelper.quartzProductPagination(
+                                                  page: nextPage.toString(),
+                                                  query: query,
+                                                );
+                                        final resp = await HttpHelper.get(
+                                          context: context,
+                                          uri: uri,
+                                        );
+                                        if (resp['data'] != null &&
+                                            resp['data']['data'] is List) {
+                                          final List<dynamic> rawList =
+                                              resp['data']['data'];
+                                          return rawList
+                                              .whereType<Map<String, dynamic>>()
+                                              .map((m) {
+                                                final p = ProductModel.fromJson(
+                                                  m,
+                                                  widget.isSpcProduct,
+                                                );
+                                                p.imageUrl = widget.url;
+                                                return p;
+                                              })
+                                              .toList();
+                                        }
+                                      } catch (e) {
+                                        log("Error loading more products in details: $e");
+                                      }
+                                      return [];
+                                    },
                                   ),
                             ),
                           ),
@@ -159,8 +227,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     AppSize.size10,
                                   ),
                                   child: CustomImageWithLoader(
-                                    height: 35.h,
-                                    width: 50.w,
+                                    height: isTablet ? double.infinity : 35.h,
+                                    width: isTablet ? double.infinity : 50.w,
                                     showImageInPanel: false,
                                     imageUrl:
                                         "${ApiHelper.assetsUrl}${widget.url}/${product.mainImg}",
@@ -174,6 +242,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         () async => favoriteProvider
                                             .toggleFavorite(product),
                                     child: CustomContainer(
+                                      padding: EdgeInsets.all(isTablet ? 6 : 4),
                                       backGroundColor: AppColors.blackColor
                                           .withOpacity(0.3),
                                       shape: BoxShape.circle,
@@ -181,6 +250,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         favoriteProvider.isFavorite(product)
                                             ? Icons.favorite_rounded
                                             : Icons.favorite_border,
+                                        size: isTablet ? 24 : 20,
                                         color:
                                             favoriteProvider.isFavorite(product)
                                                 ? AppColors.errorColor
@@ -192,18 +262,27 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Positioned(
                                   bottom: 0,
                                   left: 0,
-                                  width: 42.w,
+                                  right: 0,
                                   child: CustomContainer(
                                     borderRadius: BorderRadius.vertical(
                                       bottom: Radius.circular(AppSize.size10),
                                     ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: isTablet ? 8 : 4,
+                                    ),
                                     alignment: Alignment.bottomCenter,
                                     backGroundColor: AppColors.blackColor
-                                        .withOpacity(0.5),
+                                        .withOpacity(0.55),
                                     child: Text(
                                       product.names ?? "",
-                                      style: const TextStyle(
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
                                         color: AppColors.whiteColor,
+                                        fontSize: isTablet ? 14 : 11,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),

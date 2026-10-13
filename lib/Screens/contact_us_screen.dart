@@ -61,29 +61,63 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   @override
   Widget build(BuildContext context) {
     ContactUsProvider contactUsProvider = context.watch<ContactUsProvider>();
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return PopAndRedirectToHome(
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
           surfaceTintColor: const Color(0xFFD3C8BA),
-          title: const Text('Contact Us'),
-          leading: const BackButton(),
+          title: Text(
+            'Contact Us',
+            style: TextStyle(
+              fontSize: isTablet ? 22 : 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: BackButton(
+            style: ButtonStyle(
+              iconSize: WidgetStatePropertyAll(isTablet ? 26 : 22),
+            ),
+          ),
           foregroundColor: Colors.black,
           elevation: 0,
+          actions: [
+            Builder(
+              builder:
+                  (context) => IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      size: isTablet ? 28 : 24,
+                    ),
+                    onPressed: () => WidgetHelper.openEndDrawerSafely(context),
+                  ),
+            ),
+            SizedBox(width: isTablet ? 12 : 8),
+          ],
         ),
-        endDrawer: DrawerWidget(),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Container(
-            decoration: BoxDecoration(),
-            child: Column(
-              children: [
-                const Text(
-                  "for more information you can\nreach out to us",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 16),
+        endDrawerEnableOpenDragGesture: false,
+        endDrawer: const DrawerWidget(),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: isTablet ? 650 : double.infinity,
+            ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(isTablet ? 24 : 16),
+              child: Container(
+                decoration: const BoxDecoration(),
+                child: Column(
+                  children: [
+                    Text(
+                      "for more information you can\nreach out to us",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: isTablet ? 16 : 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: isTablet ? 24 : 16),
                 Form(
                   key: contactUsProvider.formKey,
                   child: Column(
@@ -126,17 +160,40 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                             (value) =>
                                 contactUsProvider.formKey.currentState
                                     ?.validate(),
-                        hintText: "Contact No",
-                        maxLength: 10,
+                        hintText: "Contact No (with country code)",
                         keyboardType: TextInputType.phone,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value == null || value.trim().isEmpty) {
                             return 'Enter your contact number';
-                          } else if (value.length < 10) {
-                            return 'Enter a valid 10-digit number';
+                          } else if (value.trim().length < 7) {
+                            return 'Enter a valid contact number with country code';
                           }
                           return null;
                         },
+                      ),
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              size: 14,
+                              color: AppColors.brown,
+                            ),
+                            const SizedBox(width: 6),
+                            const Expanded(
+                              child: Text(
+                                "Add mobile number with country code (e.g. +91 9876543210)",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 2.h),
                       CustomTextFormField(
@@ -196,11 +253,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                  : const Text(
+                                  : Text(
                                     "Submit",
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 14,
+                                      fontSize: isTablet ? 17 : 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                         ),
@@ -208,19 +266,21 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
-                _buildContactDetailsCard(),
+                SizedBox(height: isTablet ? 36 : 30),
+                _buildContactDetailsCard(isTablet),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
-  Widget _buildContactDetailsCard() {
+  Widget _buildContactDetailsCard([bool isTablet = false]) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isTablet ? 22 : 16),
       decoration: BoxDecoration(
         color: const Color(0xFFEDE7E3),
         borderRadius: BorderRadius.circular(14),
@@ -229,15 +289,15 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title for the contact details card
-          const Text(
+          Text(
             "Contact Details",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: isTablet ? 19 : 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF663333),
+              color: const Color(0xFF663333),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: isTablet ? 16 : 12),
 
           InkWell(
             onTap: () async {
@@ -256,25 +316,31 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             },
             child: Row(
               children: [
-                const Icon(Icons.phone, size: 18),
-                const SizedBox(width: 8),
-                Text(phoneNumber, style: TextStyle(fontSize: 12)),
+                Icon(Icons.phone, size: isTablet ? 22 : 18),
+                SizedBox(width: isTablet ? 12 : 8),
+                Text(
+                  phoneNumber,
+                  style: TextStyle(fontSize: isTablet ? 15 : 12),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: isTablet ? 12 : 8),
 
           InkWell(
             onTap: () => launchCustomUrl(email),
             child: Row(
               children: [
-                const Icon(Icons.email, size: 18),
-                const SizedBox(width: 8),
-                Text(email, style: TextStyle(fontSize: 12)),
+                Icon(Icons.email, size: isTablet ? 22 : 18),
+                SizedBox(width: isTablet ? 12 : 8),
+                Text(
+                  email,
+                  style: TextStyle(fontSize: isTablet ? 15 : 12),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: isTablet ? 12 : 8),
 
           // Location row
           InkWell(
@@ -282,13 +348,18 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.location_on, size: 18),
-                const SizedBox(width: 8),
-                Expanded(child: Text(address, style: TextStyle(fontSize: 12))),
+                Icon(Icons.location_on, size: isTablet ? 22 : 18),
+                SizedBox(width: isTablet ? 12 : 8),
+                Expanded(
+                  child: Text(
+                    address,
+                    style: TextStyle(fontSize: isTablet ? 15 : 12),
+                  ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: isTablet ? 20 : 16),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

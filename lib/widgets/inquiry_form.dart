@@ -22,10 +22,11 @@ class InquiryForm extends StatelessWidget {
   Widget build(BuildContext context) {
     ProductInquiryProvider inquiryProvider =
         context.watch<ProductInquiryProvider>();
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     return CustomContainer(
-      width: 80.w,
-      padding: const EdgeInsets.all(AppSize.size10),
-      backGroundColor: Color(0xFFF9F4EF),
+      width: isTablet ? 520.0 : 80.w,
+      padding: EdgeInsets.all(isTablet ? 20.0 : AppSize.size10),
+      backGroundColor: const Color(0xFFF9F4EF),
       borderRadius: BorderRadius.circular(AppSize.size10),
       child: SingleChildScrollView(
         child: Column(
@@ -34,20 +35,23 @@ class InquiryForm extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                icon: const Icon(Icons.close),
+                icon: Icon(Icons.close, size: isTablet ? 28 : 24),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               "Product Inquiry",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: isTablet ? 22 : 18,
+              ),
             ),
-            const Text(
+            Text(
               "Please let us know if you have any questions.",
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: isTablet ? 14 : 12),
             ),
             const SizedBox(height: 20),
             Form(
@@ -82,14 +86,40 @@ class InquiryForm extends StatelessWidget {
                   CustomTextFormField(
                     controller: inquiryProvider.contactController,
                     onChanged: (value) => formKey.currentState?.validate(),
-                    hintText: "Contact No",
-                    maxLength: 10,
+                    hintText: "Contact No (with country code)",
                     keyboardType: TextInputType.phone,
-                    validator:
-                        (value) =>
-                            value!.length != 10
-                                ? "Enter valid 10-digit contact number"
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Enter contact number";
+                      } else if (value.trim().length < 7) {
+                        return "Enter valid contact number with country code";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: AppColors.brown,
+                        ),
+                        const SizedBox(width: 6),
+                        const Expanded(
+                          child: Text(
+                            "Add mobile number with country code (e.g. +91 9876543210)",
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   CustomTextFormField(
@@ -119,9 +149,13 @@ class InquiryForm extends StatelessWidget {
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
+                    height: isTablet ? 50 : 44,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6C3F2B),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
@@ -129,6 +163,7 @@ class InquiryForm extends StatelessWidget {
                             id: productId,
                             productName: productName,
                             url: category,
+                            sampleRequest: inquiryProvider.requestSample,
                             context: context,
                           );
                         }
@@ -143,9 +178,13 @@ class InquiryForm extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               )
-                              : const Text(
+                              : Text(
                                 "Submit",
-                                style: TextStyle(color: AppColors.whiteColor),
+                                style: TextStyle(
+                                  color: AppColors.whiteColor,
+                                  fontSize: isTablet ? 17 : 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                     ),
                   ),

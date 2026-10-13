@@ -26,6 +26,12 @@ class ApiHelper {
   /// spc product
   static String dashboard = "$baseUrl/dashboard";
 
+  /// export contacts
+  static String exportContact = "$baseUrl/export/contact";
+
+  /// export inquiries
+  static String exportInquiry = "$baseUrl/export/inquiry";
+
   /// pagination links
   static String spcProductPagination({required String page, String? query}) =>
       "$baseUrl/spcproductpagination?page=$page&q=${query ?? ""}";

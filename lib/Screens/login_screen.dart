@@ -29,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     AuthProvider authProvider = context.watch<AuthProvider>();
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: Center(
@@ -40,163 +42,247 @@ class _LoginPageState extends State<LoginPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.lock_outline,
-                  size: AppSize.size80,
-                  color: Colors.grey,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isTablet ? 460 : double.infinity,
+              ),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 24 : 5.w,
+                  vertical: isTablet ? 24 : 16,
                 ),
-                SizeHelper.height(),
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizeHelper.height(),
-                Form(
-                  key: _formKey,
+                child: Container(
+                  padding: isTablet
+                      ? const EdgeInsets.symmetric(horizontal: 36, vertical: 40)
+                      : EdgeInsets.zero,
+                  decoration: isTablet
+                      ? BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: AppColors.brown.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.brown.withValues(alpha: 0.08),
+                              blurRadius: 24,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        )
+                      : null,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Email Field
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        onTapOutside:
-                            (event) =>
-                                Navigator.of(context).focusNode.unfocus(),
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          enabledBorder: brownBorder(),
-                          focusedBorder: brownBorder(),
-                          labelStyle: TextStyleHelper.smallHeading.copyWith(
-                            color: AppColors.brown,
-                          ),
-                          prefixIcon: Icon(Icons.email_outlined),
-                          border: OutlineInputBorder(),
-                        ),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Enter email";
-                          }
-                          final emailRegex = RegExp(
-                            r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
-                          );
-                          return emailRegex.hasMatch(value)
-                              ? null
-                              : "Enter valid email";
-                        },
+                      Icon(
+                        Icons.lock_outline,
+                        size: isTablet ? 90 : AppSize.size80,
+                        color: isTablet ? AppColors.brown : Colors.grey,
                       ),
                       SizeHelper.height(),
-
-                      // Password Field
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onTapOutside:
-                            (event) =>
-                                Navigator.of(context).focusNode.unfocus(),
-                        decoration: InputDecoration(
-                          enabledBorder: brownBorder(),
-                          focusedBorder: brownBorder(),
-                          labelText: 'Password',
-                          labelStyle: TextStyleHelper.smallHeading.copyWith(
-                            color: AppColors.brown,
-                          ),
-
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(
-                                () => _obscurePassword = !_obscurePassword,
-                              );
-                            },
-                          ),
-                          border: const OutlineInputBorder(),
+                      Text(
+                        'Welcome Back',
+                        style: TextStyle(
+                          fontSize: isTablet ? 28 : 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        validator: (value) {
-                          if (value == null || value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
                       ),
                       SizeHelper.height(),
-
-                      // Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState?.validate() == true) {
-                              final bool success = await authProvider.login(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                context: context,
-                              );
-                              if (success) {
-                                homeScreenProvider.setSelectedIndex = 0;
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context) => DashboardPage(),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            // Email Field
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(fontSize: isTablet ? 16 : 14),
+                              onTapOutside:
+                                  (event) =>
+                                      Navigator.of(context).focusNode.unfocus(),
+                              decoration: InputDecoration(
+                                contentPadding: isTablet
+                                    ? const EdgeInsets.symmetric(
+                                        horizontal: 18,
+                                        vertical: 18,
+                                      )
+                                    : null,
+                                labelText: 'Email',
+                                enabledBorder: brownBorder(isTablet),
+                                focusedBorder: brownBorder(isTablet),
+                                labelStyle: TextStyleHelper.smallHeading.copyWith(
+                                  color: AppColors.brown,
+                                  fontSize: isTablet ? 16 : null,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  size: isTablet ? 22 : null,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    isTablet ? 10 : 4,
                                   ),
-                                  (route) => false,
-                                );
-                              }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            backgroundColor: AppColors.brown,
-                          ),
-                          child:
-                              authProvider.isLoading
-                                  ? Center(
-                                    child: CustomContainer(
-                                      width: AppSize.size20,
-                                      height: AppSize.size20,
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.whiteColor,
-                                        backgroundColor: AppColors.brown,
-                                      ),
-                                    ),
-                                  )
-                                  : Text(
-                                    'Login',
-                                    style: TextStyleHelper.mediumHeading
-                                        .copyWith(color: AppColors.whiteColor),
-                                  ),
-                        ),
-                      ),
-                      SizeHelper.height(),
-                      InkWell(
-                        onTap:
-                            () => Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                ),
                               ),
-                              (route) => false,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Enter email";
+                                }
+                                final emailRegex = RegExp(
+                                  r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
+                                );
+                                return emailRegex.hasMatch(value)
+                                    ? null
+                                    : "Enter valid email";
+                              },
                             ),
-                        child: Text(
-                          "Skip",
-                          style: TextStyleHelper.smallText.copyWith(
-                            color: AppColors.brown,
-                            decoration: TextDecoration.underline,
-                          ),
+                            SizeHelper.height(),
+
+                            // Password Field
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              style: TextStyle(fontSize: isTablet ? 16 : 14),
+                              onTapOutside:
+                                  (event) =>
+                                      Navigator.of(context).focusNode.unfocus(),
+                              decoration: InputDecoration(
+                                contentPadding: isTablet
+                                    ? const EdgeInsets.symmetric(
+                                        horizontal: 18,
+                                        vertical: 18,
+                                      )
+                                    : null,
+                                enabledBorder: brownBorder(isTablet),
+                                focusedBorder: brownBorder(isTablet),
+                                labelText: 'Password',
+                                labelStyle: TextStyleHelper.smallHeading.copyWith(
+                                  color: AppColors.brown,
+                                  fontSize: isTablet ? 16 : null,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.lock_outline,
+                                  size: isTablet ? 22 : null,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    size: isTablet ? 22 : null,
+                                  ),
+                                  onPressed: () {
+                                    setState(
+                                      () => _obscurePassword = !_obscurePassword,
+                                    );
+                                  },
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    isTablet ? 10 : 4,
+                                  ),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.length < 6) {
+                                  return 'Password must be at least 6 characters';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizeHelper.height(),
+
+                            // Login Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: isTablet ? 54 : null,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState?.validate() == true) {
+                                    final bool success = await authProvider.login(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                      context: context,
+                                    );
+                                    if (success) {
+                                      homeScreenProvider.setSelectedIndex = 0;
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                          builder: (context) => DashboardPage(),
+                                        ),
+                                        (route) => false,
+                                      );
+                                    }
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: isTablet ? 16 : 14,
+                                  ),
+                                  backgroundColor: AppColors.brown,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      isTablet ? 10 : 8,
+                                    ),
+                                  ),
+                                ),
+                                child:
+                                    authProvider.isLoading
+                                        ? Center(
+                                          child: CustomContainer(
+                                            width: AppSize.size20,
+                                            height: AppSize.size20,
+                                            child: CircularProgressIndicator(
+                                              color: AppColors.whiteColor,
+                                              backgroundColor: AppColors.brown,
+                                            ),
+                                          ),
+                                        )
+                                        : Text(
+                                          'Login',
+                                          style: TextStyleHelper.mediumHeading
+                                              .copyWith(
+                                                color: AppColors.whiteColor,
+                                                fontSize: isTablet ? 18 : null,
+                                              ),
+                                        ),
+                              ),
+                            ),
+                            SizeHelper.height(),
+                            InkWell(
+                              onTap:
+                                  () => Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeScreen(),
+                                    ),
+                                    (route) => false,
+                                  ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: isTablet ? 8 : 4,
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  "Skip",
+                                  style: TextStyleHelper.smallText.copyWith(
+                                    color: AppColors.brown,
+                                    fontSize: isTablet ? 16 : null,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -204,7 +290,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  OutlineInputBorder brownBorder() {
-    return OutlineInputBorder(borderSide: BorderSide(color: AppColors.brown));
+  OutlineInputBorder brownBorder([bool isTablet = false]) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(isTablet ? 10 : 4),
+      borderSide: BorderSide(
+        color: AppColors.brown,
+        width: isTablet ? 1.2 : 1.0,
+      ),
+    );
   }
 }

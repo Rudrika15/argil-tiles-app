@@ -30,6 +30,7 @@ class ProductInquiryProvider with ChangeNotifier {
     required String productName,
     required String url,
     required int id,
+    required bool sampleRequest,
     required BuildContext context,
   }) async {
     _isLoading = true;
@@ -43,8 +44,10 @@ class ProductInquiryProvider with ChangeNotifier {
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         phone: contactController.text.trim(),
-        message: messageController.text.trim(),
-        subject: "Product Inquiry",
+        message:
+            messageController.text.trim() +
+            "\n${sampleRequest ? "Sample Requested" : ""}",
+        subject: productName,
         details: "$url _ $productName",
         requestSample: _requestSample,
       ),

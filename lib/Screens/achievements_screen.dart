@@ -7,6 +7,7 @@ import 'package:argil_tiles/widgets/water_mark_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../utils/method_helper/gradient_helper.dart';
+import '../utils/widget_helper/widhet_helper.dart';
 import '../widgets/custom_container.dart';
 import 'dart:async';
 
@@ -61,83 +62,112 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     return PopAndRedirectToHome(
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFD3C8BA),
           surfaceTintColor: const Color(0xFFD3C8BA),
-          title: const Text('Achievements'),
-          leading: const BackButton(),
+          leading: BackButton(
+            style: ButtonStyle(
+              iconSize: WidgetStatePropertyAll(isTablet ? 26 : 22),
+            ),
+          ),
+          title: Text(
+            'Achievements',
+            style: TextStyle(
+              fontSize: isTablet ? 22 : 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: [
             Builder(
               builder:
                   (context) => IconButton(
-                    icon: const Icon(Icons.menu),
+                    icon: Icon(
+                      Icons.menu,
+                      size: isTablet ? 28 : 24,
+                    ),
                     onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
+                      WidgetHelper.openEndDrawerSafely(context);
                     },
                   ),
             ),
           ],
         ),
-        endDrawer: DrawerWidget(),
+        endDrawerEnableOpenDragGesture: false,
+        endDrawer: const DrawerWidget(),
         body: Stack(
           children: [
-            WaterMarkLogo(),
-            ListView(
-              children: [
-                SizedBox(height: 2.h),
-                SizedBox(
-                  height: 40.h,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    // physics: NeverScrollableScrollPhysics(),
-                    itemCount: imagePaths.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          CustomContainer(
-                            backGroundColor: AppColors.whiteColor,
-                            margin: EdgeInsets.symmetric(vertical: 2.h),
-                            boxShadow: [BoxShadowHelper.shadow],
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                AppSize.size10,
-                              ),
-                              child: Image.asset(
-                                imagePaths[index],
-                                fit: BoxFit.contain,
-                                height: 20.h,
-                              ),
-                            ),
-                          ),
-                          SizeHelper.height(),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: Text(
-                              message[index],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+            const WaterMarkLogo(),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isTablet ? 780 : double.infinity,
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: Text(
-                    "The Founder has been in the business since last 60 years within which he has scaled new heights regularly. He has been recognized a number of times and mostly by credible institutions including the Government of India.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14),
-                  ),
+                child: ListView(
+                  children: [
+                    SizedBox(height: 2.h),
+                    SizedBox(
+                      height: isTablet ? 44.h : 40.h,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: imagePaths.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              CustomContainer(
+                                backGroundColor: AppColors.whiteColor,
+                                margin: EdgeInsets.symmetric(vertical: 2.h),
+                                boxShadow: [BoxShadowHelper.shadow],
+                                borderRadius: BorderRadius.circular(AppSize.size10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSize.size10,
+                                  ),
+                                  child: Image.asset(
+                                    imagePaths[index],
+                                    fit: BoxFit.contain,
+                                    height: isTablet ? 24.h : 20.h,
+                                  ),
+                                ),
+                              ),
+                              SizeHelper.height(),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isTablet ? 24 : 5.w,
+                                ),
+                                child: Text(
+                                  message[index],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isTablet ? 17 : 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 24 : 5.w,
+                        vertical: 16,
+                      ),
+                      child: Text(
+                        "The Founder has been in the business since last 60 years within which he has scaled new heights regularly. He has been recognized a number of times and mostly by credible institutions including the Government of India.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isTablet ? 17 : 14,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),

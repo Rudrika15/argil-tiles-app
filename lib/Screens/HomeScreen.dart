@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:argil_tiles/Screens/product_details_screen.dart';
 import 'package:argil_tiles/app_const/app_size.dart';
 import 'package:argil_tiles/model/common_product_model.dart';
-import 'package:argil_tiles/provider/newarraival_provider.dart';
+import '../utils/http_helper/http_helper.dart';
 import 'package:argil_tiles/utils/navigation_helper/navigation_helper.dart';
 import 'package:argil_tiles/widgets/custom_container.dart';
 import 'package:argil_tiles/widgets/custom_image.dart';
@@ -78,6 +79,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     SpcProductProvider spcProvider = context.watch<SpcProductProvider>();
     // NewarrivalProvider newArrivalProvider = context.watch<NewarrivalProvider>();
 
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
@@ -101,15 +106,17 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
             title: CustomContainer(
               child: Image.asset(
                 'assets/images/logo.png',
-                height: 5.h,
-                width: 20.w,
+                height: isTablet ? 48 : 5.h,
+                width: isTablet ? 140 : 20.w,
+                fit: BoxFit.contain,
               ),
             ),
             actions: [
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.favorite_border,
                   color: AppColors.blackColor,
+                  size: isTablet ? 28 : 24,
                 ),
                 onPressed:
                     () => Navigator.push(
@@ -120,13 +127,18 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
               Builder(
                 builder:
                     (context) => IconButton(
-                      icon: const Icon(Icons.menu, color: AppColors.blackColor),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                      icon: Icon(
+                        Icons.menu,
+                        color: AppColors.blackColor,
+                        size: isTablet ? 28 : 24,
+                      ),
+                      onPressed: () => WidgetHelper.openEndDrawerSafely(context),
                     ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: isTablet ? 16 : 10),
             ],
           ),
+          endDrawerEnableOpenDragGesture: false,
           endDrawer: DrawerWidget(),
           body: CustomContainer(
             gradient: LinearGradient(
@@ -157,9 +169,12 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               true)
                             CarouselSlider(
                               options: CarouselOptions(
-                                height: 25.h,
+                                height: isTablet
+                                    ? (isLandscape ? 38.h : 28.h)
+                                    : 25.h,
                                 autoPlay: true,
                                 enlargeCenterPage: true,
+                                viewportFraction: isTablet ? 0.92 : 0.8,
                               ),
                               items:
                                   homeScreenProvider.homeSliderModel?.data?.map((
@@ -168,8 +183,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                     return CustomContainer(
                                       backGroundColor: AppColors.whiteColor,
                                       margin: EdgeInsets.symmetric(
-                                        horizontal: 1.w,
-                                        vertical: 2.h,
+                                        horizontal: isTablet ? 8 : 1.w,
+                                        vertical: isTablet ? 1.h : 2.h,
                                       ),
 
                                       boxShadow: [BoxShadowHelper.shadow],
@@ -214,6 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               children: [
                                 _buildSectionTitle(
                                   title: 'DURA QUARTZ SURFACE',
+                                  isTablet: isTablet,
                                 ),
 
                                 if (!showAllQuartz &&
@@ -240,11 +256,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                       ?.isNotEmpty ==
                                   true
                               ? SizedBox(
-                                height: 20.h,
+                                height: isTablet
+                                    ? (isLandscape ? 26.h : 20.h)
+                                    : 20.h,
                                 child: ListView.builder(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 2.h,
-                                    horizontal: 5.w,
+                                    vertical: isTablet ? 1.h : 2.h,
+                                    horizontal: isTablet ? 3.w : 5.w,
                                   ),
                                   scrollDirection: Axis.horizontal,
                                   itemCount:
@@ -269,6 +287,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         quartzProvider
                                             .quartzProductModel
                                             ?.data?[index];
+                                    final quartzList =
+                                        quartzProvider
+                                            .quartzProductModel
+                                            ?.data;
                                     return GestureDetector(
                                       onTap:
                                           () => Navigator.push(
@@ -280,11 +302,37 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                                         url: "quartz",
                                                         isSpcProduct: false,
                                                         productModel: product,
+                                                        products: quartzList,
+                                                        initialIndex: index,
+                                                        onLoadMore: (nextPage) async {
+                                                          try {
+                                                            final resp = await HttpHelper.get(
+                                                              context: context,
+                                                              uri: ApiHelper.quartzProductPagination(page: nextPage.toString()),
+                                                            );
+                                                            if (resp['data'] != null && resp['data']['data'] is List) {
+                                                              final List<dynamic> rawList = resp['data']['data'];
+                                                              return rawList
+                                                                  .whereType<Map<String, dynamic>>()
+                                                                  .map((m) {
+                                                                    final p = ProductModel.fromJson(m, false);
+                                                                    p.imageUrl = "quartz";
+                                                                    return p;
+                                                                  })
+                                                                  .toList();
+                                                            }
+                                                          } catch (e) {
+                                                            log("Error loading more quartz products: $e");
+                                                          }
+                                                          return [];
+                                                        },
                                                       ),
                                             ),
                                           ),
                                       child: HomeScreenProductContainer(
-                                        width: 60.w,
+                                        width: isTablet
+                                            ? (isLandscape ? 32.w : 42.w)
+                                            : 60.w,
                                         imageUrl:
                                             '${ApiHelper.assetsUrl}quartz/${product?.mainImg}',
                                       ),
@@ -315,7 +363,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildSectionTitle(title: 'SPC FLOORING'),
+                                _buildSectionTitle(
+                                  title: 'SPC FLOORING',
+                                  isTablet: isTablet,
+                                ),
 
                                 if (!showAllSpc &&
                                     (spcProvider
@@ -338,11 +389,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               : spcProvider.spcProductModel?.data?.isNotEmpty ==
                                   true
                               ? SizedBox(
-                                height: 25.h,
+                                height: isTablet
+                                    ? (isLandscape ? 30.h : 24.h)
+                                    : 25.h,
                                 child: ListView.builder(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 2.h,
-                                    horizontal: 5.w,
+                                    vertical: isTablet ? 1.h : 2.h,
+                                    horizontal: isTablet ? 3.w : 5.w,
                                   ),
                                   scrollDirection: Axis.horizontal,
                                   itemCount:
@@ -367,6 +420,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                         spcProvider
                                             .spcProductModel
                                             ?.data?[index];
+                                    final spcList =
+                                        spcProvider
+                                            .spcProductModel
+                                            ?.data;
                                     return GestureDetector(
                                       onTap:
                                           () => Navigator.push(
@@ -378,10 +435,37 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                                         url: "spc",
                                                         isSpcProduct: true,
                                                         productModel: product,
+                                                        products: spcList,
+                                                        initialIndex: index,
+                                                        onLoadMore: (nextPage) async {
+                                                          try {
+                                                            final resp = await HttpHelper.get(
+                                                              context: context,
+                                                              uri: ApiHelper.spcProductPagination(page: nextPage.toString()),
+                                                            );
+                                                            if (resp['data'] != null && resp['data']['data'] is List) {
+                                                              final List<dynamic> rawList = resp['data']['data'];
+                                                              return rawList
+                                                                  .whereType<Map<String, dynamic>>()
+                                                                  .map((m) {
+                                                                    final p = ProductModel.fromJson(m, true);
+                                                                    p.imageUrl = "spc";
+                                                                    return p;
+                                                                  })
+                                                                  .toList();
+                                                            }
+                                                          } catch (e) {
+                                                            log("Error loading more spc products: $e");
+                                                          }
+                                                          return [];
+                                                        },
                                                       ),
                                             ),
                                           ),
                                       child: HomeScreenProductContainer(
+                                        width: isTablet
+                                            ? (isLandscape ? 18.w : 24.w)
+                                            : null,
                                         imageUrl:
                                             '${ApiHelper.assetsUrl}spc/${product?.mainImg}',
                                       ),
@@ -496,12 +580,16 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     );
   }
 
-  Widget _buildSectionTitle({required String title}) {
+  Widget _buildSectionTitle({required String title, bool isTablet = false}) {
     return Padding(
       padding: EdgeInsets.only(left: 5.w),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: isTablet ? 22 : 18,
+          fontWeight: FontWeight.bold,
+          letterSpacing: isTablet ? 0.5 : null,
+        ),
       ),
     );
   }
@@ -539,13 +627,19 @@ class ViewAllBtn extends StatelessWidget {
   const ViewAllBtn({super.key});
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     return CustomContainer(
-      margin: EdgeInsets.only(right: 2.w),
-      // backGroundColor: AppColors.whiteColor,
+      margin: EdgeInsets.only(right: isTablet ? 4.w : 2.w),
       borderRadius: BorderRadius.circular(AppSize.size10),
-      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-      image: DecorationImage(
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 2.w : 3.w,
+        vertical: isTablet ? 0.8.h : 1.h,
+      ),
+      width: isTablet ? 36 : null,
+      height: isTablet ? 36 : null,
+      image: const DecorationImage(
         image: AssetImage("assets/images/right-arrow.png"),
+        fit: BoxFit.contain,
       ),
     );
   }

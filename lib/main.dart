@@ -1,5 +1,3 @@
-// import 'package:argil_tiles/provider/drawer_provider/new_drawer_provider.dart';
-// import 'package:argil_tiles/provider/drawer_provider/drawer_provider.dart';
 import 'package:argil_tiles/app_const/app_color.dart';
 import 'package:argil_tiles/provider/auth_provider.dart';
 import 'package:argil_tiles/provider/contact_us_provider.dart';
@@ -20,10 +18,27 @@ import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+
+  final view = WidgetsBinding.instance.platformDispatcher.views.firstOrNull;
+  final size =
+      view != null ? view.physicalSize / view.devicePixelRatio : Size.zero;
+  final bool isTablet = size.shortestSide >= 600;
+
+  if (isTablet) {
+    // Tablets support both portrait and landscape to fill the screen in any orientation
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  } else {
+    // Phones stay locked to portrait
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
   runApp(
     MultiProvider(
       providers: [

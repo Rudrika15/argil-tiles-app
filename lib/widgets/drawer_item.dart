@@ -23,14 +23,24 @@ class DrawerItem extends StatelessWidget {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
     AuthProvider authProvider = context.watch<AuthProvider>();
     bool selected = index == homeScreenProvider.selectedIndex;
+    final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     return ListTile(
       selected: selected,
-      selectedTileColor: Color.fromARGB(238, 81, 58, 29),
-      leading: icon != null ? Icon(icon, color: AppColors.whiteColor) : null,
-      title: Text(title, style: const TextStyle(color: AppColors.whiteColor)),
+      selectedTileColor: const Color.fromARGB(238, 81, 58, 29),
+      leading: icon != null
+          ? Icon(icon, color: AppColors.whiteColor, size: isTablet ? 26 : 22)
+          : null,
+      title: Text(
+        title,
+        style: TextStyle(
+          color: AppColors.whiteColor,
+          fontSize: isTablet ? 17 : 14,
+          fontWeight: selected ? FontWeight.bold : FontWeight.w500,
+        ),
+      ),
       onTap: () {
+        Navigator.pop(context);
         if (selected) {
-          Navigator.pop(context);
           return;
         }
 

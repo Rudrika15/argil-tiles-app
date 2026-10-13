@@ -6,12 +6,19 @@ import '../utils/http_helper/http_helper.dart';
 import '../utils/widgets/custom_primary_btn.dart';
 
 typedef FromJson<T> = T Function(Map<String, dynamic> json);
+typedef UrlPagedItemBuilder<T> = Widget Function(
+  BuildContext context,
+  T item,
+  int index,
+  List<T> allItems,
+);
 
 class UrlPagedList<T> extends StatefulWidget {
   const UrlPagedList({
     super.key,
     required this.url,
-    required this.itemBuilder,
+    this.itemBuilder,
+    this.itemBuilderWithList,
     required this.fromJson,
     this.headers,
     this.extraQuery,
@@ -23,10 +30,11 @@ class UrlPagedList<T> extends StatefulWidget {
     this.enableRefresh = true,
     this.isListView = true,
     this.searchQuery = '',
-  });
+  }) : assert(itemBuilder != null || itemBuilderWithList != null, 'Either itemBuilder or itemBuilderWithList must be provided');
 
-  final String Function(String page,String query) url;
-  final Widget Function(BuildContext, T, int) itemBuilder;
+  final String Function(String page, String query) url;
+  final Widget Function(BuildContext, T, int)? itemBuilder;
+  final UrlPagedItemBuilder<T>? itemBuilderWithList;
   final FromJson<T> fromJson;
   final Map<String, String>? headers;
   final Map<String, String>? extraQuery;
@@ -45,7 +53,6 @@ class UrlPagedList<T> extends StatefulWidget {
 
 class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
   late final PagingController<int, T> _controller;
-  String _lastQuery = '';
   @override
   void initState() {
     super.initState();
@@ -58,14 +65,14 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
         return state.nextIntPageKey; // convenience extension for int keys
       },
       // Fetch a page and return the items.
-      fetchPage: (pageKey) async => _fetchPage(pageKey,widget.searchQuery),
+      fetchPage: (pageKey) async => _fetchPage(pageKey, widget.searchQuery),
     );
   }
 
-  Future<List<T>> _fetchPage(int page ,String query) async {
+  Future<List<T>> _fetchPage(int page, String query) async {
     final resp = await HttpHelper.get(
       context: context,
-      uri: widget.url(page.toString(),query),
+      uri: widget.url(page.toString(), query),
     );
 
     // Flexible extraction: supports top-level list or common keys like data/results/items.
@@ -87,7 +94,6 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.searchQuery != widget.searchQuery) {
       // 👈 If query changed, refresh
-      _lastQuery = widget.searchQuery;
       _controller.refresh();
     }
   }
@@ -103,6 +109,13 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
     return PagingListener<int, T>(
       controller: _controller,
       builder: (context, state, fetchNextPage) {
+        final allItems =
+            state.pages?.expand((page) => page).toList() ?? <T>[];
+
+        final bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+        final bool isLandscape =
+            MediaQuery.of(context).orientation == Orientation.landscape;
+
         final list =
             widget.isListView
                 ? PagedListView<int, T>(
@@ -113,6 +126,7 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
                       fetchNextPage, // the magic: triggers loads as needed
                   builderDelegate: pagedChildBuilderDelegateMethod(
                     fetchNextPage,
+                    allItems,
                   ),
                 )
                 : PagedGridView<int, T>(
@@ -121,12 +135,13 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
                   fetchNextPage: fetchNextPage,
                   builderDelegate: pagedChildBuilderDelegateMethod(
                     fetchNextPage,
+                    allItems,
                   ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.8 / 1,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: isTablet ? (isLandscape ? 4 : 3) : 2,
+                    crossAxisSpacing: isTablet ? 20 : 16,
+                    mainAxisSpacing: isTablet ? 20 : 16,
+                    childAspectRatio: isTablet ? 1.0 : 0.8 / 1,
                   ),
                 );
 
@@ -142,9 +157,15 @@ class _UrlPagedListState<T> extends State<UrlPagedList<T>> {
 
   PagedChildBuilderDelegate<T> pagedChildBuilderDelegateMethod(
     NextPageCallback fetchNextPage,
+    List<T> allItems,
   ) {
     return PagedChildBuilderDelegate<T>(
-      itemBuilder: widget.itemBuilder,
+      itemBuilder: (context, item, index) {
+        if (widget.itemBuilderWithList != null) {
+          return widget.itemBuilderWithList!(context, item, index, allItems);
+        }
+        return widget.itemBuilder!(context, item, index);
+      },
       firstPageProgressIndicatorBuilder: (c) => const Loader(),
       newPageProgressIndicatorBuilder:
           (c) =>
