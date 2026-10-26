@@ -46,6 +46,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
   bool _isLoadingMore = false;
   bool _hasMore = true;
   int _nextPage = 2;
+  bool _showTourGuide = false;
+  double _tourGuideOpacity = 0.0;
+  Timer? _tourGuideTimer;
 
   @override
   void initState() {
@@ -70,12 +73,59 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     }
 
     _pageController = PageController(initialPage: _currentIndex);
+
+    if (_products.length > 1) {
+      _showTourGuide = true;
+      _tourGuideOpacity = 1.0;
+      _tourGuideTimer = Timer(const Duration(seconds: 4), () {
+        _dismissTourGuide();
+      });
+    }
   }
 
   @override
   void dispose() {
+    _tourGuideTimer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _dismissTourGuide() {
+    if (_showTourGuide && _tourGuideOpacity > 0.0) {
+      _tourGuideTimer?.cancel();
+      if (mounted) {
+        setState(() {
+          _tourGuideOpacity = 0.0;
+        });
+        Future.delayed(const Duration(milliseconds: 350), () {
+          if (mounted && _tourGuideOpacity == 0.0) {
+            setState(() {
+              _showTourGuide = false;
+            });
+          }
+        });
+      }
+    }
+  }
+
+  void _previousProduct() {
+    _dismissTourGuide();
+    if (_currentIndex > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _nextProduct() {
+    _dismissTourGuide();
+    if (_currentIndex < _products.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _checkLoadMore(int index) async {
@@ -187,23 +237,78 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                             favoriteProvider: favoriteProvider,
                           )
                           : const Center(child: Text("Product not found")))
-                      : PageView.builder(
-                          controller: _pageController,
-                          itemCount: _products.length,
-                          onPageChanged: (index) {
-                            setState(() {
-                              _currentIndex = index;
-                            });
-                            _checkLoadMore(index);
-                          },
-                          itemBuilder: (context, index) {
-                            final product = _products[index];
-                            return _buildProductDetailView(
-                              context: context,
-                              product: product,
-                              favoriteProvider: favoriteProvider,
-                            );
-                          },
+                      : Stack(
+                          children: [
+                            NotificationListener<ScrollNotification>(
+                              onNotification: (notification) {
+                                if (notification is UserScrollNotification &&
+                                    _showTourGuide) {
+                                  _dismissTourGuide();
+                                }
+                                return false;
+                              },
+                              child: PageView.builder(
+                                controller: _pageController,
+                                itemCount: _products.length,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _currentIndex = index;
+                                  });
+                                  _dismissTourGuide();
+                                  _checkLoadMore(index);
+                                },
+                                itemBuilder: (context, index) {
+                                  final product = _products[index];
+                                  return _buildProductDetailView(
+                                    context: context,
+                                    product: product,
+                                    favoriteProvider: favoriteProvider,
+                                  );
+                                },
+                              ),
+                            ),
+
+                            // Side navigation buttons (product slider) & Tour guide
+                            if (_products.length > 1) ...[
+                              // Left navigation button
+                              if (_currentIndex > 0)
+                                Positioned(
+                                  left: isTablet ? 16 : 8,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: _buildSideNavButton(
+                                      icon: Icons.chevron_left,
+                                      onTap: _previousProduct,
+                                      isTablet: isTablet,
+                                    ),
+                                  ),
+                                ),
+
+                              // Right navigation button
+                              if (_currentIndex < _products.length - 1)
+                                Positioned(
+                                  right: isTablet ? 16 : 8,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: _buildSideNavButton(
+                                      icon: Icons.chevron_right,
+                                      onTap: _nextProduct,
+                                      isTablet: isTablet,
+                                    ),
+                                  ),
+                                ),
+
+                              // Tour guide: "Swipe to browse products"
+                              if (_showTourGuide)
+                                Positioned.fill(
+                                  child: Center(
+                                    child: _buildTourGuideWidget(isTablet),
+                                  ),
+                                ),
+                            ],
+                          ],
                         ),
             ),
 
@@ -577,6 +682,102 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
             color: Colors.white,
             fontSize: isTablet ? 18 : 15,
             fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSideNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isTablet,
+  }) {
+    final double buttonSize = isTablet ? 54 : 44;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(buttonSize / 2),
+        child: Container(
+          width: buttonSize,
+          height: buttonSize,
+          decoration: BoxDecoration(
+            color: Colors.brown.shade800.withValues(alpha: 0.65),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: isTablet ? 32 : 26,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTourGuideWidget(bool isTablet) {
+    return IgnorePointer(
+      ignoring: !_showTourGuide || _tourGuideOpacity == 0.0,
+      child: AnimatedOpacity(
+        opacity: _tourGuideOpacity,
+        duration: const Duration(milliseconds: 350),
+        child: GestureDetector(
+          onTap: _dismissTourGuide,
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 20 : 14,
+              vertical: isTablet ? 12 : 8,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.brown.shade800.withValues(alpha: 0.75),
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.chevron_left,
+                  color: Colors.white,
+                  size: isTablet ? 20 : 16,
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.swipe,
+                  color: Colors.white,
+                  size: isTablet ? 22 : 18,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "Swipe to browse products",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isTablet ? 15 : 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.white,
+                  size: isTablet ? 20 : 16,
+                ),
+              ],
+            ),
           ),
         ),
       ),
